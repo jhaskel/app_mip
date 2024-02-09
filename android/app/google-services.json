@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "95899711014",
+    "firebase_url": "https://app-mip-default-rtdb.firebaseio.com",
+    "project_id": "app-mip",
+    "storage_bucket": "app-mip.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95899711014:android:dae91d1a42c81ac83598e7",
+        "android_client_info": {
+          "package_name": "com.doisbitsw.miapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg2c_7As4aoIGplb_z8_9ZRNoc1XDGl_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
