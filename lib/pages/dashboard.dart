@@ -4,6 +4,7 @@ import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/pages/cafes_page.dart';
 import 'package:mip_app/pages/databasePage.dart';
 import 'package:mip_app/pages/earnings_page.dart';
+import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 import 'package:mip_app/pages/profile_page.dart';
 import 'package:mip_app/pages/trips_page.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _DashboardState extends State<Dashboard>
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          DatabasePage(),
+          MapsChamadoPage(),
           CreateDefeitoPage(),
           TripsPage(),
           ProfilePage(),
