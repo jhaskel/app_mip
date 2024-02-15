@@ -52,6 +52,8 @@ dependencies:
   get: ^4.6.6
   cloud_firestore: ^4.15.2
   geoflutterfire2: ^2.3.15
+  dropdown_search: ^5.0.0
+  material_design_icons_flutter: ^7.0.7296
  
  
 

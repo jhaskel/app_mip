@@ -1,4 +1,5 @@
 import 'package:mip_app/maps/animate_camera.dart';
+import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/pages/dashboard.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -25,10 +26,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  print("passou2");
 
   if (kIsWeb) {
-    print("web");
   } else {
     await FlutterConfig.loadEnvVariables();
 
@@ -56,13 +55,13 @@ class MyApp extends StatelessWidget {
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'CoMip',
         theme: ThemeData.dark(
           useMaterial3: true,
         ),
         //   home: HomeMain(),
-        home: DatabasePage(),
-        //   home: MapUiPage(),
+        //  home: DatabasePage(),
+        home: Dashboard(),
         //  home: const LoginPage(),
       ),
     );

@@ -1,5 +1,8 @@
 import 'package:mip_app/controllers/homeController.dart';
+import 'package:mip_app/pages/cadastro/chamados_page.dart';
+import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/pages/cafes_page.dart';
+import 'package:mip_app/pages/databasePage.dart';
 import 'package:mip_app/pages/earnings_page.dart';
 import 'package:mip_app/pages/profile_page.dart';
 import 'package:mip_app/pages/trips_page.dart';
@@ -45,8 +48,8 @@ class _DashboardState extends State<Dashboard>
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          CafesPage(),
-          EarningsPage(),
+          DatabasePage(),
+          CreateDefeitoPage(),
           TripsPage(),
           ProfilePage(),
         ],

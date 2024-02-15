@@ -113,18 +113,11 @@ class _DatabasePageState extends State<DatabasePage> {
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
                     markers: controller.markers,
-                    onTap: (loi) {},
                     onCameraMove: (position) {
                       setState(() {
                         _position = position;
                       });
                       controller.changeLat(position.target);
-                      print("positio ${position.target}");
-
-                      controller.markers.clear();
-                      for (var x in controller.list) {
-                        controller.addMarcador(x);
-                      }
                     },
                   ),
                   _latLngBoundsToggler(),
@@ -139,22 +132,13 @@ class _DatabasePageState extends State<DatabasePage> {
                       )),
                   Positioned(
                       top: 20,
-                      right: 50,
-                      child: InkWell(
-                          onTap: () {
-                            controller.buscaPostes2();
-                          },
-                          child: Text("${_position.target.latitude}"))),
-                  Positioned(
-                      top: 20,
                       left: 20,
                       child: IconButton(
                         icon: Icon(Icons.refresh),
                         onPressed: () {
                           controller.markers.clear();
-                          for (var x in controller.list) {
-                            controller.addMarcador(x);
-                          }
+
+                          controller.buscaPostes();
                         },
                       )),
                   controller.loading == true
