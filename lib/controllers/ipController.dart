@@ -78,6 +78,8 @@ class IpController extends GetxController {
       Map pos = value.value as Map;
       listaIp.clear();
       listaIp = pos.values.toList();
+      listaIp = maps.values.toList()
+        ..sort(((a, b) => (a["cod"]).compareTo((b["cod"]))));
       for (var x in listaIp) {
         if (x['status'] != "defeito") {
           postes.addAll({x['id']: x['cod']});
@@ -262,14 +264,12 @@ class IpController extends GetxController {
         // .orderByChild('status')
         //   .equalTo(statuss)
         // .limitToLast(5)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        maps = value.value as Map;
-        list.clear();
+        .onValue
+        .listen((event) {
+      maps = event.snapshot.value as Map;
+      list.clear();
 
-        list = maps.values.toList();
-      }
+      list = maps.values.toList();
     });
 
     int i = 0;

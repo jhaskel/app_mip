@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
+import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/repositories/cafes_repositories.dart';
 
 class MapsChamadoPage extends StatefulWidget {
@@ -39,6 +40,28 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
     return SafeArea(
       child: Scaffold(
         body: _body(),
+        bottomSheet: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CreateDefeitoPage()),
+            );
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            color: Colors.amber,
+            child: Center(
+                child: Text(
+              "Cadastrar defeito",
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            )),
+          ),
+        ),
       ),
     );
     /*  return StreamBuilder(

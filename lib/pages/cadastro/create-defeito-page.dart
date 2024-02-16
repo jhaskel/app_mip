@@ -25,6 +25,7 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Cadastrar")),
       body: LayoutBuilder(builder: (context, constraints) {
         return Center(
           child: Obx(() => Column(

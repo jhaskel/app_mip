@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:mip_app/pages/databasePage.dart';
 import 'package:mip_app/pages/firestorePage.dart';
 import 'package:mip_app/pages/home_main.dart';
+import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
         ),
         //   home: HomeMain(),
         //  home: DatabasePage(),
-        home: Dashboard(),
+        home: MapsChamadoPage(),
         //  home: const LoginPage(),
       ),
     );

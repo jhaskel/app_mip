@@ -52,7 +52,7 @@ class ChamadoController extends GetxController {
     });
     clear();
 
-    // Navigator.pop(context);
+    Navigator.pop(context);
 
     update();
   }
