@@ -15,7 +15,9 @@ class ChamadoController extends GetxController {
   CommonMethods cMethods = CommonMethods();
   final IpController conIp = Get.put(IpController());
   var textPage = "Chamados".obs;
+  var alturaWidget = 120.0.obs;
   List<dynamic> listaChamados = [].obs;
+  var indexDefeito = 100.obs;
 
   void getChamados(BuildContext context) async {
     await ref.orderByChild('status').equalTo('defeito').get().then((value) {
@@ -49,8 +51,7 @@ class ChamadoController extends GetxController {
       loading(false);
     });
     clear();
-    idIp("");
-    codIp("");
+
     // Navigator.pop(context);
 
     update();
@@ -74,6 +75,7 @@ class ChamadoController extends GetxController {
     codIp("");
     loading(false);
     defeito("");
+    indexDefeito(100);
     update();
   }
 }
