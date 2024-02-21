@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/controllers/chamadoController.dart';
+
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
-import 'package:mip_app/repositories/cafes_repositories.dart';
+import 'package:mip_app/pages/maps/mapsIp.dart';
 
 class MapsChamadoPage extends StatefulWidget {
   const MapsChamadoPage({super.key});
@@ -17,28 +17,35 @@ class MapsChamadoPage extends StatefulWidget {
 }
 
 class _MapsChamadoPageState extends State<MapsChamadoPage> {
-  final controller = Get.put(IpController());
-  final db = DB.get();
+  final controller = Get.put(ChamadoController());
 
   CameraTargetBounds _cameraTargetBounds = CameraTargetBounds.unbounded;
 
   @override
   void initState() {
     super.initState();
-    controller.buscaPostes();
+    controller.buscaPostesDefeito();
   }
 
-  static const CameraPosition _kInitialPosition = CameraPosition(
-    target: LatLng(-33.852, 151.211),
-    zoom: 11.0,
-  );
-  CameraPosition _position = _kInitialPosition;
   late GoogleMapController con;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("maps"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MapsIp()),
+                  );
+                },
+                icon: Icon(Icons.access_time))
+          ],
+        ),
         body: _body(),
         bottomSheet: InkWell(
           onTap: () {
@@ -93,11 +100,10 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   }
 
   _body() {
-    print("latlng1");
     return Column(
       children: [
         Expanded(
-          child: GetBuilder<IpController>(
+          child: GetBuilder<ChamadoController>(
               init: controller,
               builder: (value) {
                 return Stack(children: [
@@ -112,13 +118,16 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
                     markers: controller.markers,
-                    onCameraMove: (position) {
-                      setState(() {
-                        _position = position;
-                      });
-                      controller.changeLat(position.target);
-                    },
                   ),
+                  Positioned(
+                      top: 20,
+                      right: 20,
+                      child: IconButton(
+                        icon: Icon(Icons.offline_bolt),
+                        onPressed: () {
+                          controller.resetar();
+                        },
+                      )),
                   Positioned(
                       top: 100,
                       right: 50,
@@ -127,7 +136,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.circle,
                                 color: Colors.amber,
                               ),
@@ -183,7 +192,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                         onPressed: () {
                           controller.markers.clear();
 
-                          controller.buscaPostes();
+                          controller.buscaPostesDefeito();
                         },
                       )),
                   controller.loading == true

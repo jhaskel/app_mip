@@ -7,31 +7,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/repositories/cafes_repositories.dart';
 
-LatLngBounds bounds = LatLngBounds(
-  southwest: LatLng(-27.361977, -49.877825),
-  northeast: LatLng(-27.368034, -49.873015),
-);
-LatLng centerBounds = LatLng(
-    (bounds.northeast.latitude + bounds.southwest.latitude) / 2,
-    (bounds.northeast.longitude + bounds.southwest.longitude) / 2);
-
-class DatabasePage extends StatefulWidget {
-  const DatabasePage({super.key});
+class MapsIp extends StatefulWidget {
+  const MapsIp({super.key});
 
   @override
-  State<DatabasePage> createState() => _DatabasePageState();
+  State<MapsIp> createState() => _MapsIpState();
 }
 
-class _DatabasePageState extends State<DatabasePage> {
+class _MapsIpState extends State<MapsIp> {
   final controller = Get.put(IpController());
-  final db = DB.get();
-
-  CameraTargetBounds _cameraTargetBounds = CameraTargetBounds.unbounded;
 
   @override
   void initState() {
     super.initState();
-    controller.buscaPostes();
+    //  controller.buscaPostes(context);
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -45,6 +34,7 @@ class _DatabasePageState extends State<DatabasePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(title: Text("Postes")),
         body: _body(),
       ),
     );
@@ -76,25 +66,7 @@ class _DatabasePageState extends State<DatabasePage> {
         });*/
   }
 
-  Widget _latLngBoundsToggler() {
-    return TextButton(
-      child: Text(
-        _cameraTargetBounds.bounds == null
-            ? 'bound camera target'
-            : 'release camera target',
-      ),
-      onPressed: () {
-        setState(() {
-          _cameraTargetBounds = _cameraTargetBounds.bounds == null
-              ? CameraTargetBounds(bounds)
-              : CameraTargetBounds.unbounded;
-        });
-      },
-    );
-  }
-
   _body() {
-    print("latlng1");
     return Column(
       children: [
         Expanded(
@@ -109,18 +81,17 @@ class _DatabasePageState extends State<DatabasePage> {
                       target: controller.position,
                       zoom: 16,
                     ),
-                    cameraTargetBounds: _cameraTargetBounds,
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
                     markers: controller.markers,
-                    onCameraMove: (position) {
-                      setState(() {
-                        _position = position;
-                      });
-                      controller.changeLat(position.target);
+                    onCameraMove: (pos) {},
+                    onTap: (pos) {
+                      controller.changeLat(pos);
+                      for (var k in controller.list) {
+                        controller.addMarcador(k);
+                      }
                     },
                   ),
-                  _latLngBoundsToggler(),
                   Positioned(
                       top: 50,
                       right: 50,
@@ -138,7 +109,10 @@ class _DatabasePageState extends State<DatabasePage> {
                         onPressed: () {
                           controller.markers.clear();
 
-                          controller.buscaPostes();
+                          for (var k in controller.list) {
+                            controller.addMarcador(k);
+                          }
+                          //  controller.buscaPostes();
                         },
                       )),
                   controller.loading == true

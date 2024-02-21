@@ -2,7 +2,7 @@ import 'package:mip_app/controllers/homeController.dart';
 import 'package:mip_app/pages/cadastro/chamados_page.dart';
 import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/pages/cafes_page.dart';
-import 'package:mip_app/pages/databasePage.dart';
+import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/earnings_page.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 import 'package:mip_app/pages/profile_page.dart';

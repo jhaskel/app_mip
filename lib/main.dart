@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
-import 'package:mip_app/pages/databasePage.dart';
+import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/firestorePage.dart';
 import 'package:mip_app/pages/home_main.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         ),
         //   home: HomeMain(),
         //  home: DatabasePage(),
-        home: MapsChamadoPage(),
+        home: MapsIp(),
         //  home: const LoginPage(),
       ),
     );

@@ -18,8 +18,8 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
 
   @override
   void initState() {
-    conIp.getIp();
     super.initState();
+    conIp.getIp();
   }
 
   @override
@@ -39,13 +39,15 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
                     child: DropdownSearch<String>(
                       selectedItem: 'Selecione uma Luminária',
                       items: conIp.postes.values.toList(),
-                      onChanged: (v) {
+                      onChanged: (v) async {
                         var id = conIp.postes.keys.firstWhere(
                             (k) => conIp.postes[k] == v,
                             orElse: () => "null");
 
                         conCha.idIp.value = id;
                         conCha.codIp.value = v!;
+
+                        await conCha.getIpUnico(conCha.idIp.value);
                       },
                       popupProps: const PopupPropsMultiSelection.menu(
                         isFilterOnline: false,
@@ -79,7 +81,7 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
                           width: constraints.maxWidth,
                           child: MaterialButton(
                             color: Colors.amber,
-                            onPressed: () {
+                            onPressed: () async {
                               conCha.createChamado(context);
                             },
                             child: Text("Adicionar"),
@@ -97,7 +99,7 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
       () => Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
             conCha.defeito(Defeito.values[index].message);
 
             conCha.indexDefeito(index);
