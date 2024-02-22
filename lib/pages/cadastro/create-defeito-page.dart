@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
+import 'package:mip_app/widgets/adicionarDefeito.dart';
+import 'package:mip_app/widgets/defeitos_list.dart';
 
 class CreateDefeitoPage extends StatefulWidget {
   const CreateDefeitoPage({super.key});
@@ -63,7 +65,9 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
                       child: GridView.builder(
                         itemCount: Defeito.values.length,
                         itemBuilder: (context, index) {
-                          return defeitoWidged(index);
+                          return DefeitoList(
+                            index: index,
+                          );
                         },
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -74,55 +78,11 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
                       ),
                     ),
                   ),
-                  conCha.defeito.value == '' || conCha.idIp.value == ""
-                      ? Container()
-                      : Container(
-                          height: 100,
-                          width: constraints.maxWidth,
-                          child: MaterialButton(
-                            color: Colors.amber,
-                            onPressed: () async {
-                              conCha.createChamado(context);
-                            },
-                            child: Text("Adicionar"),
-                          ),
-                        )
+                  Container(height: 100, child: AdicionarDefeito()),
                 ],
               )),
         );
       }),
-    );
-  }
-
-  defeitoWidged(int index) {
-    return Obx(
-      () => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GestureDetector(
-          onTap: () async {
-            conCha.defeito(Defeito.values[index].message);
-
-            conCha.indexDefeito(index);
-          },
-          child: Container(
-              decoration: BoxDecoration(
-                  color: conCha.indexDefeito == index
-                      ? Colors.cyan
-                      : Colors.transparent,
-                  border: Border.all(color: Colors.amber, width: 2)),
-              width: conCha.alturaWidget.value,
-              height: conCha.alturaWidget.value,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${Defeito.values[index].message}",
-                  ),
-                  Icon(Util.icones[index]),
-                ],
-              )),
-        ),
-      ),
     );
   }
 }

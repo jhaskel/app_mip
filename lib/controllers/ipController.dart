@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/widgets/defeitos_list.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
 import 'package:mip_app/widgets/cafe_details.dart';
@@ -27,7 +29,9 @@ class IpController extends GetxController {
   final markers = Set<Marker>();
 
   static IpController get to => Get.find<IpController>();
+
   get mapsController => _mapsController;
+
   get position => _position;
 
   /**/
@@ -117,9 +121,7 @@ class IpController extends GetxController {
 
         for (var x in list) {
           addMarcador(x);
-
           i++;
-          //  print("iiiii $i");
         }
       }
     });
@@ -195,6 +197,19 @@ class IpController extends GetxController {
                         "cod ${x['id']}",
                         style: TextStyle(color: Colors.black),
                       ),
+                      Container(
+                          height: 120,
+                          child: Padding(
+                              padding: EdgeInsets.all(6),
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: Defeito.values.length,
+                                itemBuilder: (context, index) {
+                                  return DefeitoList(
+                                    index: index,
+                                  );
+                                },
+                              ))),
                     ],
                   )),
               barrierColor: Colors.transparent,

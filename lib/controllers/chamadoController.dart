@@ -46,7 +46,6 @@ class ChamadoController extends GetxController {
 
   var postes = Map<String, dynamic>().obs;
 
-  late StreamSubscription<Position> positionStream;
   LatLng _position = LatLng(-27.35661, -49.88283);
   var position2 = LatLng(-27.35661, -49.88283).obs;
   late GoogleMapController _mapsController;
@@ -61,12 +60,6 @@ class ChamadoController extends GetxController {
 
     var style = await rootBundle.loadString('assets/map/dark.json');
     _mapsController.setMapStyle(style);
-  }
-
-  @override
-  void onClose() {
-    positionStream.cancel();
-    super.onClose();
   }
 
   Future<Position> _posicaoAtual() async {
@@ -151,15 +144,16 @@ class ChamadoController extends GetxController {
 
     var chamado = {
       'id': id,
-      'idIp': idIp.value, //id do Ip
-      'createdAt': DateTime.now().toIso8601String(),
-      'modifiedAt': DateTime.now().toIso8601String(),
+      'idIp': idIp, //id do Ip
+      'createdAt': DateTime.now().toString(),
+      'modifiedAt': DateTime.now().toString(),
       'latitude': lati.value,
       'longitude': longi.value,
       'status': StatusApp.defeito.message,
       'defeito': defeito.value,
       'isChamado': true,
     };
+
     ref.child(id).set(chamado).then((value) async {
       await conIp.alteraStatusIp(ipId, StatusApp.defeito.message);
       cMethods.displaySnackBar("Luminária adicionada!", context);
