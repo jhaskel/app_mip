@@ -18,27 +18,30 @@ defeitoWidged(int index) {
   final ChamadoController conCha = Get.put(ChamadoController());
   return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: GestureDetector(
+    child: InkWell(
       onTap: () async {
-        conCha.defeito(Defeito.values[index].message);
+        conCha.changeDefeito(Defeito.values[index].message,index);
 
-        conCha.indexDefeito(index);
       },
-      child: Container(
-          decoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(color: Colors.amber, width: 2)),
-          width: 80,
-          height: 80,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "${Defeito.values[index].message}",
-              ),
-              Icon(Util.icones[index]),
-            ],
-          )),
+      child: Obx(
+          ()=> Container(
+            decoration: BoxDecoration(
+        color: conCha.indexDefeito == index
+        ? Colors.cyan
+            : Colors.transparent,
+            border: Border.all(color: Colors.amber, width: 2)),
+            width: 80,
+            height: 80,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "${Defeito.values[index].message}",
+                ),
+                Icon(Util.icones[index]),
+              ],
+            )),
+      ),
     ),
   );
 }

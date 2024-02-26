@@ -1,14 +1,9 @@
-import 'package:mip_app/maps/animate_camera.dart';
-import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
-import 'package:mip_app/pages/dashboard.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
-import 'package:mip_app/pages/maps/mapsIp.dart';
-import 'package:mip_app/pages/firestorePage.dart';
-import 'package:mip_app/pages/home_main.dart';
+
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -22,7 +17,7 @@ import 'dart:io' show Platform;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print("passou1");
+
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

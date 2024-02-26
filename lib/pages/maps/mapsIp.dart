@@ -85,6 +85,8 @@ class _MapsIpState extends State<MapsIp> {
                     myLocationEnabled: true,
                     markers: controller.markers,
                     onCameraMove: (pos) {},
+
+
                     onTap: (pos) {
                       controller.changeLat(pos);
                       for (var k in controller.list) {

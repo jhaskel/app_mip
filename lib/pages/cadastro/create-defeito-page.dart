@@ -78,7 +78,7 @@ class _CreateDefeitoPageState extends State<CreateDefeitoPage> {
                       ),
                     ),
                   ),
-                  Container(height: 100, child: AdicionarDefeito()),
+                  Container(height: 100, child: AdicionarDefeito(isMapIp: false,)),
                 ],
               )),
         );

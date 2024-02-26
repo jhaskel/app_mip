@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/widgets/adicionarDefeito.dart';
 import 'package:mip_app/widgets/defeitos_list.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mip_app/widgets/ipDetails.dart';
 
 class IpController extends GetxController {
   final latitude = 0.0.obs;
@@ -65,15 +67,7 @@ class IpController extends GetxController {
   var postes = Map<String, String>().obs;
   List<dynamic> listaIp = [].obs;
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
-  }
+
 
   getIp() async {
     await ref.orderByChild('status').equalTo('normal').get().then((value) {
@@ -103,32 +97,30 @@ class IpController extends GetxController {
   }
 
   buscaPostes() async {
-    print("oba");
+
     loading(true);
-    //  update();
-    String statuss = 'normal';
+      update();
 
     markers.clear();
     list.clear();
     await ref.orderByChild('isAtivo').equalTo(true).onValue.listen((event) {
       if (event.snapshot.exists) {
         maps = event.snapshot.value as Map;
-
         list = maps.values.toList();
-        int i = 0;
 
-        print("listaIp = ${list.length}");
 
         for (var x in list) {
+          loading(true);
           addMarcador(x);
-          i++;
+
         }
+        loading(false);
+
+        update();
       }
     });
 
-    loading(false);
 
-    update();
   }
 
   addMarcador(x) async {
@@ -145,7 +137,6 @@ class IpController extends GetxController {
 
     var latitudeMarcador = x['latitude'];
     var longitudeMarcador = x['longitude'];
-    print("lat mar $latitudeMarcador");
 
     if (latitudeMarcador > boundLatSu &&
         latitudeMarcador < boundLatNo &&
@@ -161,67 +152,30 @@ class IpController extends GetxController {
       } else {
         iconPoste = icones[3];
       }
-      final Uint8List icon = await getBytesFromAsset(iconPoste, 35);
+
 
       markers.add(
         Marker(
           markerId: markerId,
           position: LatLng(x['latitude'], x['longitude']),
           infoWindow: InfoWindow(title: texto),
-          icon: BitmapDescriptor.fromBytes(icon),
-          //   icon: BitmapDescriptor.defaultMarker,
+
+          icon: await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(20.5,20.5)), iconPoste),
           draggable: dragged.value,
           //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
           //   onDrag: (LatLng position) => _onMarkerDrag(markerId, position),
           onTap: () => {
-            Get.bottomSheet(
-              Container(
-                  color: Colors.white,
-                  height: 300,
-                  width: 500,
-                  child: Column(
-                    children: [
-                      Text(
-                        "ops ${x['status']}",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      Text(
-                        "latitude ${x['latitude']}",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      Text(
-                        "longitude ${x['longitude']}",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      Text(
-                        "cod ${x['id']}",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      Container(
-                          height: 120,
-                          child: Padding(
-                              padding: EdgeInsets.all(6),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: Defeito.values.length,
-                                itemBuilder: (context, index) {
-                                  return DefeitoList(
-                                    index: index,
-                                  );
-                                },
-                              ))),
-                    ],
-                  )),
-              barrierColor: Colors.transparent,
-            )
+
+            showDetails(x)
           },
         ),
       );
+      update();
     } else {
       markers.clear();
     }
 
-    update();
+
   }
 
   alteraStatusIp(String idIp, String status) {
@@ -249,9 +203,11 @@ class IpController extends GetxController {
 
   showDetails(ip) {
     Get.bottomSheet(
-      CafeDetails(
-        nome: ip['nome'],
-        imagem: ip['imagem'],
+      IpDetails(
+        id: ip['id'],
+        status: ip['status'],
+        latitude: ip['latitude'],
+        longitude: ip['longitude'],
       ),
       barrierColor: Colors.transparent,
     );

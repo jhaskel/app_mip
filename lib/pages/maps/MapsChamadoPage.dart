@@ -1,4 +1,4 @@
-import 'dart:async';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +7,7 @@ import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
+import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/mapsIp.dart';
 
 class MapsChamadoPage extends StatefulWidget {
@@ -19,12 +20,10 @@ class MapsChamadoPage extends StatefulWidget {
 class _MapsChamadoPageState extends State<MapsChamadoPage> {
   final controller = Get.put(ChamadoController());
 
-  CameraTargetBounds _cameraTargetBounds = CameraTargetBounds.unbounded;
-
   @override
   void initState() {
     super.initState();
-    controller.buscaPostesDefeito();
+   // controller.buscaPostesDefeito();
   }
 
   late GoogleMapController con;
@@ -43,30 +42,42 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                     MaterialPageRoute(builder: (context) => const MapsIp()),
                   );
                 },
-                icon: Icon(Icons.access_time))
+                icon: Icon(Icons.add)),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ControlePage()),
+                  );
+                },
+                icon: Icon(Icons.list))
           ],
         ),
         body: _body(),
-        bottomSheet: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CreateDefeitoPage()),
-            );
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            color: Colors.amber,
-            child: Center(
-                child: Text(
-              "Cadastrar defeito",
-              style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            )),
+        bottomSheet: Container(
+          width: MediaQuery.of(context).size.width,
+
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CreateDefeitoPage()),
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              color: Colors.amber,
+              child: Center(
+                  child: Text(
+                "Cadastrar defeito em Poste",
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
           ),
         ),
       ),
@@ -100,6 +111,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   }
 
   _body() {
+
     return Column(
       children: [
         Expanded(
@@ -114,7 +126,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                       target: controller.position,
                       zoom: 16,
                     ),
-                    cameraTargetBounds: _cameraTargetBounds,
+
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
                     markers: controller.markers,
@@ -205,7 +217,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                             ],
                           ),
                         )
-                      : Container()
+                      : Center()
                 ]);
               }),
         )

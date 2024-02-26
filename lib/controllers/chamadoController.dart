@@ -11,6 +11,8 @@ import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
 import 'dart:ui' as ui;
 
+import 'package:mip_app/pages/consertando_page.dart';
+
 class ChamadoController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Chamado');
   final refIp = FirebaseDatabase.instance.ref('Ip');
@@ -31,7 +33,6 @@ class ChamadoController extends GetxController {
   var longi = 0.0.obs;
   LatLng? markerPosition;
   var dragged = false.obs;
-  String poste = 'assets/poste.png';
 
   List<String> icones = [
     'assets/poste-normal.png',
@@ -104,6 +105,13 @@ class ChamadoController extends GetxController {
     }
   }
 
+  changeDefeito(valor, index) {
+    defeito(valor);
+    indexDefeito(index);
+
+    update();
+  }
+
   changeLat(LatLng target) {
     position2(target);
     update();
@@ -128,10 +136,13 @@ class ChamadoController extends GetxController {
   }
 
   void getChamados(BuildContext context) async {
-    await ref.orderByChild('status').equalTo('defeito').get().then((value) {
+    await ref.orderByChild('status').equalTo('realizado').get().then((value) {
+
       Map pos = value.value as Map;
+
       listaChamados.clear();
       listaChamados = pos.values.toList();
+      print(listaChamados.length);
     });
 
     update();
@@ -140,11 +151,11 @@ class ChamadoController extends GetxController {
   void createChamado(BuildContext context) async {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
 
-    String ipId = idIp.value;
+    String ipIds = idIp.value;
 
     var chamado = {
       'id': id,
-      'idIp': idIp, //id do Ip
+      'idIp': ipIds, //id do Ip
       'createdAt': DateTime.now().toString(),
       'modifiedAt': DateTime.now().toString(),
       'latitude': lati.value,
@@ -155,22 +166,17 @@ class ChamadoController extends GetxController {
     };
 
     ref.child(id).set(chamado).then((value) async {
-      await conIp.alteraStatusIp(ipId, StatusApp.defeito.message);
+      await conIp.alteraStatusIp(ipIds, StatusApp.defeito.message);
       cMethods.displaySnackBar("Luminária adicionada!", context);
-      loading(false);
-      print("codIp ${ipId}");
 
-      conIp.postes.removeWhere((key, value) => key == ipId);
+      conIp.postes.removeWhere((key, value) => key == ipIds);
     }).onError((error, stackTrace) {
       cMethods.displaySnackBar("Erro ao Luminária adicionada!", context);
-      loading(false);
     });
-    clear();
 
     Navigator.pop(context);
-    buscaPostesDefeito();
-
-    update();
+    // buscaPostesDefeito();
+    clear();
   }
 
   removeChamado(String id, BuildContext context) {
@@ -185,7 +191,6 @@ class ChamadoController extends GetxController {
   buscaPostesDefeito() async {
     loading(true);
     update();
-
     markers.clear();
 
     await ref.orderByChild('isChamado').equalTo(true).onValue.listen((event) {
@@ -193,19 +198,14 @@ class ChamadoController extends GetxController {
         Map maps = event.snapshot.value as Map;
         list.clear();
         list = maps.values.toList();
-
-        int i = 0;
-
         for (var x in list) {
           addMarcadorDefeito(x);
-
-          i++;
         }
       }
-    });
 
-    loading(false);
-    update();
+      loading(false);
+      update();
+    });
   }
 
   addMarcadorDefeito(x) async {
@@ -223,15 +223,16 @@ class ChamadoController extends GetxController {
       iconPoste = icones[0];
     }
 
-    final Uint8List icon = await getBytesFromAsset(iconPoste, 35);
     final MarkerId markerId = MarkerId(x['idIp']);
     markers.add(
       Marker(
         markerId: markerId,
         position: LatLng(x['latitude'], x['longitude']),
-        infoWindow: InfoWindow(title: x['defeito']),
-        icon: BitmapDescriptor.fromBytes(icon),
-        //  icon: BitmapDescriptor.defaultMarker,
+        infoWindow: InfoWindow(title: x['idIp']),
+
+        icon: await BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(20.5, 20.5)), iconPoste),
+        //      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptorFactory.HUE_GREEN),
         draggable: dragged.value,
         //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
         //   onDrag: (LatLng position) => _onMarkerDrag(markerId, position),
@@ -252,12 +253,21 @@ class ChamadoController extends GetxController {
             children: [
               Row(
                 children: [
-                  Text(
-                    "Defeito : ${x['defeito']}",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  SizedBox(
-                    width: 10,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "IP : ${x['idIp']}",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Defeito : ${x['defeito']}",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -266,23 +276,44 @@ class ChamadoController extends GetxController {
               ),
               Row(
                 children: [
-                  MaterialButton(
-                    onPressed: () async {
-                      await alterarStatus(x, StatusApp.agendado.message);
-                      Get.back();
-                    },
-                    color: Colors.blue,
-                    child: Text(
-                      "Agendar",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  x['status'] == StatusApp.defeito.message
+                      ? MaterialButton(
+                          onPressed: () async {
+                            await alterarStatus(
+                                x['id'], x['idIp'], StatusApp.agendado.message);
+                            Get.back();
+                          },
+                          color: Colors.blue,
+                          child: Text(
+                            "Agendar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+
                   SizedBox(
                     width: 10,
                   ),
+                  x['status'] != StatusApp.normal.message
+                      ?MaterialButton(
+                    onPressed: () async {
+                      await alterarStatus(
+                          x['id'], x['idIp'], StatusApp.concertando.message);
+                      Get.back();
+
+                      Get.to(ConsertandoPage(x));
+                    },
+                    color: Colors.green,
+                    child: Text(
+                      "Consertar",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ):Container(),
+                  SizedBox(width: 10,),
                   MaterialButton(
                     onPressed: () async {
-                      await alterarStatus(x, StatusApp.normal.message);
+                      await alterarStatus(
+                          x['id'], x['idIp'], StatusApp.normal.message);
                       Get.back();
                     },
                     color: Colors.amber,
@@ -294,28 +325,17 @@ class ChamadoController extends GetxController {
                   SizedBox(
                     width: 10,
                   ),
+
+
                   MaterialButton(
                     onPressed: () async {
-                      await alterarStatus(x, StatusApp.defeito.message);
+                      await alterarStatus(
+                          x['id'], x['idIp'], StatusApp.defeito.message);
                       Get.back();
                     },
                     color: Colors.red,
                     child: Text(
                       "Defeito",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  MaterialButton(
-                    onPressed: () async {
-                      await alterarStatus(x, StatusApp.concertando.message);
-                      Get.back();
-                    },
-                    color: Colors.green,
-                    child: Text(
-                      "Consertar",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -330,7 +350,6 @@ class ChamadoController extends GetxController {
   getIpUnico(String id) async {
     await refIp.child(id).get().then((value) {
       Map ips = value.value as Map;
-
       lati.value = ips['latitude'];
       longi.value = ips['longitude'];
       print("latis = ${lati.value}");
@@ -338,33 +357,47 @@ class ChamadoController extends GetxController {
 
     update();
   }
+  getChamadosConcertado(BuildContext context) async {
+    listaChamados.clear();
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
+    await ref.orderByChild('status').equalTo('realizado').onValue.listen((event) {
+      listaChamados.clear();
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+        print('maps $maps');
+
+       var list=  maps.values.toList();
+        list = maps.values.toList()..sort(((a, b) => (a["idIp"]).compareTo((b["idIp"]))));
+
+        for (var x in list) {
+            listaChamados.add(x);
+        }
+
+        loading(false);
+
+        update();
+      }
+      print("xerado");
+      update();
+    });
   }
 
   clear() {
     idIp("");
     codIp("");
-    loading(false);
+
     defeito("");
     indexDefeito(100);
     defeito("");
     update();
   }
 
-  alterarStatus(x, String message) {
-    ref.child(x['id']).update({
+  alterarStatus(String id, String idIp, String message) {
+    ref.child(id).update({
       "status": message,
       "isChamado": message != 'normal' ? true : false,
       "modifiedAt": DateTime.now().toString()
-    }).then((value) => conIp.alteraStatusIp(x['idIp'], message));
+    }).then((value) => conIp.alteraStatusIp(idIp, message));
     buscaPostesDefeito();
     update();
   }
