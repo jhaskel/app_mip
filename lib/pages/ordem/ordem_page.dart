@@ -5,27 +5,27 @@ import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
 
-class ControlePage extends StatefulWidget {
-  const ControlePage({Key? key}) : super(key: key);
+class OrdemPage extends StatefulWidget {
+  const OrdemPage({Key? key}) : super(key: key);
 
   @override
-  State<ControlePage> createState() => _ControlePageState();
+  State<OrdemPage> createState() => _OrdemPageState();
 }
 
-class _ControlePageState extends State<ControlePage> {
+class _OrdemPageState extends State<OrdemPage> {
   final ChamadoController conCha = Get.put(ChamadoController());
 
   @override
   void initState() {
     super.initState();
-    conCha.getChamadosConcertado(context,"realizado");
+    conCha.getChamadosConcertado(context,"autorizado");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Controle'),
+        title: Text('Ordem'),
       ),
       body: Obx(
         () => Column(

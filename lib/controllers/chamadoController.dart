@@ -357,10 +357,11 @@ class ChamadoController extends GetxController {
 
     update();
   }
-  getChamadosConcertado(BuildContext context) async {
+  getChamadosConcertado(BuildContext context,String stattus) async {
     listaChamados.clear();
 
-    await ref.orderByChild('status').equalTo('realizado').onValue.listen((event) {
+
+    await ref.orderByChild('status').equalTo(stattus).onValue.listen((event) {
       listaChamados.clear();
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;

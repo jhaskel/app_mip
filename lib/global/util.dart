@@ -9,7 +9,10 @@ enum StatusApp {
   realizado(message: 'realizado'), //status da mmanutencao
   lancado(message: 'lancado'), //status da mmanutencao
   autorizado(message: 'autorizado'), //status da mmanutencao
-  encerrado(message: 'encerrado'); //status da mmanutencao
+  gerandoOrdem(message: 'gerandoOrdem'),
+  aguardandoNota(message: 'AguardandoNota'),
+  tesouraria(message: 'tesouraria'), //status da mmanutencao
+  concluido(message: 'concluido'); //status da mmanutencao
 
   const StatusApp({required this.message});
   final String message;

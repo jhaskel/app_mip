@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
-import 'package:mip_app/controllers/consertandoController.dart';
+import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
 
@@ -10,7 +10,7 @@ class ItemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Itens');
 
   final ChamadoController conCha = Get.put(ChamadoController());
-  final ConsertandoController conCon = Get.put(ConsertandoController());
+  final ControleController conCon = Get.put(ControleController());
 
 
   void createItem(BuildContext context, List listaFinal,String message) async {

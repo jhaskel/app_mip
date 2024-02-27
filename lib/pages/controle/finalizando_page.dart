@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mip_app/controllers/consertandoController.dart';
+import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
@@ -15,7 +15,7 @@ class FinalizandoPage extends StatefulWidget {
 }
 
 class _FinalizandoPageState extends State<FinalizandoPage> {
-  final ConsertandoController conCon = Get.put(ConsertandoController());
+  final ControleController conCon = Get.put(ControleController());
   final ItemController conIte = Get.put(ItemController());
 
 
@@ -50,6 +50,8 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
             ) {
 
          conIte.createItem(context,conCon.listaFinal,StatusApp.lancado.message);
+         conCon.index(0);
+
 
 
 

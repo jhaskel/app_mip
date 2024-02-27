@@ -5,27 +5,28 @@ import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
 
-class ControlePage extends StatefulWidget {
-  const ControlePage({Key? key}) : super(key: key);
+class AutorizacaoPage extends StatefulWidget {
+  const AutorizacaoPage({Key? key}) : super(key: key);
 
   @override
-  State<ControlePage> createState() => _ControlePageState();
+  State<AutorizacaoPage> createState() => _AutorizacaoPageState();
 }
 
-class _ControlePageState extends State<ControlePage> {
+class _AutorizacaoPageState extends State<AutorizacaoPage> {
+  final AutorizacaoPage conAut = Get.put(AutorizacaoPage());
   final ChamadoController conCha = Get.put(ChamadoController());
 
   @override
   void initState() {
     super.initState();
-    conCha.getChamadosConcertado(context,"realizado");
+    conCha.getChamadosConcertado(context,"lancado");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Controle'),
+        title: Text('Autorizacao'),
       ),
       body: Obx(
         () => Column(
