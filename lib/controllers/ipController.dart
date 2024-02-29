@@ -7,7 +7,7 @@ import 'package:mip_app/widgets/adicionarDefeito.dart';
 import 'package:mip_app/widgets/defeitos_list.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/widgets/cafe_details.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -67,8 +67,6 @@ class IpController extends GetxController {
   var postes = Map<String, String>().obs;
   List<dynamic> listaIp = [].obs;
 
-
-
   getIp() async {
     await ref.orderByChild('status').equalTo('normal').get().then((value) {
       Map pos = value.value as Map;
@@ -97,9 +95,8 @@ class IpController extends GetxController {
   }
 
   buscaPostes() async {
-
     loading(true);
-      update();
+    update();
 
     markers.clear();
     list.clear();
@@ -108,24 +105,20 @@ class IpController extends GetxController {
         maps = event.snapshot.value as Map;
         list = maps.values.toList();
 
-
         for (var x in list) {
           loading(true);
           addMarcador(x);
-
         }
         loading(false);
 
         update();
       }
     });
-
-
   }
 
   addMarcador(x) async {
     String iconPoste = icones[0];
-    var texto = "pra frente";
+    var texto = x['cod'];
 
     double eixoLat = 0.008529;
     double eixoLong = 0.004324;
@@ -153,29 +146,24 @@ class IpController extends GetxController {
         iconPoste = icones[3];
       }
 
-
       markers.add(
         Marker(
           markerId: markerId,
           position: LatLng(x['latitude'], x['longitude']),
           infoWindow: InfoWindow(title: texto),
 
-          icon: await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(20.5,20.5)), iconPoste),
+          icon: await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(size: Size(20.5, 20.5)), iconPoste),
           draggable: dragged.value,
           //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
           //   onDrag: (LatLng position) => _onMarkerDrag(markerId, position),
-          onTap: () => {
-
-            showDetails(x)
-          },
+          onTap: () => {showDetails(x)},
         ),
       );
       update();
     } else {
       markers.clear();
     }
-
-
   }
 
   alteraStatusIp(String idIp, String status) {

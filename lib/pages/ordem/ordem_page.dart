@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:intl/intl.dart';
+import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/controllers/ordemController.dart';
+import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
+import 'package:mip_app/pages/ordem/ordem_details.dart';
 
 class OrdemPage extends StatefulWidget {
   const OrdemPage({Key? key}) : super(key: key);
@@ -13,12 +17,18 @@ class OrdemPage extends StatefulWidget {
 }
 
 class _OrdemPageState extends State<OrdemPage> {
-  final ChamadoController conCha = Get.put(ChamadoController());
+  final ItemController conIte = Get.put(ItemController());
+  final OrdemController conOrd = Get.put(OrdemController());
+  var formatador = NumberFormat("#,##0.00", "pt_BR");
+
+  String ordem = "";
+  String tipo = "1";
 
   @override
   void initState() {
     super.initState();
-    conCha.getChamadosConcertado(context,"autorizado");
+    conOrd.getOrdem();
+    ordem = '${DateFormat("yyMMdd").format(DateTime.now())}$tipo';
   }
 
   @override
@@ -36,60 +46,64 @@ class _OrdemPageState extends State<OrdemPage> {
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("Data")),
-                  Flexible(flex: 2, fit: FlexFit.tight, child: Text("Defeito")),
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("Ip")),
-                  Flexible(flex: 2, fit: FlexFit.tight, child: Text("Status")),
+                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("data")),
+                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("cod")),
+                  Flexible(flex: 4, fit: FlexFit.tight, child: Text("status")),
+                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("valor")),
                 ],
               ),
             ),
             Expanded(
               child: Container(
-                height: 400,
-                child: Center(
-                  child: conCha.listaChamados.length > 0
-                      ? ListView.builder(
-                          itemCount: conCha.listaChamados.length,
-                          itemBuilder: (context, index) {
+                child: conOrd.listaOrdens.length > 0
+                    ? ListView.builder(
+                        itemCount: conOrd.listaOrdens.length,
+                        itemBuilder: (context, index) {
+                          dynamic item = conOrd.listaOrdens[index];
+                          DateTime crea = DateTime.parse(item['modifiedAt']);
 
-                            var item = conCha.listaChamados[index];
-                            DateTime crea = DateTime.parse(item['modifiedAt']);
+                          var cod = item['cod'];
 
+                          var status = item['status'];
 
-                            return InkWell(
-                              onTap: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) =>  FinalizandoPage(item)),
-                                );
+                          var valor = item['valor'];
 
-                              },
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(DateFormat("dd/MM").format(crea))),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['defeito'])),
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['idIp'])),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['status'])),
-                                ],
-                              ),
-                            );
-                          })
-                      : Center(
-                          child: Text("Nenhum Ip"),
-                        ),
-                ),
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrdemDetails(
+                                        conOrd.listaOrdens[index])),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child:
+                                        Text(DateFormat("dd/MM").format(crea))),
+                                Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(cod)),
+                                Flexible(
+                                    flex: 4,
+                                    fit: FlexFit.tight,
+                                    child: Text(status)),
+                                Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                        'R\$ ${formatador.format(valor)}')),
+                              ],
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: Text("Nenhuma Ordem Encontrada"),
+                      ),
               ),
             ),
           ],

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +8,8 @@ import 'package:mip_app/pages/autorizacao/autorizacao_page.dart';
 import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
 import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/mapsIp.dart';
+import 'package:mip_app/pages/ordem/create_ordem_Itens.dart';
+import 'package:mip_app/pages/ordem/create_ordem_home.dart';
 import 'package:mip_app/pages/ordem/ordem_page.dart';
 
 class MapsChamadoPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   @override
   void initState() {
     super.initState();
-   // controller.buscaPostesDefeito();
+    // controller.buscaPostesDefeito();
   }
 
   late GoogleMapController con;
@@ -49,7 +49,8 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ControlePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ControlePage()),
                   );
                 },
                 icon: Icon(Icons.list)),
@@ -57,7 +58,8 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AutorizacaoPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const AutorizacaoPage()),
                   );
                 },
                 icon: Icon(Icons.ac_unit_outlined)),
@@ -65,17 +67,24 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const OrdemPage()),
+                    MaterialPageRoute(builder: (context) => CreateOrdemHome()),
                   );
                 },
                 icon: Icon(Icons.savings_outlined)),
-
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const OrdemPage()),
+                  );
+                },
+                icon: Icon(Icons.public_off_sharp)),
           ],
         ),
         body: _body(),
-        bottomSheet: Container(
+        bottomNavigationBar: Container(
+          height: 50,
           width: MediaQuery.of(context).size.width,
-
           child: InkWell(
             onTap: () {
               Navigator.push(
@@ -130,7 +139,6 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   }
 
   _body() {
-
     return Column(
       children: [
         Expanded(
@@ -145,7 +153,6 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                       target: controller.position,
                       zoom: 16,
                     ),
-
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
                     markers: controller.markers,

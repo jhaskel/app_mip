@@ -9,7 +9,8 @@ enum StatusApp {
   realizado(message: 'realizado'), //status da mmanutencao
   lancado(message: 'lancado'), //status da mmanutencao
   autorizado(message: 'autorizado'), //status da mmanutencao
-  gerandoOrdem(message: 'gerandoOrdem'),
+  ordemGerada(message: 'ordemGerada'),
+  gerandoSF(message: 'gerandoSF'),
   aguardandoNota(message: 'AguardandoNota'),
   tesouraria(message: 'tesouraria'), //status da mmanutencao
   concluido(message: 'concluido'); //status da mmanutencao
@@ -43,4 +44,32 @@ class Util {
     MdiIcons.jira,
     MdiIcons.sack,
   ];
+
+  static List roles = <String>[
+    "user",
+    "operador",
+    "supervisor",
+    "admin",
+    "dev"
+  ];
+
+  static List cores = <Color>[
+    Colors.yellow,
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.yellow,
+    Colors.purple,
+    Colors.orange,
+  ];
+
+  static final Map<String, Color> corStatus = {
+    StatusApp.normal.message: cores[0],
+    StatusApp.defeito.message: cores[1],
+    StatusApp.agendado.message: cores[2],
+    StatusApp.concertando.message: cores[3],
+    StatusApp.realizado.message: cores[4],
+    StatusApp.lancado.message: cores[5],
+    StatusApp.realizado.message: cores[6]
+  };
 }

@@ -22,26 +22,28 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
 
   @override
   void initState() {
+    super.initState();
     conCon.getItens();
     conCon.getItensUtilizados(widget.chamado['id'].toString());
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Finalizar Concerto ${widget.chamado['idIp']}"),
+        title: Text(
+          "Finalizando Consertos ${widget.chamado['idIp']}",
+        ),
       ),
       body: _body(context),
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.amber,
         child: InkWell(
-            onTap: () async {
-              await conIte.createItem(
+            onTap: () {
+              conIte.createItem(
                   context, conCon.listaFinal, StatusApp.lancado.message);
-              Navigator.pop(context);
+              //   conCon.index(0);
             },
             child: Center(
                 child: Text(
@@ -113,8 +115,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                           var item = conCon.listaItens[index];
                           final nome = item['nome'].toString();
 
-                          return ListaItensLicitados(
-                              item, nome, 1, widget.chamado);
+                          ListaItensLicitados(item, nome, 1, widget.chamado);
                         }),
                   ),
                 )
@@ -129,8 +130,8 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                         itemBuilder: (context, index) {
                           var item = conCon.listaServicos[index];
                           final nome = item['nome'].toString();
-                          return ListaItensLicitados(
-                              item, nome, 2, widget.chamado);
+
+                          ListaItensLicitados(item, nome, 2, widget.chamado);
                         }),
                   ),
                 ),
@@ -150,10 +151,11 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.amber, width: 2)),
-                  padding: EdgeInsets.all(5),
-                  child: ListaItensServicosUtilizados()),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.amber, width: 2)),
+                padding: EdgeInsets.all(5),
+                child: ListaItensServicosUtilizados(),
+              ),
             ),
           )
         ],

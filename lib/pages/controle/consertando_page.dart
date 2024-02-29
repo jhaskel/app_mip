@@ -7,16 +7,16 @@ import 'package:mip_app/global/util.dart';
 import 'package:mip_app/widgets/listaItensLicitados.dart';
 import 'package:mip_app/widgets/listaItensServicosUtilizados.dart';
 
-class FinalizandoPage extends StatefulWidget {
+class ConsertandoPage extends StatefulWidget {
   dynamic chamado;
 
-  FinalizandoPage(this.chamado, {Key? key}) : super(key: key);
+  ConsertandoPage(this.chamado, {Key? key}) : super(key: key);
 
   @override
-  State<FinalizandoPage> createState() => _FinalizandoPageState();
+  State<ConsertandoPage> createState() => _ConsertandoPageState();
 }
 
-class _FinalizandoPageState extends State<FinalizandoPage> {
+class _ConsertandoPageState extends State<ConsertandoPage> {
   final ControleController conCon = Get.put(ControleController());
   final ItemController conIte = Get.put(ItemController());
 
@@ -24,6 +24,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
   void initState() {
     conCon.getItens();
     conCon.getItensUtilizados(widget.chamado['id'].toString());
+
     super.initState();
   }
 
@@ -31,21 +32,20 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Finalizar Concerto ${widget.chamado['idIp']}"),
+        title: Text("Consertar Luminaria ${widget.chamado['idIp']}"),
       ),
       body: _body(context),
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.amber,
         child: InkWell(
-            onTap: () async {
-              await conIte.createItem(
-                  context, conCon.listaFinal, StatusApp.lancado.message);
-              Navigator.pop(context);
+            onTap: () {
+              conIte.createItem(
+                  context, conCon.listaFinal, StatusApp.realizado.message);
             },
             child: Center(
                 child: Text(
-              "Finalizar Lançamento",
+              "Finalizar Concerto",
               style: AppTextStyles.body20,
             ))),
       ),

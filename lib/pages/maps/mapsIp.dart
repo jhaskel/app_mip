@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/pages/cadastro/ip_page.dart';
 import 'package:mip_app/repositories/cafes_repositories.dart';
 
 class MapsIp extends StatefulWidget {
@@ -34,36 +35,22 @@ class _MapsIpState extends State<MapsIp> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text("Postes")),
+        appBar: AppBar(
+          title: Text("Postes"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => IpPage()),
+                  );
+                },
+                icon: Icon(Icons.post_add))
+          ],
+        ),
         body: _body(),
       ),
     );
-    /*  return StreamBuilder(
-        stream: controller.event(),
-        builder: (context, snapshot) {
-          Map<dynamic, dynamic> maps = snapshot.data!.snapshot.value as Map;
-          List<dynamic> list = [];
-          list.clear();
-          list = maps.values.toList();
-          controller.dispara(list);
-          return Scaffold(
-            appBar: AppBar(
-              title: Obx(() => Text(controller.textAppBar.value)),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.accessibility,
-                    color: Colors.amber,
-                  ),
-                  onPressed: () {
-                    controller.changeValor();
-                  },
-                ),
-              ],
-            ),
-            body: _body(controller, list),
-          );
-        });*/
   }
 
   _body() {
@@ -85,8 +72,6 @@ class _MapsIpState extends State<MapsIp> {
                     myLocationEnabled: true,
                     markers: controller.markers,
                     onCameraMove: (pos) {},
-
-
                     onTap: (pos) {
                       controller.changeLat(pos);
                       for (var k in controller.list) {

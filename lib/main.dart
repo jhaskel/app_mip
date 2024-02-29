@@ -1,10 +1,10 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
+import 'package:mip_app/pages/maps/mapsIp.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,6 @@ import 'dart:io' show Platform;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -33,8 +32,6 @@ void main() async {
       }
     });
   }
-
-  print("passou3");
 
   runApp(const MyApp());
 }
@@ -58,6 +55,7 @@ class MyApp extends StatelessWidget {
         //   home: HomeMain(),
         //  home: DatabasePage(),
         home: MapsChamadoPage(),
+        //home: MapsIp(),
         //  home: const LoginPage(),
       ),
     );

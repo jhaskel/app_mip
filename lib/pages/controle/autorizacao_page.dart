@@ -5,23 +5,24 @@ import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 
-class ConsertandoPage extends StatefulWidget {
+class FinalizandoPage extends StatefulWidget {
   dynamic chamado;
 
-  ConsertandoPage(this.chamado, {Key? key}) : super(key: key);
+  FinalizandoPage(this.chamado, {Key? key}) : super(key: key);
 
   @override
-  State<ConsertandoPage> createState() => _ConsertandoPageState();
+  State<FinalizandoPage> createState() => _FinalizandoPageState();
 }
 
-class _ConsertandoPageState extends State<ConsertandoPage> {
+class _FinalizandoPageState extends State<FinalizandoPage> {
   final ControleController conCon = Get.put(ControleController());
   final ItemController conIte = Get.put(ItemController());
 
-
   @override
   void initState() {
+    print("idchamdo ${widget.chamado['id']}");
     conCon.getItens();
+    conCon.getItensUtilizados(widget.chamado['id'].toString());
     super.initState();
   }
 
@@ -29,20 +30,35 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Consertar Luminaria ${widget.chamado['idIp']}"),
+        title: Text(
+          "Autorizando Conserto ${widget.chamado['idIp']}",
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  conCon.getItens();
+                  print("de novo");
+                });
+              },
+              child: Text("de novo"))
+        ],
       ),
       body: _body(context),
       bottomNavigationBar: Container(
         height: 50,
         color: Colors.amber,
-        child: InkWell(onTap: (
-
-            ) {
-          conIte.createItem(context,conCon.listaFinal,StatusApp.realizado.message);
-
-
-
-        }, child: Center(child: Text("Finalizar Concerto",style: AppTextStyles.body20,))),
+        child: InkWell(
+            onTap: () {
+              conIte.createItem(
+                  context, conCon.listaFinal, StatusApp.lancado.message);
+              conCon.index(0);
+            },
+            child: Center(
+                child: Text(
+              "Finalizar Lançamento",
+              style: AppTextStyles.body20,
+            ))),
       ),
     );
   }
@@ -52,7 +68,6 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
       () => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-
           Container(
             height: 50,
             child: Row(
@@ -98,10 +113,11 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
           ),
           conCon.index == 0
               ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     height: 250,
-                            decoration: BoxDecoration( border: Border.all(color: Colors.amber, width: 2)),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.amber, width: 2)),
                     child: ListView.builder(
                         itemCount: conCon.listaItens.length,
                         itemBuilder: (context, index) {
@@ -113,7 +129,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                 String chamado = widget.chamado['id'];
                                 String nome = item['nome'].toString();
 
-                                String created = DateTime.now().toIso8601String();
+                                String created =
+                                    DateTime.now().toIso8601String();
 
                                 String id = DateTime.now()
                                     .millisecondsSinceEpoch
@@ -121,7 +138,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                 String idIp = widget.chamado['idIp'];
 
                                 String unidade = item['unidade'].toString();
-                                String operador = 'paulo almeida';
+                                String operador = 'paulo Haskel';
                                 String ordem = '20240214-1';
                                 final nomeitem = item['nome'].toString();
                                 double valor = item['valor'];
@@ -133,8 +150,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                 if (estoque <= 0) {
                                   Get.defaultDialog(
                                       title: "OOps",
-                                      content: Text('Estoque é insuficiente')
-                                  );
+                                      content: Text('Estoque é insuficiente'));
                                 } else {
                                   print("Estoque suficiente");
                                   var iten = {
@@ -146,7 +162,6 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                     'idIp': idIp,
                                     'idItem': idItem,
                                     'estoque': estoque,
-
                                     'operador': operador,
                                     'tipo': 1,
                                     'ordem': ordem,
@@ -156,39 +171,39 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                     'total': valor,
                                   };
 
-
                                   conCon.adicionarItemLicitado(iten);
                                 }
                               },
                               child: Text('$nome'));
                         }),
                   ),
-              )
+                )
               : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     height: 250,
-                            decoration: BoxDecoration( border: Border.all(color: Colors.amber, width: 2)),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.amber, width: 2)),
                     child: ListView.builder(
                         itemCount: conCon.listaServicos.length,
                         itemBuilder: (context, index) {
                           var item = conCon.listaServicos[index];
                           final nome = item['nome'].toString();
 
-
                           return InkWell(
                               onTap: () {
                                 String chamado = widget.chamado['id'];
                                 String nome = item['nome'].toString();
 
-                                String created = DateTime.now().toIso8601String();
+                                String created =
+                                    DateTime.now().toIso8601String();
 
                                 String id = DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString();
                                 String idIp = widget.chamado['idIp'];
 
-                                String operador = 'paulo almeida';
+                                String operador = 'paulo kjhj';
                                 String ordem = '20240214-2';
                                 final nomeitem = item['nome'].toString();
                                 String idItem = item['id'].toString();
@@ -203,12 +218,9 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
 
                                 print("quantidade $quantidade");
                                 if (estoque <= 0) {
-
                                   Get.defaultDialog(
-                                    title: "OOps",
-                                    content: Text('Estoque é insuficiente')
-                                  );
-
+                                      title: "OOps",
+                                      content: Text('Estoque é insuficiente'));
                                 } else {
                                   print("Estoque suficiente");
                                   var iten = {
@@ -230,14 +242,13 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                     'total': valor,
                                   };
 
-
                                   conCon.adicionarItemLicitado(iten);
                                 }
                               },
                               child: Text('$nome'));
                         }),
                   ),
-              ),
+                ),
           Container(
             height: 30,
             child: Center(
@@ -254,28 +265,29 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                decoration: BoxDecoration( border: Border.all(color: Colors.amber, width: 2)),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.amber, width: 2)),
                 padding: EdgeInsets.all(5),
-
                 child: ListView.builder(
                     itemCount: conCon.listaFinal.length,
                     itemBuilder: (context, index) {
-
                       var item = conCon.listaFinal;
-
                       int quant = (item[index]['quant']);
-
 
                       return InkWell(
                           onTap: () {
-                            conCon.removerItemLicitado(conCon.listaFinal[index]);
+                            conCon
+                                .removerItemLicitado(conCon.listaFinal[index]);
                           },
                           child: Row(
                             children: [
                               Flexible(
                                   flex: 10,
                                   fit: FlexFit.tight,
-                                  child: Text('${item[index]['nome']}',overflow: TextOverflow.ellipsis,)),
+                                  child: Text(
+                                    '${item[index]['nome']}',
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                               Flexible(
                                   flex: 1,
                                   fit: FlexFit.tight,
@@ -290,11 +302,10 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                             child: InkWell(
                                                 onTap: () async {
                                                   conCon.alteraQuant(
-                                                      conCon.listaFinal[index],index,
+                                                      conCon.listaFinal[index],
+                                                      index,
                                                       false);
-                                                  setState(() {
-
-                                                  });
+                                                  setState(() {});
                                                 },
                                                 child: Icon(Icons
                                                     .indeterminate_check_box))),
@@ -303,7 +314,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                         padding: const EdgeInsets.all(1.0),
                                         child: Container(
                                             child: Text("${quant}",
-                                                style: AppTextStyles.heading15)),
+                                                style:
+                                                    AppTextStyles.heading15)),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(1.0),
@@ -311,12 +323,11 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                                             child: InkWell(
                                                 onTap: () async {
                                                   conCon.alteraQuant(
-                                                      conCon.listaFinal[index],index,
-                                                      true);
-                                                  setState(() {
-
-                                                  });
-
+                                                    conCon.listaFinal[index],
+                                                    index,
+                                                    true,
+                                                  );
+                                                  setState(() {});
                                                 },
                                                 child: Icon(Icons.add_box))),
                                       ),
@@ -332,6 +343,4 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
       ),
     );
   }
-
-
 }

@@ -1,69 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/global/app_text_styles.dart';
 
 class AdicionarDefeito extends StatelessWidget {
-   bool isMapIp;
+  bool isMapIp;
 
-  AdicionarDefeito( {required this.isMapIp});
+  AdicionarDefeito({required this.isMapIp});
   final ChamadoController conCha = Get.put(ChamadoController());
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      Obx(()=>
-         Scaffold(
+    return Obx(
+      () => Scaffold(
         body: _body(context),
-            ),
-      );
-
-
+      ),
+    );
   }
 
   _body(BuildContext context) {
     print("${conCha.defeito.value}");
     print("${isMapIp}");
 
-    if(isMapIp==true){
+    if (isMapIp == true) {
       return conCha.defeito.value == ''
           ? Container(
-        height: 100,
-        width: MediaQuery.of(context).size.width,
-        child: MaterialButton(
-          color: Colors.grey,
-          onPressed:null,
-          child: Text("Selecione um defeito"),
-        ),
-      )
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              child: MaterialButton(
+                color: Colors.grey,
+                onPressed: null,
+                child: Text("Selecione um defeito"),
+              ),
+            )
           : Container(
-        height: 100,
-        width: MediaQuery.of(context).size.width,
-        child: MaterialButton(
-          color: Colors.amber,
-          onPressed: () async {
-            conCha.createChamado(context);
-          },
-          child: Text("Adicionar"),
-        ),
-      );
-
-    }else{
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              child: MaterialButton(
+                color: Colors.amber,
+                onPressed: () async {
+                  conCha.createChamado(context);
+                },
+                child: Text(
+                  "Adicionar",
+                  style: AppTextStyles.heading,
+                ),
+              ),
+            );
+    } else {
       return conCha.defeito.value == '' || conCha.idIp.value == ""
           ? Container()
           : Container(
-        height: 100,
-        width: MediaQuery.of(context).size.width,
-        child: MaterialButton(
-          color: Colors.amber,
-          onPressed: () async {
-            conCha.createChamado(context);
-          },
-          child: Text("Adicionar"),
-        ),
-      );
-
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              child: MaterialButton(
+                color: Colors.amber,
+                onPressed: () async {
+                  conCha.createChamado(context);
+                },
+                child: Text("Adicionar"),
+              ),
+            );
     }
-
   }
 }
