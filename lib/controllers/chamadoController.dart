@@ -231,7 +231,7 @@ class ChamadoController extends GetxController {
         infoWindow: InfoWindow(title: x['idIp']),
 
         icon: await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(2, 2)), iconPoste),
+            ImageConfiguration(size: Size(20, 20)), iconPoste),
         //   icon: BitmapDescriptor.defaultMarkerWithHue(250),
         draggable: dragged.value,
         //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
