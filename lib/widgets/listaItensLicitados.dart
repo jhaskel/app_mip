@@ -29,7 +29,6 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
             Get.defaultDialog(
                 title: "OOps", content: Text('Estoque é insuficiente'));
           } else {
-            print("Estoque suficiente");
             var iten = {
               'chamado': chamado['id'],
               'nome': nome,
@@ -52,6 +51,22 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
             conCon.adicionarItemLicitado(iten);
           }
         },
-        child: Text('$nome'));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                '$nome',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Text('${item['unidade']}'),
+            ),
+            Divider(
+              thickness: 1,
+            )
+          ],
+        ));
   }
 }

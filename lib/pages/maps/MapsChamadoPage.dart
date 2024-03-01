@@ -4,8 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:mip_app/global/util.dart';
-import 'package:mip_app/pages/autorizacao/autorizacao_page.dart';
-import 'package:mip_app/pages/cadastro/create-defeito-page.dart';
+import 'package:mip_app/pages/controle/autorizacao_page.dart';
+import 'package:mip_app/pages/chamados/create-defeito-page.dart';
 import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/ordem/create_ordem_Itens.dart';

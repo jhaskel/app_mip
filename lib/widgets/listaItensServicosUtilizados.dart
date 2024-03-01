@@ -24,61 +24,59 @@ class _ListaItensServicosUtilizadosState
           var item = conCon.listaFinal;
           int quant = (item[index]['quant']);
           return InkWell(
+              onLongPress: () {
+                Get.defaultDialog(
+                    title: "Nome do Item",
+                    content: Text('${item[index]['nome']}'));
+              },
               onTap: () {
                 conCon.removerItemLicitado(conCon.listaFinal[index]);
               },
-              child: Row(
+              child: Column(
                 children: [
-                  Flexible(
-                      flex: 10,
-                      fit: FlexFit.tight,
-                      child: Text(
-                        '${item[index]['nome']}',
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                  Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: Text('${item[index]['unidade']}')),
-                  Flexible(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
-                                child: InkWell(
-                                    onTap: () async {
-                                      conCon.alteraQuant(
-                                          conCon.listaFinal[index],
-                                          index,
-                                          false);
-                                      setState(() {});
-                                    },
-                                    child:
-                                        Icon(Icons.indeterminate_check_box))),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
-                                child: Text("${quant}",
-                                    style: AppTextStyles.heading15)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
-                                child: InkWell(
-                                    onTap: () async {
-                                      conCon.alteraQuant(
-                                          conCon.listaFinal[index],
-                                          index,
-                                          true);
-                                      setState(() {});
-                                    },
-                                    child: Icon(Icons.add_box))),
-                          ),
-                        ],
-                      )),
+                  ListTile(
+                    dense: false,
+                    title: Text(
+                      '${item[index]['nome']}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                              child: InkWell(
+                                  onTap: () async {
+                                    conCon.alteraQuant(
+                                        conCon.listaFinal[index], index, false);
+                                    setState(() {});
+                                  },
+                                  child: Icon(Icons.indeterminate_check_box))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                              child: Text("${quant}",
+                                  style: AppTextStyles.heading15White)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                              child: InkWell(
+                                  onTap: () async {
+                                    conCon.alteraQuant(
+                                        conCon.listaFinal[index], index, true);
+                                    setState(() {});
+                                  },
+                                  child: Icon(Icons.add_box))),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  )
                 ],
               ));
         });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
+import 'package:mip_app/global/util.dart';
 
 class ItemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Itens');
@@ -12,10 +13,13 @@ class ItemController extends GetxController {
   final ControleController conCon = Get.put(ControleController());
 
   List<dynamic> listaItens = [].obs;
+  List<dynamic> listaItensChamado = [].obs;
   List<dynamic> listaFiltrada = [].obs;
   var totalOrdem = 0.0.obs;
+  var textDetail = "Itens utilizados no conserto".obs;
+  var totalChamado = 0.0.obs;
 
-  getItens(String ordem) async {
+  getItensByTipo(String ordem) async {
     await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
       listaItens.clear();
       listaFiltrada.clear();
@@ -66,6 +70,25 @@ class ItemController extends GetxController {
     });
   }
 
+  getItensByChamado(String chamado) async {
+    print("id $chamado");
+    await ref.orderByChild('chamado').equalTo(chamado).onValue.listen((event) {
+      listaItensChamado.clear();
+
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+
+        listaItensChamado = maps.values.toList()
+          ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
+
+        totalChamado.value =
+            listaItensChamado.map((e) => e['total']).reduce((v, e) => v + e);
+
+        update();
+      }
+    });
+  }
+
   createItem(BuildContext context, List listaFinal, String message) async {
     for (var x in listaFinal) {
       String id = x['id'].toString();
@@ -89,7 +112,11 @@ class ItemController extends GetxController {
     }
 
     conCha.buscaPostesDefeito();
-    Navigator.pop(context);
+
+    if (message != StatusApp.lancado.message) {
+      Navigator.pop(context);
+    }
+
     // clear();
   }
 

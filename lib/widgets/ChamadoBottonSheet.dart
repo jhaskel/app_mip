@@ -5,16 +5,16 @@ import 'package:mip_app/pages/controle/consertando_page.dart';
 import '../global/util.dart';
 
 // ignore: must_be_immutable
-class ChamadoDetails extends StatefulWidget {
+class ChamadoBottonSheet extends StatefulWidget {
   dynamic chamado;
 
-  ChamadoDetails({required this.chamado});
+  ChamadoBottonSheet({required this.chamado});
 
   @override
-  State<ChamadoDetails> createState() => _ChamadoDetailsState();
+  State<ChamadoBottonSheet> createState() => _ChamadoBottonSheetState();
 }
 
-class _ChamadoDetailsState extends State<ChamadoDetails> {
+class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
   final ChamadoController conCha = Get.put(ChamadoController());
 
   @override

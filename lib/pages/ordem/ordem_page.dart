@@ -33,12 +33,12 @@ class _OrdemPageState extends State<OrdemPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Ordem'),
-      ),
-      body: Obx(
-        () => Column(
+    return Obx(
+      () => Scaffold(
+        appBar: AppBar(
+          title: Text(conOrd.nomePage.value),
+        ),
+        body: Column(
           children: [
             Container(
               height: 50,

@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:mip_app/controllers/chamadoController.dart';
-import 'package:mip_app/widgets/adicionarDefeito.dart';
-import 'package:mip_app/widgets/defeitos_list.dart';
+
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
 
@@ -23,6 +20,12 @@ class IpController extends GetxController {
   var longi = 0.0.obs;
   var valor = 2.obs;
   var textPage = "Ips".obs;
+  var quantIp = 0.obs;
+  var quantIpNormal = 0.obs;
+  var quantIpDefeito = 0.obs;
+  var quantIpAgendado = 0.obs;
+  var quantIpConcertando = 0.obs;
+  var quantIpRealizado = 0.obs;
 
   late StreamSubscription<Position> positionStream;
   LatLng _position = LatLng(-27.35661, -49.88283);
@@ -68,17 +71,30 @@ class IpController extends GetxController {
   List<dynamic> listaIp = [].obs;
 
   getIp() async {
-    await ref.orderByChild('status').equalTo('normal').get().then((value) {
+    await ref.get().then((value) {
       Map pos = value.value as Map;
       final sorted = Map.fromEntries(
           pos.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
 
       listaIp.clear();
       listaIp = sorted.values.toList();
+      quantIp(listaIp.length);
+      quantIpNormal(0);
+      quantIpAgendado(0);
+      quantIpDefeito(0);
 
       for (var x in listaIp) {
-        if (x['status'] != "defeito") {
+        if (x['status'] == "normal") {
           postes.addAll({x['id']: x['cod']});
+
+          quantIpNormal.value++;
+        }
+        if (x['status'] == "defeito") {
+          quantIpDefeito.value++;
+        }
+
+        if (x['status'] == "agendado") {
+          quantIpAgendado.value++;
         }
       }
     });
@@ -240,7 +256,7 @@ class IpController extends GetxController {
       return Future.error('Autorize o acesso à localização nas configurações.');
     }
 
-    return await Geolocator.getCurrentPosition();
+    return await Geolocator.getCurrentPosition().then((value) => buscaPostes());
   }
 
   getPosicao() async {
@@ -250,6 +266,7 @@ class IpController extends GetxController {
       longitude.value = posicao.longitude;
       position2(LatLng(latitude.value, longitude.value));
       print("pos2 $position2");
+      buscaPostes();
 
       _mapsController.animateCamera(
           CameraUpdate.newLatLng(LatLng(latitude.value, longitude.value)));

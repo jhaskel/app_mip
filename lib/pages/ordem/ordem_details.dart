@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
-import 'package:mip_app/pages/controle/finalizando_page.dart';
+import 'package:mip_app/global/app_text_styles.dart';
 
 // ignore: must_be_immutable
 class OrdemDetails extends StatefulWidget {
@@ -29,7 +29,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
     super.initState();
 
     for (var x in item['itensOrdem']) {
-      print(x);
       var cod = "";
       if (x['cod'] != null) {
         cod = x['cod'].toString();
@@ -46,8 +45,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
 
       listaItens.add(s);
     }
-
-    //listaItens.add(ix);
   }
 
   @override
@@ -55,55 +52,161 @@ class _OrdemDetailsState extends State<OrdemDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalhe da Ordem ${item['cod']}'),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf_sharp))
+        ],
       ),
       body: Column(
         children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            height: 210,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: Colors.amber, width: 2)),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text("cod"),
+                  ),
+                  Container(
+                    child: Text(item['cod']),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text("valor"),
+                  ),
+                  Container(
+                    child: Text('R\$ ${formatador.format(item['valor'])}'),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text("Solicitação de Fornecimento"),
+                  ),
+                  Container(
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text("emitir"),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text("Nota Fiscal"),
+                  ),
+                  Container(
+                    child: Tooltip(
+                      message: 'Visualizar',
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.remove_red_eye_sharp),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text("Status"),
+                  ),
+                  Container(
+                    child: TextButton(
+                        onPressed: () {}, child: Text(item['status'])),
+                  ),
+                ],
+              ),
+            ]),
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Container(
             height: 50,
             color: Colors.grey,
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
-                Flexible(flex: 1, fit: FlexFit.tight, child: Text("data")),
-                Flexible(flex: 1, fit: FlexFit.tight, child: Text("cod")),
-                Flexible(flex: 4, fit: FlexFit.tight, child: Text("status")),
-                Flexible(flex: 1, fit: FlexFit.tight, child: Text("valor")),
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "cod",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
+                Flexible(
+                    flex: 4,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "nome",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "unidade",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "quantidade",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "valor",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
+                Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Text(
+                      "total",
+                      style: AppTextStyles.bodyWhite20,
+                    )),
               ],
             ),
           ),
-          Container(
-              height: 150,
-              child: ListView.builder(
-                  itemCount: conOrd.listaOrdens.length,
-                  itemBuilder: (context, index) {
-                    var item = conOrd.listaOrdens[index];
-                    DateTime crea = DateTime.parse(item['modifiedAt']);
-
-                    var cod = item['cod'];
-
-                    var status = item['status'];
-
-                    var valor = item['valor'];
-
-                    return Row(
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(DateFormat("dd/MM").format(crea))),
-                        Flexible(flex: 1, fit: FlexFit.tight, child: Text(cod)),
-                        Flexible(
-                            flex: 4, fit: FlexFit.tight, child: Text(status)),
-                        Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text('R\$ ${formatador.format(valor)}')),
-                      ],
-                    );
-                  })),
           Expanded(
             child: Container(
-                color: Colors.white24,
+                padding: EdgeInsets.all(10),
                 child: ListView.builder(
                     itemCount: listaItens.length,
                     itemBuilder: (context, index) {
@@ -116,32 +219,45 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                       var valor = item['valor'];
                       var total = item['total'];
 
-                      return Row(
+                      return Column(
                         children: [
-                          Flexible(
-                              flex: 1, fit: FlexFit.tight, child: Text(cod)),
-                          Flexible(
-                              flex: 4, fit: FlexFit.tight, child: Text(nome)),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Text(unidade)),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Text(quantidade.toString())),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Text('R\$ ${formatador.format(valor)}')),
-                          Flexible(
-                              flex: 1,
-                              fit: FlexFit.tight,
-                              child: Text('R\$ ${formatador.format(total)}')),
+                          Row(
+                            children: [
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: Text(cod)),
+                              Flexible(
+                                  flex: 4,
+                                  fit: FlexFit.tight,
+                                  child: Text(nome)),
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: Text(unidade)),
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: Text(quantidade.toString())),
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child:
+                                      Text('R\$ ${formatador.format(valor)}')),
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child:
+                                      Text('R\$ ${formatador.format(total)}')),
+                            ],
+                          ),
+                          Divider(
+                            thickness: 1,
+                          )
                         ],
                       );
                     })),
-          ),
+          )
         ],
       ),
     );

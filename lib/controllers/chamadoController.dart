@@ -9,10 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'dart:ui' as ui;
-
-import 'package:mip_app/pages/controle/consertando_page.dart';
-import 'package:mip_app/widgets/ChamadoDetails.dart';
+import 'package:mip_app/pages/chamados/chamado_details.dart';
+import 'package:mip_app/widgets/ChamadoBottonSheet.dart';
 
 class ChamadoController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Chamado');
@@ -93,6 +91,7 @@ class ChamadoController extends GetxController {
       final posicao = await _posicaoAtual();
       latitude.value = posicao.latitude;
       longitude.value = posicao.longitude;
+
       _mapsController.animateCamera(
           CameraUpdate.newLatLng(LatLng(latitude.value, longitude.value)));
     } catch (e) {
@@ -245,7 +244,7 @@ class ChamadoController extends GetxController {
 
   Future<dynamic> bottonSheet(chamado) async {
     return Get.bottomSheet(
-      ChamadoDetails(
+      ChamadoBottonSheet(
         chamado: chamado,
       ),
       barrierColor: Colors.transparent,

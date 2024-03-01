@@ -7,6 +7,8 @@ import 'package:mip_app/controllers/ordemController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
+import 'package:mip_app/pages/ordem/widget/cabecalho_create_ordem.dart';
+import 'package:mip_app/pages/ordem/widget/lista_itens.dart';
 
 class CreateOrdemServicos extends StatefulWidget {
   const CreateOrdemServicos({Key? key}) : super(key: key);
@@ -26,7 +28,7 @@ class _CreateOrdemServicosState extends State<CreateOrdemServicos> {
   @override
   void initState() {
     super.initState();
-    conIte.getItens(tipo);
+    conIte.getItensByTipo(tipo);
     ordem = '${DateFormat("yyMMdd").format(DateTime.now())}$tipo';
   }
 
@@ -78,22 +80,7 @@ class _CreateOrdemServicosState extends State<CreateOrdemServicos> {
       body: Obx(
         () => Column(
           children: [
-            Container(
-              height: 50,
-              color: Colors.grey,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("cod")),
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("unidade")),
-                  Flexible(flex: 4, fit: FlexFit.tight, child: Text("Nome")),
-                  Flexible(
-                      flex: 1, fit: FlexFit.tight, child: Text("quantidade")),
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("valor")),
-                  Flexible(flex: 1, fit: FlexFit.tight, child: Text("total")),
-                ],
-              ),
-            ),
+            cabecalhoCreateOrdem(),
             Expanded(
               child: Container(
                 child: conIte.listaFiltrada.length > 0
@@ -101,53 +88,29 @@ class _CreateOrdemServicosState extends State<CreateOrdemServicos> {
                         itemCount: conIte.listaFiltrada.length,
                         itemBuilder: (context, index) {
                           var item = conIte.listaFiltrada[index];
-                          //   DateTime crea = DateTime.parse(item['modifiedAt']);
 
                           var ip = item['cod'];
-
                           var nome = item['nome'];
-
                           var unidade = item['unidade'];
-
                           var quantidade = item['quant'];
-
                           var valor = item['valor'];
-
                           var total = item['total'];
 
-                          return Row(
+                          return Column(
                             children: [
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(ip == null ? "" : ip.toString())),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(unidade)),
-                              Flexible(
-                                  flex: 4,
-                                  fit: FlexFit.tight,
-                                  child: Text(nome)),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(quantidade.toString())),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child:
-                                      Text('R\$ ${formatador.format(valor)}')),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child:
-                                      Text('R\$ ${formatador.format(total)}')),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListaItens(ip, unidade, nome, quantidade,
+                                    valor, total),
+                              ),
+                              Divider(
+                                thickness: 1,
+                              )
                             ],
                           );
                         })
                     : Center(
-                        child: Text("Nenhum Ip"),
+                        child: Text("Nenhum item encontrado!"),
                       ),
               ),
             ),

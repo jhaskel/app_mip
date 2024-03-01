@@ -28,7 +28,7 @@ class _CreateOrdemHomeState extends State<CreateOrdemHome>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Gerar Ordem'),
+          title: Text('Gerar Ordens'),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -48,7 +48,7 @@ class _CreateOrdemHomeState extends State<CreateOrdemHome>
                     text: "Ordem Itens",
                   ),
                   Tab(
-                    text: "Ordem de Servilos",
+                    text: "Ordem de Serviços",
                   ),
                 ],
                 onTap: (position) {

@@ -7,6 +7,7 @@ class OrdemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Ordens');
   CommonMethods cMethods = CommonMethods();
   List<dynamic> listaOrdens = [].obs;
+  var nomePage = 'Ordens'.obs;
 
   createdOrdem(Map<String, Object> ord, BuildContext context, String ordem) {
     ref.child(ordem).set(ord).then((value) async {
