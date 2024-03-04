@@ -90,6 +90,7 @@ class ItemController extends GetxController {
   }
 
   createItem(BuildContext context, List listaFinal, String message) async {
+    int ordenar = 0;
     for (var x in listaFinal) {
       String id = x['id'].toString();
       String idIp = x['idIp'].toString();
@@ -97,12 +98,15 @@ class ItemController extends GetxController {
       int quant = x['quant'];
       int estoque = x['estoque'];
       String idItem = x['idItem'];
+      ordenar = x['ordenacao'] + 1;
+
+      print("ordena $ordenar");
 
       int est = estoque - quant;
 
       ref.child(id).set(x).then((value) async {
         await conCha.alterarStatus(chamado, idIp, message);
-        await conCon.alteraEstoque(idItem, est);
+        await conCon.alteraEstoque(idItem, est, ordenar);
         // cMethods.displaySnackBar("Luminária adicionada!", context);
 
         //     conIp.postes.removeWhere((key, value) => key == ipIds);

@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/pages/chamados/chamado_details.dart';
 import 'package:mip_app/widgets/ChamadoBottonSheet.dart';
 
 class ChamadoController extends GetxController {

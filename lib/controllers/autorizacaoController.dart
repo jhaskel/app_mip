@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,24 +17,19 @@ class AutorizacaoController extends GetxController {
   var total = 0.0.obs;
 
   getItens() async {
-
-
     lista.clear();
     listaItens.clear();
     listaServicos.clear();
     listaFinal.clear();
 
-
     await ref.get().then((value) {
-      if(value.exists){
-
+      if (value.exists) {
         Map maps = value.value as Map;
-
 
         lista = maps.values.toList();
 
-
-        lista = maps.values.toList()..sort(((a, b) => (b["ordenacao"]).compareTo((a["ordenacao"]))));
+        lista = maps.values.toList()
+          ..sort(((a, b) => (b["ordenacao"]).compareTo((a["ordenacao"]))));
 
         for (var x in lista) {
           int tipo = x['tipo'];
@@ -45,107 +41,82 @@ class AutorizacaoController extends GetxController {
           }
         }
 
-
-
         update();
-
       }
     });
-
   }
-  getItensUtilizados(String chamado) async{
 
-
-lista.clear();
+  getItensUtilizados(String chamado) async {
+    lista.clear();
 
     await refIten.orderByChild('chamado').equalTo(chamado).get().then((value) {
-      if(value.exists){
-
+      if (value.exists) {
         Map maps = value.value as Map;
-
 
         var lista = maps.values.toList();
 
-
-        lista = maps.values.toList()..sort(((a, b) => (b["nome"]).compareTo((a["nome"]))));
+        lista = maps.values.toList()
+          ..sort(((a, b) => (b["nome"]).compareTo((a["nome"]))));
 
         for (var x in lista) {
           listaFinal.add(x);
         }
 
-
-
         update();
-
       }
     });
-
   }
 
-
-
-  adicionarItemLicitado(listaIten){
-
+  adicionarItemLicitado(listaIten) {
     listaFinal.add(listaIten);
     total(listaIten['total']);
 
-   // var tes = listaFinal.map((e) => e['total']);
- //   total(tes.reduce((a, b) => a+b));
- //   print('total $total');
+    // var tes = listaFinal.map((e) => e['total']);
+    //   total(tes.reduce((a, b) => a+b));
+    //   print('total $total');
     update();
   }
 
-   alteraQuant(dynamic lista, int index,bool tipo) {
-double valor= lista['valor'];
-int esto = lista['estoque'];
+  alteraQuant(dynamic lista, int index, bool tipo) {
+    double valor = lista['valor'];
+    int esto = lista['estoque'];
 
-int quan =lista['quant'];
-
-
+    int quan = lista['quant'];
 
     if (tipo) {
-      if(quan < esto){
+      if (quan < esto) {
         listaFinal[index]['quant']++;
 
         print("${listaFinal[index]['quant']}");
         update();
-      }else{
-        Get.defaultDialog(
-          title: "OOPs",
-          content: Text("Estoque insufuciente")
-        );
+      } else {
+        Get.defaultDialog(title: "OOPs", content: Text("Estoque insufuciente"));
       }
-
     } else {
-      if( listaFinal[index]['quant'] >1){
+      if (listaFinal[index]['quant'] > 1) {
         listaFinal[index]['quant']--;
         update();
       }
     }
-    double tot = valor*lista['quant'];
+    double tot = valor * lista['quant'];
 
-
-  listaFinal[index]['total']=tot;
+    listaFinal[index]['total'] = tot;
     update();
   }
 
-
-  removerItemLicitado(dynamic item){
-    listaFinal.removeWhere((e) => e['id']==item['id']);
+  removerItemLicitado(dynamic item) {
+    listaFinal.removeWhere((e) => e['id'] == item['id']);
     update();
   }
-  resetarListaItemLicitado(){
+
+  resetarListaItemLicitado() {
     listaFinal.clear();
     update();
   }
 
-   alteraEstoque(String id, estoque) {
-     ref.child(id).update({
-       "estoque": estoque,
-       "modifiedAt": DateTime.now().toString()
-     });
-   }
-
-
-
+  alteraEstoque(String id, estoque) {
+    ref
+        .child(id)
+        .update({"estoque": estoque, "modifiedAt": DateTime.now().toString()});
+  }
 }

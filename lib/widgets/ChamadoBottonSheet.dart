@@ -25,6 +25,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: EdgeInsets.all(10),
         color: Colors.white,
         height: 300,
         width: 500,

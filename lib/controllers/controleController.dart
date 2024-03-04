@@ -108,9 +108,10 @@ class ControleController extends GetxController {
     update();
   }
 
-  alteraEstoque(String id, estoque) {
+  alteraEstoque(String id, estoque, int ordenar) {
     ref.child(id).update({
       "estoque": estoque,
+      "ordenacao": ordenar,
       "modifiedAt": DateTime.now().toString(),
     });
   }

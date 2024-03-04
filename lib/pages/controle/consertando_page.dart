@@ -45,7 +45,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
             },
             child: Center(
                 child: Text(
-              "Finalizar Concerto",
+              "Finalizar Concerto.",
               style: AppTextStyles.body20,
             ))),
       ),

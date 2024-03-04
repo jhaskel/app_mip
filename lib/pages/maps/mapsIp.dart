@@ -1,12 +1,8 @@
-import 'dart:async';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/pages/chamados/ip_page.dart';
-import 'package:mip_app/repositories/cafes_repositories.dart';
 
 class MapsIp extends StatefulWidget {
   const MapsIp({super.key});

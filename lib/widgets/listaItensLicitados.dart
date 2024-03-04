@@ -38,6 +38,7 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
               'idIp': chamado['idIp'],
               'idItem': item['id'].toString(),
               'estoque': estoque,
+              'ordenacao': item['ordenacao'],
               'user': "Paulo Almeida",
               'tipo': tipo,
               'ordem': "$tipo",

@@ -1,3 +1,4 @@
+import 'package:essential_xlsx/essential_xlsx.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +12,7 @@ import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/ordem/create_ordem_Itens.dart';
 import 'package:mip_app/pages/ordem/create_ordem_home.dart';
 import 'package:mip_app/pages/ordem/ordem_page.dart';
+import 'dart:io';
 
 class MapsChamadoPage extends StatefulWidget {
   const MapsChamadoPage({super.key});
@@ -77,6 +79,11 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                     context,
                     MaterialPageRoute(builder: (context) => const OrdemPage()),
                   );
+                },
+                icon: Icon(Icons.radar)),
+            IconButton(
+                onPressed: () {
+                  toXLSX();
                 },
                 icon: Icon(Icons.public_off_sharp)),
           ],
@@ -249,5 +256,38 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
         )
       ],
     );
+  }
+
+  final List<Map<String, dynamic>> data = <Map<String, dynamic>>[
+    {'name': 'Isaque', 'phone': '22 2777-2339', 'age': '32'},
+    {'name': 'Joe', 'phone': '22 2777-2339', 'age': '32'},
+    {'name': 'Leo', 'phone': '22 2777-2339', 'age': '32'},
+    {'name': 'Tiago', 'phone': '22 2777-2339', 'age': '32'},
+    {'name': 'Jon', 'phone': '22 2777-2339', 'age': '32'},
+  ];
+  void toXLSX() {
+    if (data.isNotEmpty) {
+      final simplexlsx = SimpleXLSX();
+      simplexlsx.sheetName = 'sheet';
+
+      //adiciona os dados
+      print("data $data");
+      var idx = 0;
+      data.forEach((item) {
+        if (idx == 0) {
+          //adiciona os titulos
+          simplexlsx.addRow(item.keys.toList());
+        }
+        {
+          //adiciona os valores
+          simplexlsx.addRow(item.values.map((i) => i.toString()).toList());
+        }
+        idx++;
+      });
+
+      final bytes = simplexlsx.build();
+
+      var fg = File('teste.xlsx').writeAsBytesSync(bytes);
+    }
   }
 }

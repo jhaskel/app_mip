@@ -65,6 +65,7 @@ class IpController extends GetxController {
   var long = ''.obs;
   var status = ''.obs;
   int i = 0;
+  var loading = false.obs;
 
   CommonMethods cMethods = CommonMethods();
   var postes = Map<String, String>().obs;
@@ -197,8 +198,6 @@ class IpController extends GetxController {
           "Não foi possivel Excluir ${textPage.value}", context);
     });
   }
-
-  var loading = false.obs;
 
   changeLat(LatLng target) {
     position2(target);
