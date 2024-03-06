@@ -183,6 +183,7 @@ class ChamadoController extends GetxController {
       'longitude': longi.value,
       'status': StatusApp.defeito.message,
       'defeito': defeito.value,
+      'total': 0.0,
       'isChamado': true,
     };
 
@@ -319,18 +320,19 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  alterarStatus(String id, String idIp, String message) {
+  alterarStatus(String id, String idIp, String message, double total) {
     ref.child(id).update({
       "status": message,
+      "total": total,
       "isChamado": message == StatusApp.autorizado.message ? false : true,
       "modifiedAt": DateTime.now().toString()
     }).then((value) {
-      print("000");
+
       if (message == StatusApp.autorizado.message) {
-        print("001");
+
         conIp.alteraStatusIp(idIp, StatusApp.normal.message);
       } else {
-        print("002");
+
         conIp.alteraStatusIp(idIp, message);
       }
     });
@@ -338,5 +340,15 @@ class ChamadoController extends GetxController {
     buscaPostesDefeito();
     conIp.buscaPostes();
     update();
+  }
+
+  alterarTotal(String id, double total) {
+    ref.child(id).update({
+
+      "total": total,
+
+    });
+
+
   }
 }

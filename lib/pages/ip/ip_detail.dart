@@ -19,14 +19,24 @@ class _IpDetailState extends State<IpDetail> {
   final IpController conIp = Get.put(IpController());
   final ItemController conIte = Get.put(ItemController());
   double alturaContainer = 120;
-  double larguraContainer = 300;
+
   int chamadosTotal = 0;
   int chamadosAbertos = 0;
   int chamadosRealizados = 0;
+  double gastoTotal = 0.0;
+  double larguraContainer=0.0;
+
+
+
+  altera(){
+
+  }
+
 
   @override
   void initState() {
     super.initState();
+
     conCha.getChamadosByIp(context, item['id']);
   }
 
@@ -48,6 +58,7 @@ class _IpDetailState extends State<IpDetail> {
 
   @override
   Widget build(BuildContext context) {
+    larguraContainer = (MediaQuery.of(context).size.width/4)-20;
     return Obx(
       () => Scaffold(
         appBar: AppBar(
@@ -67,6 +78,7 @@ class _IpDetailState extends State<IpDetail> {
 
   _body() {
     return StreamBuilder(
+
       stream: conCha.ref.orderByChild('idIp').equalTo(item['id']).onValue,
       builder: (context, snapshott) {
         if (!snapshott.hasData) {
@@ -78,17 +90,29 @@ class _IpDetailState extends State<IpDetail> {
               child: Text("Nenhum Chamado Para esse IP"),
             ));
           } else {
+             chamadosTotal = 0;
+             chamadosAbertos = 0;
+             chamadosRealizados = 0;
+             gastoTotal = 0.0;
             Map<dynamic, dynamic> maps = snapshott.data!.snapshot.value as Map;
             List<dynamic> list = [];
 
             list.clear();
             list = maps.values.toList();
+
+             list = maps.values.toList()
+               ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
             chamadosTotal = list.length;
 
             for (var x in list) {
               if (x['isChamado'] == true) {
                 chamadosAbertos++;
+
+              }else{
+                print("tot ${x['total']}");
+                gastoTotal=gastoTotal+x['total'];
               }
+
             }
 
             chamadosRealizados = chamadosTotal - chamadosAbertos;
@@ -104,6 +128,8 @@ class _IpDetailState extends State<IpDetail> {
                         chamadosAbertos.toString(), 'Chamados Abertos'),
                     demonstrativoIp(
                         chamadosRealizados.toString(), 'Chamados Realizados'),
+                    demonstrativoIp(
+                        gastoTotal.toString(), 'Gasto total'),
                   ]),
                 ),
                 Obx(() => Container(
@@ -145,7 +171,12 @@ class _IpDetailState extends State<IpDetail> {
                         DateTime dtCrea = DateTime.parse(item['createdAt']);
                         DateTime dtAlt = DateTime.parse(item['modifiedAt']);
 
-                        var total = conIte.totalChamado.value;
+                        var total = 0.0;
+                      if(item['total']>0.0){
+                         total = item['total'];
+                       }
+
+
                         return Container(
                             width: MediaQuery.of(context).size.width,
                             child: Row(children: [
@@ -165,47 +196,11 @@ class _IpDetailState extends State<IpDetail> {
                                 width: 100,
                                 child: Text(item['defeito']),
                               ),
-                              StreamBuilder(
-                                  stream: conIte.ref
-                                      .orderByChild('chamado')
-                                      .equalTo(item['id'])
-                                      .onValue,
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return CircularProgressIndicator();
-                                    } else if (snapshot.data!.snapshot.value ==
-                                        null) {
-                                      return Center(
-                                          child: Container(
-                                        child: Text("Não finalizado"),
-                                      ));
-                                    } else {
-                                      Map<dynamic, dynamic> mapss =
-                                          snapshot.data!.snapshot.value as Map;
-                                      List<dynamic> list2 = [];
+                              Container(
+                                width: 100,
+                                child: Text(total.toString()),
+                              ),
 
-                                      list2.clear();
-                                      list2 = mapss.values.toList();
-                                      var listGasto = [];
-
-                                      var fg = list2.where(
-                                          (e) => e['chamado'] == item['id']);
-
-                                      var fh = fg.map((e) => e['total']);
-                                      var fk = fh.reduce(
-                                          (value, element) => value + element);
-
-                                      var t = list2
-                                          .map((e) => e['total'])
-                                          .reduce((v, e) => v + e);
-                                      print("FG $t");
-
-                                      return Container(
-                                        width: 100,
-                                        child: Text(fk.toStringAsFixed(2)),
-                                      );
-                                    }
-                                  }),
                               Spacer(),
                               Container(
                                 width: 100,

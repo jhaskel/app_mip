@@ -21,9 +21,12 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
   get chamado => widget.chamado;
   var formatador = NumberFormat("#,##0.00", "pt_BR");
 
+
+
   @override
   void initState() {
     super.initState();
+
     conIte.getItensByChamado(chamado['id']);
   }
 
@@ -53,7 +56,7 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                   onCancel: () {},
                   onConfirm: () {
                     conCha.alterarStatus(chamado['id'], chamado['idIp'],
-                        StatusApp.autorizado.message);
+                        StatusApp.autorizado.message,conIte.totalChamado.value);
                     Get.back();
                     Navigator.pop(context);
                   },

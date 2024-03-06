@@ -62,7 +62,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                           await conCha.alterarStatus(
                               widget.chamado['id'],
                               widget.chamado['idIp'],
-                              StatusApp.agendado.message);
+                              StatusApp.agendado.message,0.0);
                           Get.back();
                         },
                         color: Colors.blue,
@@ -81,7 +81,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                           await conCha.alterarStatus(
                               widget.chamado['id'],
                               widget.chamado['idIp'],
-                              StatusApp.concertando.message);
+                              StatusApp.concertando.message,0.0);
                           Get.back();
 
                           Get.to(ConsertandoPage(widget.chamado));
@@ -99,7 +99,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 MaterialButton(
                   onPressed: () async {
                     await conCha.alterarStatus(widget.chamado['id'],
-                        widget.chamado['idIp'], StatusApp.normal.message);
+                        widget.chamado['idIp'], StatusApp.normal.message,0.0);
                     Get.back();
                   },
                   color: Colors.amber,
@@ -114,7 +114,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 MaterialButton(
                   onPressed: () async {
                     await conCha.alterarStatus(widget.chamado['id'],
-                        widget.chamado['idIp'], StatusApp.defeito.message);
+                        widget.chamado['idIp'], StatusApp.defeito.message,0.0);
                     Get.back();
                   },
                   color: Colors.red,
