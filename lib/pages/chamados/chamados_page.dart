@@ -31,28 +31,32 @@ class _ChamadosPageState extends State<ChamadosPage> {
           ],
         ),
       )),
-      body: Container(
-        child: Obx(() => Column(
-              children: [
-                Text("${conCha.textPage.value}"),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: conCha.listaChamados.length,
-                      itemBuilder: (context, index) {
-                        return Row(
-                          children: [
-                            Text(conCha.listaChamados[index]['id']),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(conCha.listaChamados[index]['idIp']),
-                          ],
-                        );
-                      }),
-                )
-              ],
-            )),
-      ),
+      body: _body(context),
+    );
+  }
+
+  Container _body(BuildContext context) {
+    return Container(
+      child: Obx(() => Column(
+            children: [
+              Text("${conCha.textPage.value}"),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: conCha.listaChamados.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Text(conCha.listaChamados[index]['id']),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(conCha.listaChamados[index]['idIp']),
+                        ],
+                      );
+                    }),
+              )
+            ],
+          )),
     );
   }
 }

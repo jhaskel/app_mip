@@ -40,6 +40,7 @@ class ChamadoController extends GetxController {
   ];
   final markers = Set<Marker>().obs;
   List<dynamic> list = [].obs;
+  List<dynamic> listChamadosByIP = [].obs;
 
   Map maps = {};
 
@@ -144,6 +145,28 @@ class ChamadoController extends GetxController {
     });
 
     update();
+  }
+
+  void getChamadosByIp(BuildContext context, ip) async {
+    print("ip,....$ip");
+    listChamadosByIP.clear();
+    update();
+
+    await ref.orderByChild('idIp').equalTo(ip).onValue.listen((event) {
+      if (event.snapshot.exists) {
+        Map pos = event.snapshot.value as Map;
+        listChamadosByIP.clear();
+        listChamadosByIP = pos.values.toList();
+        print(listChamadosByIP.length);
+      }
+    });
+
+    /* await ref.orderByChild('idIp').equalTo(ip).get().then((value) {
+      Map pos = value.value as Map;
+      listChamadosByIP.clear();
+      listChamadosByIP = pos.values.toList();
+      print(listChamadosByIP.length);
+    });*/
   }
 
   void createChamado(BuildContext context) async {
@@ -299,15 +322,15 @@ class ChamadoController extends GetxController {
   alterarStatus(String id, String idIp, String message) {
     ref.child(id).update({
       "status": message,
-      "isChamado": message == StatusApp.autorizado.message ||
-              message == StatusApp.autorizado.message
-          ? false
-          : true,
+      "isChamado": message == StatusApp.autorizado.message ? false : true,
       "modifiedAt": DateTime.now().toString()
     }).then((value) {
+      print("000");
       if (message == StatusApp.autorizado.message) {
+        print("001");
         conIp.alteraStatusIp(idIp, StatusApp.normal.message);
       } else {
+        print("002");
         conIp.alteraStatusIp(idIp, message);
       }
     });

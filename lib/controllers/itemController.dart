@@ -83,6 +83,7 @@ class ItemController extends GetxController {
 
         totalChamado.value =
             listaItensChamado.map((e) => e['total']).reduce((v, e) => v + e);
+        print("totalchamdo $totalChamado");
 
         update();
       }

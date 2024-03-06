@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/pages/ip/ip_detail.dart';
 
 class IpPage extends StatefulWidget {
   const IpPage({super.key});
@@ -54,7 +55,15 @@ class _IpPageState extends State<IpPage> {
                           itemBuilder: (context, index) {
                             var item = conIp.listaIp[index];
 
-                            return Text(item['cod']);
+                            return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => IpDetail(item)),
+                                  );
+                                },
+                                child: Text(item['cod']));
                           }),
                     )
                   : Container(
