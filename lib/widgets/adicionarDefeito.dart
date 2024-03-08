@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 
 class AdicionarDefeito extends StatelessWidget {
@@ -37,7 +38,7 @@ class AdicionarDefeito extends StatelessWidget {
               height: 100,
               width: MediaQuery.of(context).size.width,
               child: MaterialButton(
-                color: Colors.amber,
+                color: AppColors.primaria,
                 onPressed: () async {
                   conCha.createChamado(context);
                 },

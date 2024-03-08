@@ -4,6 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/pages/chamados/chamado_page_detail.dart';
+
+import '../../global/app_colors.dart';
 
 class IpDetail extends StatefulWidget {
   dynamic item;
@@ -24,21 +28,7 @@ class _IpDetailState extends State<IpDetail> {
   int chamadosAbertos = 0;
   int chamadosRealizados = 0;
   double gastoTotal = 0.0;
-  double larguraContainer=0.0;
-
-
-
-  altera(){
-
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    conCha.getChamadosByIp(context, item['id']);
-  }
+  double larguraContainer = 0.0;
 
   Padding demonstrativoIp(String valor, String title) {
     return Padding(
@@ -49,7 +39,10 @@ class _IpDetailState extends State<IpDetail> {
         decoration:
             BoxDecoration(border: Border.all(width: 2, color: Colors.amber)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(valor),
+          Text(
+            valor,
+            style: AppTextStyles.heading40White.copyWith(fontSize: 30),
+          ),
           Text(title),
         ]),
       ),
@@ -58,7 +51,7 @@ class _IpDetailState extends State<IpDetail> {
 
   @override
   Widget build(BuildContext context) {
-    larguraContainer = (MediaQuery.of(context).size.width/4)-20;
+    larguraContainer = (MediaQuery.of(context).size.width / 4) - 20;
     return Obx(
       () => Scaffold(
         appBar: AppBar(
@@ -78,7 +71,6 @@ class _IpDetailState extends State<IpDetail> {
 
   _body() {
     return StreamBuilder(
-
       stream: conCha.ref.orderByChild('idIp').equalTo(item['id']).onValue,
       builder: (context, snapshott) {
         if (!snapshott.hasData) {
@@ -90,29 +82,27 @@ class _IpDetailState extends State<IpDetail> {
               child: Text("Nenhum Chamado Para esse IP"),
             ));
           } else {
-             chamadosTotal = 0;
-             chamadosAbertos = 0;
-             chamadosRealizados = 0;
-             gastoTotal = 0.0;
+            chamadosTotal = 0;
+            chamadosAbertos = 0;
+            chamadosRealizados = 0;
+            gastoTotal = 0.0;
             Map<dynamic, dynamic> maps = snapshott.data!.snapshot.value as Map;
             List<dynamic> list = [];
 
             list.clear();
             list = maps.values.toList();
 
-             list = maps.values.toList()
-               ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
+            list = maps.values.toList()
+              ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
             chamadosTotal = list.length;
 
             for (var x in list) {
               if (x['isChamado'] == true) {
                 chamadosAbertos++;
-
-              }else{
+              } else {
                 print("tot ${x['total']}");
-                gastoTotal=gastoTotal+x['total'];
+                gastoTotal = gastoTotal + x['total'];
               }
-
             }
 
             chamadosRealizados = chamadosTotal - chamadosAbertos;
@@ -128,17 +118,22 @@ class _IpDetailState extends State<IpDetail> {
                         chamadosAbertos.toString(), 'Chamados Abertos'),
                     demonstrativoIp(
                         chamadosRealizados.toString(), 'Chamados Realizados'),
-                    demonstrativoIp(
-                        gastoTotal.toString(), 'Gasto total'),
+                    demonstrativoIp(gastoTotal.toString(), 'Gasto total'),
                   ]),
                 ),
                 Obx(() => Container(
-                      height: 100,
+                      height: conCha.alturaContainer.value,
                       width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              width: 2, color: AppColors.borderCabecalho),
+                          bottom: BorderSide(
+                              width: 2, color: AppColors.borderCabecalho))),
                       child: Row(children: [
                         Container(
                           width: 300,
-                          child: Text(conIte.textDetail.value),
+                          child: Text('cod'),
                         ),
                         Container(
                           width: 100,
@@ -164,20 +159,28 @@ class _IpDetailState extends State<IpDetail> {
                       ]),
                     )),
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        var item = list[index];
-                        DateTime dtCrea = DateTime.parse(item['createdAt']);
-                        DateTime dtAlt = DateTime.parse(item['modifiedAt']);
+                  child: ListView.separated(
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      var item = list[index];
+                      DateTime dtCrea = DateTime.parse(item['createdAt']);
+                      DateTime dtAlt = DateTime.parse(item['modifiedAt']);
 
-                        var total = 0.0;
-                      if(item['total']>0.0){
-                         total = item['total'];
-                       }
+                      var total = 0.0;
+                      if (item['total'] > 0.0) {
+                        total = item['total'];
+                      }
 
+                      return InkWell(
+                        onTap: (){
 
-                        return Container(
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChamadoPageDetail(item)),
+                          );
+                        },
+                        child: Container(
                             width: MediaQuery.of(context).size.width,
                             child: Row(children: [
                               Container(
@@ -200,7 +203,6 @@ class _IpDetailState extends State<IpDetail> {
                                 width: 100,
                                 child: Text(total.toString()),
                               ),
-
                               Spacer(),
                               Container(
                                 width: 100,
@@ -214,8 +216,15 @@ class _IpDetailState extends State<IpDetail> {
                                         color: Colors.green,
                                       ),
                               ),
-                            ]));
-                      }),
+                            ])),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        thickness: 1,
+                      );
+                    },
+                  ),
                 ),
               ],
             );

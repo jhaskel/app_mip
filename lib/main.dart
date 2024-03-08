@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/exportPage.dart';
+import 'package:mip_app/pages/chamados/chamados_page.dart';
 import 'package:mip_app/pages/ip/ip_page.dart';
 
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
@@ -51,8 +53,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //   home: HomeMain(),
-        //  home: DatabasePage(),
-          home: MapsChamadoPage(),
+        //  home: ExportPage("Kk"),
+        home: MapsChamadoPage(),
         //home: IpPage(),
         //home: MapsIp(),
         //  home: const LoginPage(),

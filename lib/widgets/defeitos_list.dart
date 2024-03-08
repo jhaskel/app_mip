@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/util.dart';
 
 class DefeitoList extends StatelessWidget {
@@ -27,9 +28,9 @@ defeitoWidged(int index) {
           ()=> Container(
             decoration: BoxDecoration(
         color: conCha.indexDefeito == index
-        ? Colors.cyan
+        ? AppColors.secundaria
             : Colors.transparent,
-            border: Border.all(color: Colors.amber, width: 2)),
+            border: Border.all(color: AppColors.primaria, width: 2)),
             width: 80,
             height: 80,
             child: Column(

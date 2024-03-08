@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/global/app_colors.dart';
+import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/ip/ip_detail.dart';
 
 class IpPage extends StatefulWidget {
@@ -23,6 +25,7 @@ class _IpPageState extends State<IpPage> {
 
   @override
   Widget build(BuildContext context) {
+    larguraContainer = (MediaQuery.of(context).size.width / 4) - 20;
     return Obx(
       () => Scaffold(
         appBar: AppBar(title: Text(conIp.textPage.value)),
@@ -47,24 +50,100 @@ class _IpPageState extends State<IpPage> {
                     conIp.quantIpAgendado.value.toString(), 'Ip Agendado'),
               ]),
             ),
+            Container(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  border: Border(
+                      top: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho),
+                      bottom: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho))),
+              child: Row(children: [
+                Container(
+                  width: 100,
+                  child: Text('cod'),
+                ),
+                Container(
+                  width: 200,
+                  child: Text("Bairro"),
+                ),
+                Container(
+                  child: Text("Logradouro"),
+                ),
+
+                Spacer(),
+                Container(
+                  width: 200,
+                  child: Text("tipo"),
+                ),
+
+                Container(
+                  width: 100,
+                  child: Text("Status"),
+                ),
+                Container(
+                  width: 100,
+                  child: Text("Ativo"),
+                ),
+              ]),
+            ),
             Expanded(
               child: conIp.listaIp.length > 0
                   ? Container(
-                      child: ListView.builder(
-                          itemCount: conIp.listaIp.length,
-                          itemBuilder: (context, index) {
-                            var item = conIp.listaIp[index];
+                      child: ListView.separated(
+                        itemCount: conIp.listaIp.length,
+                        itemBuilder: (context, index) {
+                          var item = conIp.listaIp[index];
 
-                            return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => IpDetail(item)),
-                                  );
-                                },
-                                child: Text(item['cod']));
-                          }),
+                          return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => IpDetail(item)),
+                                );
+                              },
+                              child: Row(
+                                children: [
+
+                                  Container(
+                                    width: 100,
+                                    child: Text(item['cod']),
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    child: Text(item['Bairro']),
+                                  ),
+                                  Container(
+                                    child: Text(item['logradouro']),
+                                  ),
+
+                                  Spacer(),
+                                  Container(
+                                    width: 200,
+                                    child: Text(item['tipo']),
+                                  ),
+
+                                  Container(
+                                    width: 100,
+                                    child: Text(item['status']),
+                                  ),
+                                  Container(
+                                    width: 100,
+                                    child: item['isAtivo']?Icon(Icons.circle,color: Colors.green):Icon(Icons.circle,color: Colors.red),
+
+
+                                  ),
+                                ],
+                              ));
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            thickness: 1,
+                          );
+                        },
+                      ),
                     )
                   : Container(
                       child: Center(
@@ -86,7 +165,10 @@ class _IpPageState extends State<IpPage> {
         decoration:
             BoxDecoration(border: Border.all(width: 2, color: Colors.amber)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(valor),
+          Text(
+            valor,
+            style: AppTextStyles.heading40White.copyWith(fontSize: 30),
+          ),
           Text(title),
         ]),
       ),

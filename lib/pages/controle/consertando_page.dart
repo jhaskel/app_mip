@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/widgets/listaItensLicitados.dart';
@@ -24,7 +25,6 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
   void initState() {
     conCon.getItens();
     conCon.getItensUtilizados(widget.chamado['id'].toString());
-
     super.initState();
   }
 
@@ -32,7 +32,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Consertar Luminaria ${widget.chamado['idIp']}"),
+        title: Text("Consertar Luminária ${widget.chamado['idIp']}"),
       ),
       body: _body(context),
       bottomNavigationBar: Container(
@@ -58,17 +58,17 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 50,
+            height: 100,
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: conCon.index.value == 0
-                                ? Colors.amber
-                                : Colors.black26,
+                                ? AppColors.borderCards
+                                : AppColors.borderCardsOff,
                             width: 2)),
                     child: InkWell(
                         onTap: () {
@@ -76,7 +76,10 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                             conCon.index(0);
                           });
                         },
-                        child: Text('Itens')),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Itens'),
+                        )),
                   ),
                 ),
                 SizedBox(
@@ -86,8 +89,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: conCon.index.value == 1
-                              ? Colors.amber
-                              : Colors.black26,
+                              ? AppColors.borderCards
+                              : AppColors.borderCardsOff,
                           width: 2)),
                   child: InkWell(
                       onTap: () {
@@ -95,7 +98,10 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                           conCon.index(1);
                         });
                       },
-                      child: Text('Serviços')),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text('Serviços'),
+                      )),
                 ),
               ],
             ),
@@ -106,7 +112,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                   child: Container(
                     height: 250,
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.amber, width: 2)),
+                        border:
+                            Border.all(color: AppColors.primaria, width: 2)),
                     child: ListView.builder(
                         itemCount: conCon.listaItens.length,
                         itemBuilder: (context, index) {

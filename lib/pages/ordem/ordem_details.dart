@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/pages/ordem/pdf/pdf-ordem-empresa.dart';
 
 // ignore: must_be_immutable
 class OrdemDetails extends StatefulWidget {
@@ -22,11 +24,15 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   var formatador = NumberFormat("#,##0.00", "pt_BR");
 
   List<dynamic> listaItens = [].obs;
+  List<Map<String, dynamic>> list=[];
   get item => widget.item;
 
   @override
   void initState() {
     super.initState();
+  //  list.addAll(item);
+
+
 
     for (var x in item['itensOrdem']) {
       var cod = "";
@@ -43,7 +49,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
         "valor": x['valor'],
       };
 
-      listaItens.add(s);
+     listaItens.add(s);
     }
   }
 
@@ -53,7 +59,15 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       appBar: AppBar(
         title: Text('Detalhe da Ordem ${item['cod']}'),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
+          IconButton(onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PdfOrdemEmpresa(
+                      listaItens,)),
+            );
+
+          }, icon: Icon(Icons.picture_as_pdf)),
           IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf_sharp))
         ],
       ),
@@ -144,7 +158,12 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                   ),
                   Container(
                     child: TextButton(
-                        onPressed: () {}, child: Text(item['status'])),
+                        onPressed: () {
+
+                          setState(() {
+
+                          });
+                        }, child: Text(item['status'])),
                   ),
                 ],
               ),
@@ -155,108 +174,96 @@ class _OrdemDetailsState extends State<OrdemDetails> {
           ),
           Container(
             height: 50,
-            color: Colors.grey,
+            decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(width: 2, color: AppColors.borderCabecalho),
+                    bottom: BorderSide(
+                        width: 2, color: AppColors.borderCabecalho))),
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
-                Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "cod",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
-                Flexible(
-                    flex: 4,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "nome",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
-                Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "unidade",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
-                Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "quantidade",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
-                Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "valor",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
-                Flexible(
-                    flex: 1,
-                    fit: FlexFit.tight,
-                    child: Text(
-                      "total",
-                      style: AppTextStyles.bodyWhite20,
-                    )),
+                Container(
+                  width: 100,
+                  child: Text(
+                    "cod",
+                    style: AppTextStyles.bodyWhite20,
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  child: Text(
+                    "unidade",
+                    style: AppTextStyles.bodyWhite20,
+                  ),
+                ),
+                Text(
+                  "nome",
+                  style: AppTextStyles.bodyWhite20,
+                ),
+                Spacer(),
+
+                Container(
+                  width: 100,
+                  child: Text(
+                    "quant",
+                    style: AppTextStyles.bodyWhite20,
+                  ),
+                ),
+
+                Container(
+                  width: 100,
+                  child: Text(
+                    "valor",
+                    style: AppTextStyles.bodyWhite20,
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  child: Text(
+                    "total",
+                    style: AppTextStyles.bodyWhite20,
+                  ),
+                ),
               ],
             ),
           ),
           Expanded(
             child: Container(
                 padding: EdgeInsets.all(10),
-                child: ListView.builder(
-                    itemCount: listaItens.length,
-                    itemBuilder: (context, index) {
-                      var item = listaItens[index];
+                child: ListView.separated(
+                  itemCount: listaItens.length,
+                  itemBuilder: (context, index) {
+                    var item = listaItens[index];
 
-                      var cod = item['cod'];
-                      var nome = item['nome'];
-                      var unidade = item['unidade'];
-                      var quantidade = item['quant'];
-                      var valor = item['valor'];
-                      var total = item['total'];
+                    var cod = item['cod'];
+                    var nome = item['nome'];
+                    var unidade = item['unidade'];
+                    var quantidade = item['quant'];
+                    var valor = item['valor'];
+                    var total = item['total'];
 
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(cod)),
-                              Flexible(
-                                  flex: 4,
-                                  fit: FlexFit.tight,
-                                  child: Text(nome)),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(unidade)),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(quantidade.toString())),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child:
-                                      Text('R\$ ${formatador.format(valor)}')),
-                              Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child:
-                                      Text('R\$ ${formatador.format(total)}')),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 1,
-                          )
-                        ],
-                      );
-                    })),
+                    return Row(
+                      children: [
+                        Container(width:100,child: Text(cod)),
+                        Container(width:100, child: Text(unidade)),
+                        Container( child: Text(nome)),
+                        Spacer(),
+
+                        Container(width:100,
+                            child: Text(quantidade.toString())),
+                        Container(width:100,
+                            child: Text('R\$ ${formatador.format(valor)}')),
+                        Container(width:100,
+                            child: Text('R\$ ${formatador.format(total)}')),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      thickness: 1,
+                    );
+                  },
+                )),
           )
         ],
       ),

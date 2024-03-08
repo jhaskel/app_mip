@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 
@@ -21,8 +22,6 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
   get chamado => widget.chamado;
   var formatador = NumberFormat("#,##0.00", "pt_BR");
 
-
-
   @override
   void initState() {
     super.initState();
@@ -37,7 +36,7 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
       body: _body(context),
       bottomNavigationBar: Container(
         height: 100,
-        color: Colors.amber,
+        color: AppColors.primaria,
         width: MediaQuery.of(context).size.width,
         child: Center(
             child: Column(
@@ -55,8 +54,11 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                       'Tem certeza que deseja autorizar o concerto no Ip ${chamado['idIp']}'),
                   onCancel: () {},
                   onConfirm: () {
-                    conCha.alterarStatus(chamado['id'], chamado['idIp'],
-                        StatusApp.autorizado.message,conIte.totalChamado.value);
+                    conCha.alterarStatus(
+                        chamado['id'],
+                        chamado['idIp'],
+                        StatusApp.autorizado.message,
+                        conIte.totalChamado.value);
                     Get.back();
                     Navigator.pop(context);
                   },
@@ -101,7 +103,7 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                       var total = item['valor'] * quant;
 
                       int caracteres = nome.length;
-                      print('carac $caracteres');
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -109,17 +111,16 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                             children: [
                               caracteres > 40
                                   ? Container(
-                                      width: 220,
                                       child: Text(
-                                        nome,
-                                        overflow: TextOverflow.ellipsis,
-                                      ))
+                                      nome,
+                                      overflow: TextOverflow.ellipsis,
+                                    ))
                                   : Container(
                                       child: Text(
                                       nome,
                                     )),
                               Spacer(),
-                              Container(width: 35, child: Text(unidade)),
+                              Container(width: 50, child: Text(unidade)),
                               Container(
                                   width: 25,
                                   child: Center(child: Text(quant.toString()))),

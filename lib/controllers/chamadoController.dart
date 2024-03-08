@@ -15,6 +15,7 @@ class ChamadoController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Chamado');
   final refIp = FirebaseDatabase.instance.ref('Ip');
 
+  var alturaContainer = 50.0.obs;
   var idIp = "".obs;
   var codIp = "".obs;
   var loading = false.obs;
@@ -31,6 +32,11 @@ class ChamadoController extends GetxController {
   var longi = 0.0.obs;
   LatLng? markerPosition;
   var dragged = false.obs;
+
+  var quantChamados = 0.obs;
+  var chamadosAndamento = 0.obs;
+  var chamadosFinalizados = 0.obs;
+  var gastosTotalChamados = 0.0.obs;
 
   List<String> icones = [
     'assets/poste-normal.png',
@@ -135,18 +141,6 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  void getChamados(BuildContext context) async {
-    await ref.orderByChild('status').equalTo('realizado').get().then((value) {
-      Map pos = value.value as Map;
-
-      listaChamados.clear();
-      listaChamados = pos.values.toList();
-      print(listaChamados.length);
-    });
-
-    update();
-  }
-
   void getChamadosByIp(BuildContext context, ip) async {
     print("ip,....$ip");
     listChamadosByIP.clear();
@@ -160,13 +154,6 @@ class ChamadoController extends GetxController {
         print(listChamadosByIP.length);
       }
     });
-
-    /* await ref.orderByChild('idIp').equalTo(ip).get().then((value) {
-      Map pos = value.value as Map;
-      listChamadosByIP.clear();
-      listChamadosByIP = pos.values.toList();
-      print(listChamadosByIP.length);
-    });*/
   }
 
   void createChamado(BuildContext context) async {
@@ -285,6 +272,48 @@ class ChamadoController extends GetxController {
     update();
   }
 
+  void getChamados(BuildContext context) async {
+    quantChamados(0);
+    chamadosAndamento(0);
+    chamadosFinalizados(0);
+    gastosTotalChamados(0.0);
+    await ref.get().then((value) {
+      Map pos = value.value as Map;
+
+      listaChamados.clear();
+
+      listaChamados = pos.values.toList()
+        ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
+
+      double soma =
+          listaChamados.map((e) => e['total']).reduce((v, e) => v + e);
+      gastosTotalChamados(soma);
+
+      for (var x in listaChamados) {
+        quantChamados++;
+        if (x['isChamado'] == true) {
+          chamadosAndamento++;
+        }
+      }
+
+      chamadosFinalizados(quantChamados.value - chamadosAndamento.value);
+    });
+
+    update();
+  }
+
+  void getChamadosRealizado(BuildContext context) async {
+    await ref.orderByChild('status').equalTo('realizado').get().then((value) {
+      Map pos = value.value as Map;
+
+      listaChamados.clear();
+      listaChamados = pos.values.toList();
+      print(listaChamados.length);
+    });
+
+    update();
+  }
+
   getChamadosConcertado(BuildContext context, String stattus) async {
     listaChamados.clear();
 
@@ -292,18 +321,18 @@ class ChamadoController extends GetxController {
       listaChamados.clear();
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;
-        print('maps $maps');
+       // print('maps $maps');
 
         var list = maps.values.toList();
         list = maps.values.toList()
-          ..sort(((a, b) => (a["idIp"]).compareTo((b["idIp"]))));
+          ..sort(((a, b) => (b["modifiedAt"]).compareTo((a["modifiedAt"]))));
 
         for (var x in list) {
           listaChamados.add(x);
         }
 
-        loading(false);
 
+        loading(false);
         update();
       }
 
@@ -327,12 +356,9 @@ class ChamadoController extends GetxController {
       "isChamado": message == StatusApp.autorizado.message ? false : true,
       "modifiedAt": DateTime.now().toString()
     }).then((value) {
-
       if (message == StatusApp.autorizado.message) {
-
         conIp.alteraStatusIp(idIp, StatusApp.normal.message);
       } else {
-
         conIp.alteraStatusIp(idIp, message);
       }
     });
@@ -344,11 +370,7 @@ class ChamadoController extends GetxController {
 
   alterarTotal(String id, double total) {
     ref.child(id).update({
-
       "total": total,
-
     });
-
-
   }
 }

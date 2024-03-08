@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/ordem/widget/cabecalho_create_ordem.dart';
@@ -35,7 +36,7 @@ class _CreateOrdemItensState extends State<CreateOrdemItens> {
     return Scaffold(
       bottomNavigationBar: Container(
         height: 100,
-        color: Colors.amber,
+        color: AppColors.primaria,
         width: MediaQuery.of(context).size.width,
         child: Center(
             child: Column(

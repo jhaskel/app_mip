@@ -1,18 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/global/app_colors.dart';
 
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/controle/autorizacao_page.dart';
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
 import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/mapsIp.dart';
-import 'package:mip_app/pages/ordem/create_ordem_Itens.dart';
 import 'package:mip_app/pages/ordem/create_ordem_home.dart';
 import 'package:mip_app/pages/ordem/ordem_page.dart';
-import 'dart:io';
 
 class MapsChamadoPage extends StatefulWidget {
   const MapsChamadoPage({super.key});
@@ -81,11 +79,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                   );
                 },
                 icon: Icon(Icons.radar)),
-            IconButton(
-                onPressed: () {
-
-                },
-                icon: Icon(Icons.public_off_sharp)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.public_off_sharp)),
           ],
         ),
         body: _body(),
@@ -103,12 +97,12 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: 50,
-              color: Colors.amber,
+              color: AppColors.primaria,
               child: Center(
                   child: Text(
                 "Cadastrar defeito em Poste",
                 style: TextStyle(
-                    color: Colors.black87,
+                    color: AppColors.black87,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               )),
@@ -257,7 +251,4 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
       ],
     );
   }
-
-
-
 }

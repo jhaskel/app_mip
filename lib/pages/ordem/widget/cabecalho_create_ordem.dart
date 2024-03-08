@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mip_app/global/app_colors.dart';
 
 class cabecalhoCreateOrdem extends StatelessWidget {
   const cabecalhoCreateOrdem({
@@ -10,7 +11,11 @@ class cabecalhoCreateOrdem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+        decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(width: 2, color: AppColors.borderCabecalho),
+                bottom:
+                    BorderSide(width: 2, color: AppColors.borderCabecalho))),
         height: 50,
         width: MediaQuery.of(context).size.width,
         child: const Row(

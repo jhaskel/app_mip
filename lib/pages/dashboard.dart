@@ -1,9 +1,5 @@
 import 'package:mip_app/controllers/homeController.dart';
-import 'package:mip_app/pages/chamados/chamados_page.dart';
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
-
-import 'package:mip_app/pages/maps/mapsIp.dart';
-import 'package:mip_app/pages/earnings_page.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 import 'package:mip_app/pages/profile_page.dart';
 import 'package:mip_app/pages/trips_page.dart';

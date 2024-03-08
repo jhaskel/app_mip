@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/widgets/listaItensLicitados.dart';
@@ -36,7 +37,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
       body: _body(context),
       bottomNavigationBar: Container(
         height: 50,
-        color: Colors.amber,
+        color: AppColors.primaria,
         child: InkWell(
             onTap: () async {
               await conIte.createItem(
@@ -58,17 +59,17 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 50,
+            height: 100,
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: conCon.index.value == 0
-                                ? Colors.amber
-                                : Colors.black26,
+                                ? AppColors.borderCards
+                                : AppColors.borderCardsOff,
                             width: 2)),
                     child: InkWell(
                         onTap: () {
@@ -76,7 +77,10 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                             conCon.index(0);
                           });
                         },
-                        child: Text('Itens')),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Itens'),
+                        )),
                   ),
                 ),
                 SizedBox(
@@ -86,8 +90,8 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: conCon.index.value == 1
-                              ? Colors.amber
-                              : Colors.black26,
+                              ? AppColors.borderCards
+                              : AppColors.borderCardsOff,
                           width: 2)),
                   child: InkWell(
                       onTap: () {
@@ -95,7 +99,10 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                           conCon.index(1);
                         });
                       },
-                      child: Text('Serviços')),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text('Serviços'),
+                      )),
                 ),
               ],
             ),

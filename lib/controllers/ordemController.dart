@@ -26,7 +26,7 @@ class OrdemController extends GetxController {
         Map maps = event.snapshot.value as Map;
 
         listaOrdens = maps.values.toList()
-          ..sort(((a, b) => (a["cod"]).compareTo((b["cod"]))));
+          ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
 
         print(listaOrdens);
         for (var x in listaOrdens) {

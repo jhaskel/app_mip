@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:intl/intl.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
 
 class ControlePage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ControlePageState extends State<ControlePage> {
   @override
   void initState() {
     super.initState();
-    conCha.getChamadosConcertado(context,"realizado");
+    conCha.getChamadosConcertado(context, "realizado");
   }
 
   @override
@@ -31,8 +32,13 @@ class _ControlePageState extends State<ControlePage> {
         () => Column(
           children: [
             Container(
-              height: 50,
-              color: Colors.grey,
+              decoration: BoxDecoration(
+                  border: Border(
+                      top: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho),
+                      bottom: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho))),
+              height: conCha.alturaContainer.value,
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
@@ -43,53 +49,59 @@ class _ControlePageState extends State<ControlePage> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: Container(
-                height: 400,
-                child: Center(
-                  child: conCha.listaChamados.length > 0
-                      ? ListView.builder(
-                          itemCount: conCha.listaChamados.length,
-                          itemBuilder: (context, index) {
+                child: conCha.listaChamados.length > 0
+                    ? ListView.separated(
+                        itemCount: conCha.listaChamados.length,
+                        itemBuilder: (context, index) {
+                          var item = conCha.listaChamados[index];
+                          DateTime crea = DateTime.parse(item['modifiedAt']);
 
-                            var item = conCha.listaChamados[index];
-                            DateTime crea = DateTime.parse(item['modifiedAt']);
-
-
-                            return InkWell(
-                              onTap: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) =>  FinalizandoPage(item)),
-                                );
-
-                              },
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(DateFormat("dd/MM").format(crea))),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['defeito'])),
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['idIp'])),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['status'])),
-                                ],
-                              ),
-                            );
-                          })
-                      : Center(
-                          child: Text("Nenhum Ip"),
-                        ),
-                ),
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FinalizandoPage(item)),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child:
+                                        Text(DateFormat("dd/MM").format(crea))),
+                                Flexible(
+                                    flex: 2,
+                                    fit: FlexFit.tight,
+                                    child: Text(item['defeito'])),
+                                Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(item['idIp'])),
+                                Flexible(
+                                    flex: 2,
+                                    fit: FlexFit.tight,
+                                    child: Text(item['status'])),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            thickness: 1,
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text("Nenhum Ip"),
+                      ),
               ),
             ),
           ],

@@ -4,9 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
-import 'package:mip_app/global/app_text_styles.dart';
-import 'package:mip_app/global/util.dart';
-import 'package:mip_app/pages/controle/finalizando_page.dart';
+import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/pages/ordem/ordem_details.dart';
 
 class OrdemPage extends StatefulWidget {
@@ -42,7 +40,12 @@ class _OrdemPageState extends State<OrdemPage> {
           children: [
             Container(
               height: 50,
-              color: Colors.grey,
+              decoration: BoxDecoration(
+                  border: Border(
+                      top: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho),
+                      bottom: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho))),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
@@ -53,10 +56,13 @@ class _OrdemPageState extends State<OrdemPage> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: Container(
                 child: conOrd.listaOrdens.length > 0
-                    ? ListView.builder(
+                    ? ListView.separated(
                         itemCount: conOrd.listaOrdens.length,
                         itemBuilder: (context, index) {
                           dynamic item = conOrd.listaOrdens[index];
@@ -100,7 +106,13 @@ class _OrdemPageState extends State<OrdemPage> {
                               ],
                             ),
                           );
-                        })
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            thickness: 1,
+                          );
+                        },
+                      )
                     : Center(
                         child: Text("Nenhuma Ordem Encontrada"),
                       ),

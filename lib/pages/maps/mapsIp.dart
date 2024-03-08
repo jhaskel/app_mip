@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/pages/chamados/chamados_page.dart';
 import 'package:mip_app/pages/ip/ip_page.dart';
+import 'package:mip_app/pages/ordem/ordem_page.dart';
 
 class MapsIp extends StatefulWidget {
   const MapsIp({super.key});
@@ -38,7 +40,12 @@ class _MapsIpState extends State<MapsIp> {
                 onPressed: () {
                   push(context, IpPage());
                 },
-                icon: Icon(Icons.post_add))
+                icon: Icon(Icons.post_add)),
+            IconButton(
+                onPressed: () {
+                  push2(context, ChamadosPage());
+                },
+                icon: Icon(Icons.baby_changing_station))
           ],
         ),
         body: _body(),
@@ -116,6 +123,16 @@ class _MapsIpState extends State<MapsIp> {
   void push(
     BuildContext context,
     IpPage page,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
+  void push2(
+    BuildContext context,
+    ChamadosPage page,
   ) {
     Navigator.push(
       context,

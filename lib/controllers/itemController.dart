@@ -106,8 +106,9 @@ class ItemController extends GetxController {
       int est = estoque - quant;
 
       ref.child(id).set(x).then((value) async {
-        await conCha.alterarStatus(chamado, idIp, message,0.0);
+        await conCha.alterarStatus(chamado, idIp, message, 0.0);
         await conCon.alteraEstoque(idItem, est, ordenar);
+
         // cMethods.displaySnackBar("Luminária adicionada!", context);
 
         //     conIp.postes.removeWhere((key, value) => key == ipIds);
