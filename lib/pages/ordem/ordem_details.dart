@@ -47,6 +47,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
         "total": x['total'],
         "unidade": x['unidade'],
         "valor": x['valor'],
+        "ordem": item['cod'],
       };
 
      listaItens.add(s);

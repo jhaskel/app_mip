@@ -65,13 +65,13 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     grid.headers.add(4);
 //Add the rows to the grid
     PdfGridRow header = grid.headers[0];
-    header.cells[0].value = 'Ordem  ${widget.list.first['cod']}';
+    header.cells[0].value = 'Ordem  ${widget.list.first['ordem']}';
 
     PdfGridRow headerFor = grid.headers[1];
-    headerFor.cells[0].value = ' Fpremecdor';
+    headerFor.cells[0].value = ' Processo Administrativo nºxxxxxxxxxxxxx';
 
     PdfGridRow headerCnpj = grid.headers[2];
-    headerCnpj.cells[0].value = 'Nível Escolar }';
+    headerCnpj.cells[0].value = 'Energia ';
 
     PdfGridRow header1 = grid.headers[3];
     header1.cells[0].value = 'Cod';
@@ -216,7 +216,7 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     );
     headerElement.graphics.setTransparency(0.6);
     headerElement.graphics.drawString(
-        'Ordem-${widget.list.first['cod']}',
+        'Ordem-${widget.list.first['ordem']}',
         PdfStandardFont(PdfFontFamily.helvetica, 10),
         bounds: const Rect.fromLTWH(0, 0, 515, 50),
         format: PdfStringFormat(
@@ -252,6 +252,6 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     document.dispose();
     //Save and launch the file.
     await FileSaveHelper.saveAndLaunchFile(
-        bytes, 'Ordem nº ${widget.list.first['cod']}.pdf');
+        bytes, 'Ordem nº ${widget.list.first['ordem']}.pdf');
   }
 }
