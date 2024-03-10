@@ -158,15 +158,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                     myLocationEnabled: true,
                     markers: controller.markers,
                   ),
-                  Positioned(
-                      top: 20,
-                      right: 20,
-                      child: IconButton(
-                        icon: Icon(Icons.offline_bolt),
-                        onPressed: () {
-                          controller.resetar();
-                        },
-                      )),
+
                   Positioned(
                       top: 100,
                       right: 50,

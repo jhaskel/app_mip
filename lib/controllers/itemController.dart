@@ -44,7 +44,7 @@ class ItemController extends GetxController {
           int gh = b.reduce((v, e) => v + e);
           var c = listaItens
               .where((e) => e['nome'] == f)
-              .map((e) => [e['cod'], e['unidade'], e['valor']])
+              .map((e) => [e['cod'], e['unidade'], e['valor'],e['licitacao'],e['empresa']])
               .toSet();
           print("$f -  ${gh} -  ${c.first[0]} - ${c.first[1]} - ${c.first[2]}");
 
@@ -57,6 +57,8 @@ class ItemController extends GetxController {
             "quant": gh,
             "valor": c.first[2],
             "total": total,
+            "licitacao": c.first[3],
+            "empresa": c.first[4],
           };
 
           listaFiltrada.add(it);

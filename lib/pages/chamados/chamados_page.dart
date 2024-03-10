@@ -105,6 +105,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
                     var item = conCha.listaChamados[index];
 
                     DateTime crea = DateTime.parse(item['createdAt']);
+
                     return InkWell(
                       onTap: () {
                         Navigator.push(

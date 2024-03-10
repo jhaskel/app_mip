@@ -123,23 +123,7 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  resetar() async {
-    await refIp.orderByChild('isAtivo').equalTo(true).get().then((value) {
-      Map pos = value.value as Map;
-      listaChamados.clear();
-      listaChamados = pos.values.toList();
 
-      for (var x in listaChamados) {
-        print(x['isAtivo']);
-        if (x['status'] != "normal") {
-          refIp.child(x['id']).update(
-              {"status": 'normal', "modifiedAt": DateTime.now().toString()});
-        }
-      }
-    });
-
-    update();
-  }
 
   void getChamadosByIp(BuildContext context, ip) async {
     print("ip,....$ip");
@@ -285,12 +269,25 @@ class ChamadoController extends GetxController {
       listaChamados = pos.values.toList()
         ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
 
+
+      quantChamados(listaChamados.length);
+
+
+
+
       double soma =
           listaChamados.map((e) => e['total']).reduce((v, e) => v + e);
+      print("okkkkkkkkkkkk1");
       gastosTotalChamados(soma);
 
+
+
+
+
+
+     quantChamados(listaChamados.length);
       for (var x in listaChamados) {
-        quantChamados++;
+
         if (x['isChamado'] == true) {
           chamadosAndamento++;
         }

@@ -48,12 +48,12 @@ class MyApp extends StatelessWidget {
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
+        locale: Locale('pt', 'BR'),
         title: 'CoMip',
         theme: ThemeData.dark(
           useMaterial3: true,
         ),
-        //   home: HomeMain(),
-        //  home: ExportPage("Kk"),
+
         home: MapsChamadoPage(),
         //home: IpPage(),
         //home: MapsIp(),

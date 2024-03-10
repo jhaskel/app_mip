@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mip_app/controllers/empresaController.dart';
+import 'package:mip_app/controllers/licitacaoController.dart';
+import 'package:mip_app/controllers/prefeituraController.dart';
 import 'package:mip_app/global/save_web.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'dart:async';
@@ -10,6 +13,7 @@ import 'dart:async';
 
 class PdfOrdemEmpresa extends StatefulWidget {
   List<dynamic> list;
+
   PdfOrdemEmpresa(this.list, {Key? key}) : super(key: key);
 
   @override
@@ -17,6 +21,10 @@ class PdfOrdemEmpresa extends StatefulWidget {
 }
 
 class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
+
+  final PrefeituraController conPref = Get.put(PrefeituraController());
+  final EmpresaController conEmp = Get.put(EmpresaController());
+  final LicitacaoController conLic = Get.put(LicitacaoController());
   _gerar() async {
     await _createPDF();
     Get.back();
@@ -53,7 +61,8 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     }
     //total = formatador.format(1256);
 
-
+        //   var t = widget.licitacao.first['licitacao'];
+  //  print("tttttttttt $t");
 
     //Draw the text
     final PdfSection? section = document.sections?.add();
@@ -68,10 +77,10 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     header.cells[0].value = 'Ordem  ${widget.list.first['ordem']}';
 
     PdfGridRow headerFor = grid.headers[1];
-    headerFor.cells[0].value = ' Processo Administrativo nºxxxxxxxxxxxxx';
+    headerFor.cells[0].value = 'Processo Administrativo nº ${conLic.licitacao['processo']}';
 
     PdfGridRow headerCnpj = grid.headers[2];
-    headerCnpj.cells[0].value = 'Energia ';
+    headerCnpj.cells[0].value = '${conEmp.empresa['nome']} ';
 
     PdfGridRow header1 = grid.headers[3];
     header1.cells[0].value = 'Cod';
@@ -128,11 +137,11 @@ class _PdfOrdemEmpresaState extends State<PdfOrdemEmpresa> {
     row6.height = 30;
 
     PdfGridRow row7 = grid.rows.add();
-   // row7.cells[0].value = conConf.nomeResponsavel.value;
+    row7.cells[0].value = conPref.prefeitura['contato'];
     row7.height = 20;
 
     PdfGridRow row8 = grid.rows.add();
-  //  row8.cells[0].value = conConf.cargoResponsavel.value;
+   row8.cells[0].value = conPref.prefeitura['cargo'];
     row8.height = 20;
 
     row2.cells[0].columnSpan = 5;

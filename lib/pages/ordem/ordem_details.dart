@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
+import 'package:mip_app/controllers/empresaController.dart';
 import 'package:mip_app/controllers/itemController.dart';
+import 'package:mip_app/controllers/licitacaoController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
+import 'package:mip_app/controllers/prefeituraController.dart';
 import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/pages/ordem/pdf/oficio_pdf.dart';
 import 'package:mip_app/pages/ordem/pdf/pdf-ordem-empresa.dart';
 
 // ignore: must_be_immutable
@@ -21,25 +26,45 @@ class OrdemDetails extends StatefulWidget {
 class _OrdemDetailsState extends State<OrdemDetails> {
   final ItemController conIte = Get.put(ItemController());
   final OrdemController conOrd = Get.put(OrdemController());
+  final PrefeituraController conPref = Get.put(PrefeituraController());
+  final EmpresaController conEmp = Get.put(EmpresaController());
+  final LicitacaoController conLic = Get.put(LicitacaoController());
   var formatador = NumberFormat("#,##0.00", "pt_BR");
+  TextEditingController numero = TextEditingController();
 
   List<dynamic> listaItens = [].obs;
-  List<Map<String, dynamic>> list=[];
+  List<Map<String, dynamic>> list = [];
   get item => widget.item;
+  String licitacao = '';
+  String empresa = '';
+  String tipo = '1';
+
+  lici(String id) async {
+    await conLic.getLicitacao(context, id);
+    licitacao = (conLic.licitacao['processo']);
+  }
+
+  empre(String id) async {
+    await conEmp.getEmpresa(context, id);
+    empresa = (conLic.licitacao['empresa']);
+  }
 
   @override
   void initState() {
     super.initState();
-  //  list.addAll(item);
+    conPref.getPrefeitura(context);
 
+    lici(item['itensOrdem'][0]['licitacao']);
+    empre(item['itensOrdem'][0]['empresa']);
 
+    tipo = item['id'][item['id'].length - 1];
+    print("tipo $tipo");
 
     for (var x in item['itensOrdem']) {
       var cod = "";
       if (x['cod'] != null) {
         cod = x['cod'].toString();
       }
-
       var s = {
         "cod": cod,
         "nome": x['nome'],
@@ -49,8 +74,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
         "valor": x['valor'],
         "ordem": item['cod'],
       };
-
-     listaItens.add(s);
+      listaItens.add(s);
     }
   }
 
@@ -60,16 +84,66 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       appBar: AppBar(
         title: Text('Detalhe da Ordem ${item['cod']}'),
         actions: [
-          IconButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => PdfOrdemEmpresa(
-                      listaItens,)),
-            );
+          IconButton(
+              onPressed: () {
+                print("07");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PdfOrdemEmpresa(listaItens)),
+                );
+              },
+              icon: Icon(Icons.picture_as_pdf)),
+          IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                    title: "Numero do Documento",
+                    content: TextFormField(
+                      autofocus: true,
+                      focusNode: FocusNode(),
+                      keyboardType:
+                      TextInputType.number,
+                      maxLength: 2,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Only numbers can be entered
 
-          }, icon: Icon(Icons.picture_as_pdf)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf_sharp))
+
+                      controller: numero,
+                    ),
+                    cancel: IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.cancel)),
+                    confirm: IconButton(
+                        onPressed: () {
+                          print("88888888888888 ${numero.text}");
+                          var ofc = numero.text;
+
+                          Navigator.pop(context);
+
+                          if (ofc.length > 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OficioPdf(
+                                      item['cod'],
+                                      numero.text,
+                                      item['valor'],
+                                      tipo == "1" ? true : false)),
+                            );
+                          } else {
+                            Get.defaultDialog(
+                                title: 'Defina um numero',
+                                content: Text(
+                                    "Obrigatório definir um numero para o documento"),
+                             );
+                          }
+                        },
+                        icon: Icon(Icons.check_circle)));
+              },
+              icon: Icon(Icons.picture_as_pdf_sharp))
         ],
       ),
       body: Column(
@@ -160,11 +234,9 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                   Container(
                     child: TextButton(
                         onPressed: () {
-
-                          setState(() {
-
-                          });
-                        }, child: Text(item['status'])),
+                          setState(() {});
+                        },
+                        child: Text(item['status'])),
                   ),
                 ],
               ),
@@ -202,7 +274,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                   style: AppTextStyles.bodyWhite20,
                 ),
                 Spacer(),
-
                 Container(
                   width: 100,
                   child: Text(
@@ -210,7 +281,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                     style: AppTextStyles.bodyWhite20,
                   ),
                 ),
-
                 Container(
                   width: 100,
                   child: Text(
@@ -245,16 +315,17 @@ class _OrdemDetailsState extends State<OrdemDetails> {
 
                     return Row(
                       children: [
-                        Container(width:100,child: Text(cod)),
-                        Container(width:100, child: Text(unidade)),
-                        Container( child: Text(nome)),
+                        Container(width: 100, child: Text(cod)),
+                        Container(width: 100, child: Text(unidade)),
+                        Container(child: Text(nome)),
                         Spacer(),
-
-                        Container(width:100,
-                            child: Text(quantidade.toString())),
-                        Container(width:100,
+                        Container(
+                            width: 100, child: Text(quantidade.toString())),
+                        Container(
+                            width: 100,
                             child: Text('R\$ ${formatador.format(valor)}')),
-                        Container(width:100,
+                        Container(
+                            width: 100,
                             child: Text('R\$ ${formatador.format(total)}')),
                       ],
                     );
