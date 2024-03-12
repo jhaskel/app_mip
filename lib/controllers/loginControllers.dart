@@ -1,35 +1,101 @@
-import 'package:flutter/foundation.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mip_app/model/userModel.dart';
 
-class LoginContoller with ChangeNotifier {
-  var googleSignInNow = GoogleSignIn();
+import 'package:mip_app/authentication/login_screeen.dart';
+import 'package:mip_app/global/global_var.dart';
+import 'package:mip_app/methods/common_methods.dart';
+import 'package:mip_app/pages/dashboard.dart';
 
-  GoogleSignInAccount? googleSignInAccount;
-  UserModel? userModel;
+import '../widgets/loading_dialog.dart';
+import 'package:get/get.dart';
 
-  allowUserToLogin() async {
-    print('object02');
-    kIsWeb
-        ? await (googleSignInNow.signInSilently())
-        : await (googleSignInNow.signIn());
 
-    if (kIsWeb && googleSignInAccount == null)
-      googleSignInAccount = await (googleSignInNow.signIn());
-    print('object03');
 
-    this.userModel = UserModel(
-        displayName: this.googleSignInAccount!.displayName,
-        email: this.googleSignInAccount!.email,
-        photoURL: this.googleSignInAccount!.photoUrl);
-    notifyListeners();
+
+class LoginController extends GetxController {
+
+  var auth = FirebaseAuth.instance;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  CommonMethods cMethods = CommonMethods();
+
+
+
+
+  void checkNetworkIsAvailable(BuildContext context) {
+    cMethods.checkConnectivity(context);
+    signInFormValidation(context);
+  }
+  signInFormValidation(BuildContext context) {
+    if (!emailController.text.trim().contains("@")) {
+      cMethods.displaySnackBar('digite um email válido', context);
+    } else if (passwordController.text.trim().length < 3) {
+      cMethods.displaySnackBar(
+          'senha precisa ser maior que 3 catachters', context);
+    } else {
+      signInUser(context);
+    }
   }
 
-  allowUserToLogoutW() async {
-    this.googleSignInAccount = await googleSignInNow.signOut();
 
-    userModel = null;
-    notifyListeners();
+  signInUser(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) =>
+          LoadingDialog(messageText: "Allowing you to Login..."),
+    );
+
+    final User? userFirebase = (await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .catchError((errorMsg) {
+      Navigator.pop(context);
+      cMethods.displaySnackBar(errorMsg.toString(), context);
+    }))
+        .user;
+
+    if (!context.mounted) return;
+    Navigator.pop(context);
+
+    if (userFirebase != null) {
+      DatabaseReference usersRef = FirebaseDatabase.instance
+          .ref()
+          .child("Users")
+          .child(userFirebase.uid);
+      usersRef.once().then((snap) {
+        if (snap.snapshot.value != null) {
+          if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
+            userName = (snap.snapshot.value as Map)["nome"];
+            userRole = (snap.snapshot.value as Map)["role"];
+            Navigator.push(
+                context, MaterialPageRoute(builder: (c) => Dashboard()));
+          } else {
+            auth.signOut();
+            cMethods.displaySnackBar(
+                "you está bloqueado. Contate o admin: 2bitsw@gmail.com", context);
+          }
+        } else {
+          auth.signOut();
+          cMethods.displaySnackBar(
+              "Seu email não consta em nosso sistema.", context);
+        }
+      });
+    }
   }
+  
+  logout(BuildContext context) async {
+   await auth.signOut();
+    Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()), (
+        route) => false);
+    
+  }
+
+
 }

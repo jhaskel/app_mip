@@ -9,15 +9,31 @@ class LicitacaoController extends GetxController{
   final ref = FirebaseDatabase.instance.ref('Licitacao');
   CommonMethods cMethods = CommonMethods();
   var textPage = "Licitacao".obs;
+
   List<dynamic> list = [].obs;
   dynamic licitacao=[];
 
-  getLicitacao(BuildContext context, ip) async {
 
+  getLicitacao(BuildContext context) async {
     list.clear();
     update();
 
-    await ref.orderByChild('id').equalTo(ip).onValue.listen((event) {
+    await ref.onValue.listen((event) {
+      if (event.snapshot.exists) {
+        Map pos = event.snapshot.value as Map;
+        list.clear();
+        list = pos.values.toList();
+        licitacao= list.first;
+        print("licitacaoB $licitacao");
+      }
+    });
+  }
+
+  getLicitacaoById(BuildContext context, id) async {
+    list.clear();
+    update();
+
+    await ref.orderByChild('id').equalTo(id).onValue.listen((event) {
       if (event.snapshot.exists) {
         Map pos = event.snapshot.value as Map;
         list.clear();

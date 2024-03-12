@@ -1,5 +1,9 @@
 import 'package:mip_app/controllers/homeController.dart';
+import 'package:mip_app/controllers/usuarioController.dart';
+import 'package:mip_app/pages/cadastro/cadastro_page.dart';
+
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
+import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 import 'package:mip_app/pages/profile_page.dart';
 import 'package:mip_app/pages/trips_page.dart';
@@ -17,6 +21,7 @@ class _DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
   TabController? controller;
   HomeController conHome = Get.put(HomeController());
+  UsuarioController conUse = Get.put(UsuarioController());
 
   onBarItemClicked(int i) {
     setState(() {
@@ -24,12 +29,14 @@ class _DashboardState extends State<Dashboard>
       controller!.index = conHome.indexSelected.value;
     });
   }
+  List <String>telas = ["Home","Controle","Chamado","Profile","Cadastros"];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = TabController(length: 4, vsync: this);
+    conUse.userCurrent(context);
+    controller = TabController(length: telas.length, vsync: this);
   }
 
   @override
@@ -46,19 +53,23 @@ class _DashboardState extends State<Dashboard>
         controller: controller,
         children: [
           MapsChamadoPage(),
+          ControlePage(),
           CreateDefeitoPage(),
-          TripsPage(),
           ProfilePage(),
+          CadastroPage(),
+
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        items:  [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: telas[0]),
           BottomNavigationBarItem(
-              icon: Icon(Icons.credit_card), label: "Earnings"),
+              icon: Icon(Icons.credit_card), label: telas[1]),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_tree), label: "Trips"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+              icon: Icon(Icons.add_circle_sharp,color: Colors.amber,size: 30,), label: telas[2]),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: telas[3]),
+          BottomNavigationBarItem(icon: Icon(Icons.g_mobiledata), label: telas[4]),
+
         ],
         currentIndex: conHome.indexSelected.value,
         //backgroundColor: Colors.grey,

@@ -24,15 +24,22 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
 
   @override
   void initState() {
-    super.initState();
-
     conIte.getItensByChamado(chamado['id']);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("yyyyyyyyyyy ${conIte.listaItensChamado.length}");
+
     return Scaffold(
-      appBar: AppBar(title: Text('Detalhe do chamado ${chamado['id']}')),
+      appBar: AppBar(title: Text('Detalhe do chamado ${chamado['id']}'),  actions: [
+        IconButton(onPressed: (){
+          setState(() {
+
+          });
+        }, icon: Icon(Icons.refresh))
+      ],),
       body: _body(context),
       bottomNavigationBar: Container(
         height: 100,
@@ -54,7 +61,7 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                       'Tem certeza que deseja autorizar o concerto no Ip ${chamado['idIp']}'),
                   onCancel: () {},
                   onConfirm: () {
-                    conCha.alterarStatus(
+                    conCha.alterarStatus(context,
                         chamado['id'],
                         chamado['idIp'],
                         StatusApp.autorizado.message,
@@ -76,8 +83,9 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
   }
 
   _body(BuildContext context) {
+
     return Obx(
-      () => Column(
+      () => conIte.loading.value==true?CircularProgressIndicator():Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(

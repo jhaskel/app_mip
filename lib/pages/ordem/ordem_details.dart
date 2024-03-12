@@ -40,7 +40,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   String tipo = '1';
 
   lici(String id) async {
-    await conLic.getLicitacao(context, id);
+    await conLic.getLicitacaoById(context, id);
     licitacao = (conLic.licitacao['processo']);
   }
 

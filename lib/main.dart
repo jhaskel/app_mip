@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/authentication/login_screeen.dart';
 import 'package:mip_app/exportPage.dart';
 import 'package:mip_app/pages/chamados/chamados_page.dart';
+import 'package:mip_app/pages/dashboard.dart';
 import 'package:mip_app/pages/ip/ip_page.dart';
 
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
@@ -18,6 +21,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -25,7 +29,6 @@ void main() async {
   if (kIsWeb) {
   } else {
     await FlutterConfig.loadEnvVariables();
-
     await Permission.locationWhenInUse.isDenied.then((valueOfPermission) {
       if ((valueOfPermission)) {
         Permission.locationWhenInUse.request();
@@ -41,24 +44,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("passou");
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => LoginContoller())
-      ],
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        locale: Locale('pt', 'BR'),
-        title: 'CoMip',
-        theme: ThemeData.dark(
-          useMaterial3: true,
-        ),
 
-        home: MapsChamadoPage(),
-        //home: IpPage(),
-        //home: MapsIp(),
-        //  home: const LoginPage(),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      locale: Locale('pt', 'BR'),
+      title: 'CoMip',
+      theme: ThemeData.dark(
+        useMaterial3: true,
       ),
+
+    //  home: MapsChamadoPage(),
+      home: FirebaseAuth.instance.currentUser == null
+          ? LoginScreen()
+          : Dashboard(),
+
+
+      //home: MapsIp(),
+      //  home: const LoginPage(),
     );
   }
 }

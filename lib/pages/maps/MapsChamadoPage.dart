@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
+import 'package:mip_app/controllers/usuarioController.dart';
 import 'package:mip_app/global/app_colors.dart';
+import 'package:mip_app/global/global_var.dart';
 
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/controle/autorizacao_page.dart';
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
-import 'package:mip_app/pages/controle/controle_page.dart';
+
 import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/ordem/create_ordem_home.dart';
 import 'package:mip_app/pages/ordem/ordem_page.dart';
@@ -21,6 +23,7 @@ class MapsChamadoPage extends StatefulWidget {
 
 class _MapsChamadoPageState extends State<MapsChamadoPage> {
   final controller = Get.put(ChamadoController());
+  final conUse = Get.put(UsuarioController());
 
   @override
   void initState() {
@@ -34,8 +37,10 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("maps"),
+        appBar: userRole==''|| userRole==Util.roles[0]
+            ?AppBar(title: Text("Postes com Defeito"),)
+            :AppBar(
+          title: Text("Postes com Defeito"),
           actions: [
             IconButton(
                 onPressed: () {
@@ -45,24 +50,8 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                   );
                 },
                 icon: Icon(Icons.add)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ControlePage()),
-                  );
-                },
-                icon: Icon(Icons.list)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AutorizacaoPage()),
-                  );
-                },
-                icon: Icon(Icons.ac_unit_outlined)),
+
+
             IconButton(
                 onPressed: () {
                   Navigator.push(
@@ -71,72 +60,15 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                   );
                 },
                 icon: Icon(Icons.savings_outlined)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OrdemPage()),
-                  );
-                },
-                icon: Icon(Icons.radar)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.public_off_sharp)),
+
+
           ],
         ),
         body: _body(),
-        bottomNavigationBar: Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateDefeitoPage()),
-              );
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              color: AppColors.primaria,
-              child: Center(
-                  child: Text(
-                "Cadastrar defeito em Poste",
-                style: TextStyle(
-                    color: AppColors.black87,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              )),
-            ),
-          ),
-        ),
+
       ),
     );
-    /*  return StreamBuilder(
-        stream: controller.event(),
-        builder: (context, snapshot) {
-          Map<dynamic, dynamic> maps = snapshot.data!.snapshot.value as Map;
-          List<dynamic> list = [];
-          list.clear();
-          list = maps.values.toList();
-          controller.dispara(list);
-          return Scaffold(
-            appBar: AppBar(
-              title: Obx(() => Text(controller.textAppBar.value)),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.accessibility,
-                    color: Colors.amber,
-                  ),
-                  onPressed: () {
-                    controller.changeValor();
-                  },
-                ),
-              ],
-            ),
-            body: _body(controller, list),
-          );
-        });*/
+
   }
 
   _body() {
@@ -167,26 +99,14 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                         children: [
                           Row(
                             children: [
-                              const Icon(
-                                Icons.circle,
-                                color: Colors.amber,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(StatusApp.normal.message)
-                            ],
-                          ),
-                          Row(
-                            children: [
                               Icon(
                                 Icons.circle,
-                                color: Colors.green,
+                                color: Colors.red,
                               ),
                               SizedBox(
                                 width: 5,
                               ),
-                              Text(StatusApp.concertando.message)
+                              Text(StatusApp.defeito.message)
                             ],
                           ),
                           Row(
@@ -201,16 +121,32 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                               Text(StatusApp.agendado.message)
                             ],
                           ),
+
                           Row(
                             children: [
+
                               Icon(
                                 Icons.circle,
-                                color: Colors.red,
+                                color: Colors.green,
                               ),
                               SizedBox(
                                 width: 5,
                               ),
-                              Text(StatusApp.defeito.message)
+                              Text(StatusApp.concertando.message)
+                            ],
+                          ),
+
+
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.circle,
+                                color: Colors.amber,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Concertado')
                             ],
                           ),
                         ],

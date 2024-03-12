@@ -59,7 +59,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 widget.chamado['status'] == StatusApp.defeito.message
                     ? MaterialButton(
                         onPressed: () async {
-                          await conCha.alterarStatus(
+                          await conCha.alterarStatus(context,
                               widget.chamado['id'],
                               widget.chamado['idIp'],
                               StatusApp.agendado.message,0.0);
@@ -78,7 +78,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 widget.chamado['status'] == StatusApp.agendado.message
                     ? MaterialButton(
                         onPressed: () async {
-                          await conCha.alterarStatus(
+                          await conCha.alterarStatus(context,
                               widget.chamado['id'],
                               widget.chamado['idIp'],
                               StatusApp.concertando.message,0.0);
@@ -98,7 +98,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 ),
                 MaterialButton(
                   onPressed: () async {
-                    await conCha.alterarStatus(widget.chamado['id'],
+                    await conCha.alterarStatus(context,widget.chamado['id'],
                         widget.chamado['idIp'], StatusApp.normal.message,0.0);
                     Get.back();
                   },
@@ -113,7 +113,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 ),
                 MaterialButton(
                   onPressed: () async {
-                    await conCha.alterarStatus(widget.chamado['id'],
+                    await conCha.alterarStatus(context,widget.chamado['id'],
                         widget.chamado['idIp'], StatusApp.defeito.message,0.0);
                     Get.back();
                   },

@@ -18,21 +18,24 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
   final ChamadoController conCha = Get.put(ChamadoController());
   final IpController conIp = Get.put(IpController());
 
-  @override
-  void initState() {
-    super.initState();
-    conCha.getChamadosConcertado(context, "lancado");
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Autorizacao'),
+        title: Text('Autorização'),
+        actions: [
+          IconButton(onPressed: (){
+            setState(() {
+
+            });
+          }, icon: Icon(Icons.refresh))
+        ],
       ),
       body: Obx(
         () => Column(
           children: [
+            Container(height: 40,child: Text(conCha.loading.value.toString()),),
             Container(
               height: conCha.alturaContainer.value,
               decoration: BoxDecoration(
@@ -55,58 +58,90 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
               height: 10,
             ),
             Expanded(
-              child: Container(
-                child: Center(
-                  child: conCha.listaChamados.length > 0
-                      ? ListView.separated(
-                          itemCount: conCha.listaChamados.length,
-                          itemBuilder: (context, index) {
-                            var item = conCha.listaChamados[index];
-                            DateTime crea = DateTime.parse(item['modifiedAt']);
+              child: StreamBuilder(
+                  stream: conCha.ref
+                      .orderByChild('status')
+                      .equalTo('lancado')
+                      .onValue,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }else{
+                    if (snapshot.data!.snapshot.value == null) {
+                      if (snapshot.data!.snapshot.value == null) {
+                        return Center(
+                            child: Container(
+                              child: Text("Nenhum Chamado Para esse IP"),
+                            ));
+                      }
+                    }else{
 
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ChamadoDetails(
-                                            item,
-                                          )),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(
-                                          DateFormat("dd/MM").format(crea))),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['id'])),
-                                  Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['idIp'])),
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: Text(item['status'])),
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return Divider(
-                              thickness: 1,
-                            );
-                          },
-                        )
-                      : Center(
-                          child: Text("Nenhum Ip"),
+                      Map maps = snapshot.data!.snapshot.value as Map;
+
+
+
+
+                      var list = maps.values.toList()
+                        ..sort(((a, b) => (b["modifiedAt"]).compareTo((a["modifiedAt"]))));
+
+                      return Container(
+                        child: Center(
+                          child:  ListView.separated(
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              var item = list[index];
+                              DateTime crea = DateTime.parse(item['modifiedAt']);
+
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ChamadoDetails(
+                                          item,
+                                        )),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Text(
+                                            DateFormat("dd/MM").format(crea))),
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['id'])),
+                                    Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['idIp'])),
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['status'])),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return Divider(
+                                thickness: 1,
+                              );
+                            },
+                          )
+
                         ),
-                ),
+                      );
+
+                    }
+
+                  }
+                  return Container();
+
+
+                }
               ),
             ),
           ],
@@ -115,3 +150,4 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
     );
   }
 }
+

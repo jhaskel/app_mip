@@ -47,6 +47,8 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
               'quant': 1,
               'valor': item['valor'],
               'total': item['valor'],
+              'licitacao': item['licitacao'],
+              'empresa': item['empresa'],
             };
 
             conCon.adicionarItemLicitado(iten);

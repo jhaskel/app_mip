@@ -1,9 +1,12 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:intl/intl.dart';
 import 'package:mip_app/global/app_colors.dart';
+import 'package:mip_app/pages/controle/autorizacao_page.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
 
 class ControlePage extends StatefulWidget {
@@ -18,15 +21,36 @@ class _ControlePageState extends State<ControlePage> {
 
   @override
   void initState() {
+
     super.initState();
-    conCha.getChamadosConcertado(context, "realizado");
+    conCha.getChamadosLancado(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Controle'),
+        title: Text('Controle',),actions: [
+          Obx(
+          ()=> IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AutorizacaoPage()),
+              );
+            },
+            icon: Stack(
+              children: [
+                Icon(Icons.ac_unit_outlined),
+                Positioned(
+                  top: -5,
+                    right: -5,
+
+                    child: CircleAvatar(backgroundColor:Colors.white,radius:10,child: Text("${conCha.quantLancados.value}",style: TextStyle(color: Colors.red) ,)))
+              ],
+            )),
+          ),SizedBox(width: 20,)],
       ),
       body: Obx(
         () => Column(
@@ -53,56 +77,87 @@ class _ControlePageState extends State<ControlePage> {
               height: 10,
             ),
             Expanded(
-              child: Container(
-                child: conCha.listaChamados.length > 0
-                    ? ListView.separated(
-                        itemCount: conCha.listaChamados.length,
-                        itemBuilder: (context, index) {
-                          var item = conCha.listaChamados[index];
-                          DateTime crea = DateTime.parse(item['modifiedAt']);
+              child: StreamBuilder(
+                  stream: conCha.ref
+                      .orderByChild('status')
+                      .equalTo('realizado')
+                      .onValue,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }else{
+                      if (snapshot.data!.snapshot.value == null) {
+                        if (snapshot.data!.snapshot.value == null) {
+                          return Center(
+                              child: Container(
+                                child: Text("Nenhum Chamado Para esse IP"),
+                              ));
+                        }
+                      }else{
 
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        FinalizandoPage(item)),
+                        Map maps = snapshot.data!.snapshot.value as Map;
+
+
+                       var list = maps.values.toList()
+                          ..sort(((a, b) => (b["modifiedAt"]).compareTo((a["modifiedAt"]))));
+                        return Container(
+                          child:  ListView.separated(
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              var item = list[index];
+                              DateTime crea =
+                              DateTime.parse(item['modifiedAt']);
+
+                              return InkWell(
+                                onTap: () {
+                                  var t = Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            FinalizandoPage(item)),
+                                  );
+
+
+                                },
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Text(DateFormat("dd/MM")
+                                            .format(crea))),
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['defeito'])),
+                                    Flexible(
+                                        flex: 1,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['idIp'])),
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['status'])),
+                                  ],
+                                ),
                               );
                             },
-                            child: Row(
-                              children: [
-                                Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child:
-                                        Text(DateFormat("dd/MM").format(crea))),
-                                Flexible(
-                                    flex: 2,
-                                    fit: FlexFit.tight,
-                                    child: Text(item['defeito'])),
-                                Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: Text(item['idIp'])),
-                                Flexible(
-                                    flex: 2,
-                                    fit: FlexFit.tight,
-                                    child: Text(item['status'])),
-                              ],
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider(
-                            thickness: 1,
-                          );
-                        },
-                      )
-                    : Center(
-                        child: Text("Nenhum Ip"),
-                      ),
-              ),
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return Divider(
+                                thickness: 1,
+                              );
+                            },
+                          )
+
+
+                        );
+                      }
+
+                    }
+                  return Container();
+
+                  }),
             ),
           ],
         ),

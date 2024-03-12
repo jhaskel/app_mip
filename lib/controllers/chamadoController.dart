@@ -167,7 +167,7 @@ class ChamadoController extends GetxController {
       cMethods.displaySnackBar("Erro ao Luminária adicionada!", context);
     });
 
-    Navigator.pop(context);
+  //  Navigator.pop(context);
     // buscaPostesDefeito();
     clear();
   }
@@ -269,21 +269,11 @@ class ChamadoController extends GetxController {
       listaChamados = pos.values.toList()
         ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
 
-
       quantChamados(listaChamados.length);
-
-
-
-
       double soma =
           listaChamados.map((e) => e['total']).reduce((v, e) => v + e);
-      print("okkkkkkkkkkkk1");
+
       gastosTotalChamados(soma);
-
-
-
-
-
 
      quantChamados(listaChamados.length);
       for (var x in listaChamados) {
@@ -302,36 +292,33 @@ class ChamadoController extends GetxController {
   void getChamadosRealizado(BuildContext context) async {
     await ref.orderByChild('status').equalTo('realizado').get().then((value) {
       Map pos = value.value as Map;
-
       listaChamados.clear();
       listaChamados = pos.values.toList();
       print(listaChamados.length);
     });
-
     update();
   }
 
-  getChamadosConcertado(BuildContext context, String stattus) async {
-    listaChamados.clear();
+  var quantLancados = 0.obs;
 
-    await ref.orderByChild('status').equalTo(stattus).onValue.listen((event) {
-      listaChamados.clear();
+  getChamadosLancado(BuildContext context) async {
+
+    await ref.orderByChild('status').equalTo('lancado').onValue.listen((event) {
+
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;
        // print('maps $maps');
 
         var list = maps.values.toList();
-        list = maps.values.toList()
-          ..sort(((a, b) => (b["modifiedAt"]).compareTo((a["modifiedAt"]))));
+        list = maps.values.toList();
+        quantLancados(list.length);
 
-        for (var x in list) {
-          listaChamados.add(x);
-        }
+        print("quantLancados ${quantLancados}");
 
 
-        loading(false);
-        update();
+
       }
+
 
       update();
     });
@@ -346,7 +333,7 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  alterarStatus(String id, String idIp, String message, double total) {
+  alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
     ref.child(id).update({
       "status": message,
       "total": total,
@@ -355,11 +342,11 @@ class ChamadoController extends GetxController {
     }).then((value) {
       if (message == StatusApp.autorizado.message) {
         conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+
       } else {
         conIp.alteraStatusIp(idIp, message);
       }
     });
-
     buscaPostesDefeito();
     conIp.buscaPostes();
     update();

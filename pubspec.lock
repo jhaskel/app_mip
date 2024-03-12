@@ -339,6 +339,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_vector_icons:
+    dependency: "direct main"
+    description:
+      name: flutter_vector_icons
+      sha256: "20a77e282f8cb438c8edcee4eec85d8497d5f4cbeb07d116e9d2d01c9edfc5e2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -848,6 +856,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  rect_getter:
+    dependency: transitive
+    description:
+      name: rect_getter
+      sha256: "1c71e4ab5fb7d83d2b14a8338f979bc9ae57eefba786e7fbc91f6746dac2193d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   rxdart:
     dependency: transitive
     description:
@@ -864,6 +880,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  scroll_to_index:
+    dependency: transitive
+    description:
+      name: scroll_to_index
+      sha256: b707546e7500d9f070d63e5acf74fd437ec7eeeb68d3412ef7b0afada0b4f176
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  side_navigation:
+    dependency: "direct main"
+    description:
+      name: side_navigation
+      sha256: "32da9920e604ff38bbaef8a083845a62561bf882c98c6eedd5b5860899091bb2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -941,6 +973,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "23.2.7"
+  tab_container:
+    dependency: "direct main"
+    description:
+      name: tab_container
+      sha256: "05782d9364332a55a5615825f83fa2595d21c2876dee2374bd32ff8b1031ee1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   term_glyph:
     dependency: transitive
     description:
@@ -981,6 +1021,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  vertical_scrollable_tabview:
+    dependency: "direct main"
+    description:
+      name: vertical_scrollable_tabview
+      sha256: a6de900ffadc23c0f26ba42522f19b9bba4d0a062a4e7413e6a7897a3c9e7425
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   web:
     dependency: transitive
     description:

@@ -84,7 +84,7 @@ class ControleController extends GetxController {
         print("${listaFinal[index]['quant']}");
         update();
       } else {
-        Get.defaultDialog(title: "OOPs", content: Text("Estoque insufuciente"));
+        Get.defaultDialog(title: "OOPs", content: Text("Estoque insuficiente"));
       }
     } else {
       if (listaFinal[index]['quant'] > 1) {

@@ -72,13 +72,16 @@ class IpController extends GetxController {
   List<dynamic> listaIp = [].obs;
 
   getIp() async {
+    loading(true);
     await ref.get().then((value) {
       Map pos = value.value as Map;
-      final sorted = Map.fromEntries(
-          pos.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+
 
       listaIp.clear();
-      listaIp = sorted.values.toList();
+
+      listaIp = pos.values.toList()
+        ..sort(((a, b) => (a["id"]).compareTo((b["id"]))));
+
       quantIp(listaIp.length);
       quantIpNormal(0);
       quantIpAgendado(0);
@@ -99,6 +102,7 @@ class IpController extends GetxController {
         }
       }
     });
+    loading(false);
 
     update();
   }

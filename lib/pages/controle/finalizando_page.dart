@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_colors.dart';
@@ -19,6 +20,7 @@ class FinalizandoPage extends StatefulWidget {
 
 class _FinalizandoPageState extends State<FinalizandoPage> {
   final ControleController conCon = Get.put(ControleController());
+  final ChamadoController conCha = Get.put(ChamadoController());
   final ItemController conIte = Get.put(ItemController());
 
   @override
@@ -42,7 +44,9 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
             onTap: () async {
               await conIte.createItem(
                   context, conCon.listaFinal, StatusApp.lancado.message);
+
               Navigator.pop(context);
+
             },
             child: Center(
                 child: Text(

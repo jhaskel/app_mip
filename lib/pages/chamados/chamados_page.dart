@@ -18,6 +18,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
   var formatador = NumberFormat("#,##0.00", "pt_BR");
   double alturaContainer = 120;
   double larguraContainer = 120;
+  int index=0;
 
   @override
   void initState() {
@@ -41,7 +42,23 @@ class _ChamadosPageState extends State<ChamadosPage> {
   }
 
   Container _body(BuildContext context) {
-    larguraContainer = (MediaQuery.of(context).size.width / 4) - 16;
+    switch (index) {
+      case 0:
+        conCha.listaChamados..sort(((a, b) => (a["id"]).compareTo((b["id"]))));
+        break;
+      case 1:
+        conCha.listaChamados..sort(((a, b) => (b["id"]).compareTo((a["id"]))));
+        break;
+
+      case 2:
+        conCha.listaChamados..sort(((a, b) => (a["idIp"]).compareTo((b["idIp"]))));
+        break;
+      case 3:
+        conCha.listaChamados..sort(((a, b) => (b["idIp"]).compareTo((a["idIp"]))));
+        break;
+
+    }
+    larguraContainer = (MediaQuery.of(context).size.width / 4) ;
     return Container(
       child: Obx(() => Column(
             children: [
@@ -73,7 +90,21 @@ class _ChamadosPageState extends State<ChamadosPage> {
                 child: Row(children: [
                   Container(
                     width: 100,
-                    child: Text("data"),
+                    child:  Row(
+                      children: [
+                        Text('Data'),
+                        index==0
+                            ? IconButton(onPressed: (){
+                          setState(() {
+                            index=1;
+                          });
+                        }, icon: Icon(Icons.arrow_circle_down)):IconButton(onPressed: (){
+                          setState(() {
+                            index=0;
+                          });
+                        }, icon: Icon(Icons.arrow_circle_up))
+                      ],
+                    ),
                   ),
                   Container(
                     width: 200,
@@ -81,7 +112,21 @@ class _ChamadosPageState extends State<ChamadosPage> {
                   ),
                   Container(
                     width: 100,
-                    child: Text("IP"),
+                    child:  Row(
+                      children: [
+                        Text('Ip'),
+                        index!=2
+                            ? IconButton(onPressed: (){
+                          setState(() {
+                            index=2;
+                          });
+                        }, icon: Icon(Icons.arrow_circle_down)):IconButton(onPressed: (){
+                          setState(() {
+                            index=3;
+                          });
+                        }, icon: Icon(Icons.arrow_circle_up))
+                      ],
+                    ),
                   ),
                   Container(
                     width: 100,
@@ -171,7 +216,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         height: alturaContainer,
-        width: larguraContainer,
+        width: larguraContainer-75,
         decoration: BoxDecoration(
             border: Border.all(width: 2, color: AppColors.primaria)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

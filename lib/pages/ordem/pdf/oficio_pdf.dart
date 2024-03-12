@@ -174,7 +174,7 @@ class _OficioPdfState extends State<OficioPdf> {
     document.dispose();
     //Save and launch the file.
     await FileSaveHelper.saveAndLaunchFile(
-        bytes, 'Ordem nº ${widget.ordem}.pdf');
+        bytes, 'oficio nº ${widget.ordem}.pdf');
     //Launch file.
   }
 

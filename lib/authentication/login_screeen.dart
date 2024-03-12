@@ -3,7 +3,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mip_app/authentication/signup_screen.dart';
+import 'package:mip_app/controllers/loginControllers.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/methods/common_methods.dart';
 import 'package:mip_app/pages/dashboard.dart';
@@ -17,10 +19,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  CommonMethods cMethods = CommonMethods();
 
+  final LoginController conLog = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 22,
                     ),
                     TextField(
-                      controller: emailController,
+                      controller: conLog.emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 22,
                     ),
                     TextField(
-                      controller: passwordController,
+                      controller: conLog.passwordController,
                       keyboardType: TextInputType.emailAddress,
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          checkNetworkIsAvailable();
+                          conLog.checkNetworkIsAvailable(context);
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
@@ -109,66 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void checkNetworkIsAvailable() {
-    cMethods.checkConnectivity(context);
-    signInFormValidation();
-  }
 
-  signInFormValidation() {
-    if (!emailController.text.trim().contains("@")) {
-      cMethods.displaySnackBar('digite um email válido', context);
-    } else if (passwordController.text.trim().length < 3) {
-      cMethods.displaySnackBar(
-          'senha precisa ser maior que 3 catachters', context);
-    } else {
-      signInUser();
-    }
-  }
 
-  signInUser() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) =>
-          LoadingDialog(messageText: "Allowing you to Login..."),
-    );
 
-    final User? userFirebase = (await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    )
-            .catchError((errorMsg) {
-      Navigator.pop(context);
-      cMethods.displaySnackBar(errorMsg.toString(), context);
-    }))
-        .user;
 
-    if (!context.mounted) return;
-    Navigator.pop(context);
 
-    if (userFirebase != null) {
-      DatabaseReference usersRef = FirebaseDatabase.instance
-          .ref()
-          .child("drivers")
-          .child(userFirebase.uid);
-      usersRef.once().then((snap) {
-        if (snap.snapshot.value != null) {
-          if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
-            userName = (snap.snapshot.value as Map)["name"];
-            Navigator.push(
-                context, MaterialPageRoute(builder: (c) => Dashboard()));
-          } else {
-            FirebaseAuth.instance.signOut();
-            cMethods.displaySnackBar(
-                "you are blocked. Contact admin: alizeb875@gmail.com", context);
-          }
-        } else {
-          FirebaseAuth.instance.signOut();
-          cMethods.displaySnackBar(
-              "your record do not exists as a Driver.", context);
-        }
-      });
-    }
-  }
 }
