@@ -36,6 +36,17 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Chamado : ${widget.chamado['id']}",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       "IP : ${widget.chamado['idIp']}",
                       style: TextStyle(color: Colors.black),
@@ -52,78 +63,83 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
               ],
             ),
             SizedBox(
-              width: 10,
+              width: 30,
             ),
-            Row(
-              children: [
-                widget.chamado['status'] == StatusApp.defeito.message
-                    ? MaterialButton(
-                        onPressed: () async {
-                          await conCha.alterarStatus(context,
-                              widget.chamado['id'],
-                              widget.chamado['idIp'],
-                              StatusApp.agendado.message,0.0);
-                          Get.back();
-                        },
-                        color: Colors.blue,
-                        child: Text(
-                          "Agendar",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  width: 10,
-                ),
-                widget.chamado['status'] == StatusApp.agendado.message
-                    ? MaterialButton(
-                        onPressed: () async {
-                          await conCha.alterarStatus(context,
-                              widget.chamado['id'],
-                              widget.chamado['idIp'],
-                              StatusApp.concertando.message,0.0);
-                          Get.back();
+            Divider(thickness: 2,color: Colors.blue,),
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  widget.chamado['status'] == StatusApp.defeito.message
+                      ? MaterialButton(
 
-                          Get.to(ConsertandoPage(widget.chamado));
-                        },
-                        color: Colors.green,
-                        child: Text(
-                          "Consertar",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  width: 10,
-                ),
-                MaterialButton(
-                  onPressed: () async {
-                    await conCha.alterarStatus(context,widget.chamado['id'],
-                        widget.chamado['idIp'], StatusApp.normal.message,0.0);
-                    Get.back();
-                  },
-                  color: Colors.amber,
-                  child: Text(
-                    "Normal",
-                    style: TextStyle(color: Colors.white),
+                          onPressed: () async {
+                            await conCha.alterarStatus(context,
+                                widget.chamado['id'],
+                                widget.chamado['idIp'],
+                                StatusApp.agendado.message,0.0);
+                            Get.back();
+                          },
+                          color: Colors.blue,
+                          child: Text(
+                            "Agendar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                MaterialButton(
-                  onPressed: () async {
-                    await conCha.alterarStatus(context,widget.chamado['id'],
-                        widget.chamado['idIp'], StatusApp.defeito.message,0.0);
-                    Get.back();
-                  },
-                  color: Colors.red,
-                  child: Text(
-                    "Defeito",
-                    style: TextStyle(color: Colors.white),
+                  widget.chamado['status'] == StatusApp.agendado.message
+                      ? MaterialButton(
+                          onPressed: () async {
+                            await conCha.alterarStatus(context,
+                                widget.chamado['id'],
+                                widget.chamado['idIp'],
+                                StatusApp.concertando.message,0.0);
+                            Get.back();
+
+                            Get.to(ConsertandoPage(widget.chamado));
+                          },
+                          color: Colors.green,
+                          child: Text(
+                            "Consertar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
-              ],
+                  MaterialButton(
+                    onPressed: () async {
+                      await conCha.alterarStatus(context,widget.chamado['id'],
+                          widget.chamado['idIp'], StatusApp.normal.message,0.0);
+                      Get.back();
+                    },
+                    color: Colors.amber,
+                    child: Text(
+                      "Normal",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  MaterialButton(
+                    onPressed: () async {
+                      await conCha.alterarStatus(context,widget.chamado['id'],
+                          widget.chamado['idIp'], StatusApp.defeito.message,0.0);
+                      Get.back();
+                    },
+                    color: Colors.red,
+                    child: Text(
+                      "Defeito",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ));

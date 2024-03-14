@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mip_app/pages/Prefeitura/prefeitura_page.dart';
 import 'package:mip_app/pages/chamados/chamados_page.dart';
+import 'package:mip_app/pages/empresa/empresa_page.dart';
 import 'package:mip_app/pages/ip/ip_page.dart';
 import 'package:mip_app/pages/licitacao/licitacao_page.dart';
 import 'package:mip_app/pages/ordem/ordem_page.dart';
+import 'package:mip_app/pages/usuarios/usuarios_page.dart';
+
 import 'package:side_navigation/side_navigation.dart';
 
 
@@ -20,14 +24,12 @@ class _CadastroPageState extends State<CadastroPage> {
     OrdemPage(),
     LicitacaoPage(),
     Center(
-      child: Text('Account'),
+      child: Text('COSIP'),
     ),
-    Center(
-      child: Text('Settings'),
-    ),
-    Center(
-      child: Text('Settings'),
-    ),
+    EmpresaPage(),
+    PrefeituraPage(),
+    UsuarioPage(),
+
     Center(
       child: Text('Settings'),
     ),

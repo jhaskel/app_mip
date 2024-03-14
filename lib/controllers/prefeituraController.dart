@@ -10,13 +10,12 @@ class PrefeituraController extends GetxController{
   CommonMethods cMethods = CommonMethods();
   var textPage = "Prefeitura".obs;
   List<dynamic> list = [].obs;
+  List<dynamic> listPrefeituras = [].obs;
   dynamic prefeitura=[];
 
   getPrefeitura(BuildContext context,) async {
 
     list.clear();
-    update();
-
     await ref.orderByChild('isAtivo').equalTo(true).onValue.listen((event) {
       if (event.snapshot.exists) {
         Map pos = event.snapshot.value as Map;
@@ -26,6 +25,22 @@ class PrefeituraController extends GetxController{
         print("prefeituraB $prefeitura");
       }
     });
+    update();
+  }
+
+  getPrefeituraAll(BuildContext context,) async {
+
+
+    await ref.onValue.listen((event) {
+      listPrefeituras.clear();
+      if (event.snapshot.exists) {
+        Map pos = event.snapshot.value as Map;
+        listPrefeituras.clear();
+        listPrefeituras = pos.values.toList();
+      }
+    });
+
+    update();
   }
 
 

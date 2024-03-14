@@ -26,6 +26,7 @@ class _LicitacaoPageState extends State<LicitacaoPage> {
     super.initState();
     conLic.getLicitacao(context);
 
+
   }
 
   @override
@@ -63,14 +64,13 @@ class _LicitacaoPageState extends State<LicitacaoPage> {
             ),
             Expanded(
               child: Container(
-                child: conLic.list.length > 0
+                child: conLic.listLicitacoes.length > 0
                     ? ListView.separated(
-                        itemCount: conLic.list.length,
+                        itemCount: conLic.listLicitacoes.length,
                         itemBuilder: (context, index) {
-                          dynamic item = conLic.list[index];
+                          dynamic item = conLic.listLicitacoes[index];
                           DateTime hoje=DateTime.now();
                           DateTime crea = DateTime.parse(item['homologadoAt']);
-
 
                           var processo = item['processo'];
                           var nome = item['alias'];
@@ -88,7 +88,7 @@ class _LicitacaoPageState extends State<LicitacaoPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => LicitacaoDetail(
-                                        conLic.list[index])),
+                                        conLic.listLicitacoes[index],dias)),
                               );
                             },
                             child: Row(
@@ -102,10 +102,6 @@ class _LicitacaoPageState extends State<LicitacaoPage> {
                                 Container(width: 100, child: Text(
                                     'R\$ ${formatador.format(valor)}')),
                                 Container(width: 100, child: ativo==1?Icon(Icons.circle,color: Colors.green,):Icon(Icons.circle,color: Colors.red,)),
-
-
-
-
 
                               ],
                             ),
