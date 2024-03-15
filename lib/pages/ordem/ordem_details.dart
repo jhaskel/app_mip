@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/empresaController.dart';
@@ -12,6 +15,7 @@ import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/ordem/pdf/oficio_pdf.dart';
 import 'package:mip_app/pages/ordem/pdf/pdf-ordem-empresa.dart';
+
 
 // ignore: must_be_immutable
 class OrdemDetails extends StatefulWidget {
@@ -38,6 +42,18 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   String licitacao = '';
   String empresa = '';
   String tipo = '1';
+
+  XFile? imageFile;
+  String urlOfUploadedImage = "";
+  chooseImageFromGallery() async {
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = pickedFile;
+      });
+    }
+  }
 
   lici(String id) async {
     await conLic.getLicitacaoById(context, id);
@@ -118,7 +134,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                         icon: Icon(Icons.cancel)),
                     confirm: IconButton(
                         onPressed: () {
-                          print("88888888888888 ${numero.text}");
+
                           var ofc = numero.text;
 
                           Navigator.pop(context);
@@ -148,6 +164,32 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       ),
       body: Column(
         children: [
+          imageFile == null
+              ? const CircleAvatar(
+            radius: 86,
+            backgroundImage:
+            AssetImage("assets/images/avatarman.png"),
+          )
+              : Container(
+            width: 180,
+            height: 180,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey,
+                image: DecorationImage(
+                    fit: BoxFit.fitHeight,
+                    image: FileImage(
+                      File(imageFile!.path),
+                    ))),
+          ),
+          InkWell(
+            onTap: () {
+              chooseImageFromGallery();
+            },
+            child: const Text("Select Image",
+                style:
+                TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
           Container(
             padding: EdgeInsets.all(10),
             height: 210,
