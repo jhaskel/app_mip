@@ -9,9 +9,10 @@ enum StatusApp {
   realizado(message: 'realizado'), //status da mmanutencao
   lancado(message: 'lancado'), //status da mmanutencao
   autorizado(message: 'autorizado'), //status da mmanutencao
-  ordemGerada(message: 'ordemGerada'),
-  gerandoSF(message: 'gerandoSF'),
-  aguardandoNota(message: 'AguardandoNota'),
+  ordemGerada(message: 'ordem Gerada'),
+  gerandoSF(message: 'gerando SF'),
+  aguardandoNota(message: 'Aguardando Nota'),
+  notaGerada(message: 'Nota Gerada'),
   tesouraria(message: 'tesouraria'), //status da mmanutencao
   concluido(message: 'concluido'); //status da mmanutencao
 

@@ -59,7 +59,9 @@ class _CreateOrdemItensState extends State<CreateOrdemItens> {
                   "modifiedAt": DateTime.now().toString(),
                   "isAtivo": true,
                   "itensOrdem": conIte.listaFiltrada,
-                  "status": StatusApp.ordemGerada.message
+                  "status": StatusApp.ordemGerada.message,
+                  "urlSf":"",
+                  "urlNf":""
                 };
 
                 await conOrd.createdOrdem(ord, context, ordem);

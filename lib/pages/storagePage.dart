@@ -1,7 +1,5 @@
 
 import 'dart:async';
-import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +18,11 @@ class TaskManager extends StatefulWidget {
   }
 }
 
-String url = "";
-bool loading= false;
 
 class _TaskManager extends State<TaskManager> {
   List<UploadTask> _uploadTasks = [];
+  String url = "";
+  bool loading= false;
 
   Future<UploadTask?> uploadFile(XFile? file) async {
     setState(() {
@@ -52,6 +50,11 @@ String uy = DateTime.now().millisecondsSinceEpoch.toString();
         content: Text('Parece que esse arquivo não é um pdf'),
       );
       print("000002");
+
+      setState(() {
+        loading=false;
+      });
+
     }else{
       print("000003");
 
@@ -90,8 +93,18 @@ String uy = DateTime.now().millisecondsSinceEpoch.toString();
 
       Future<UploadTask?> retorno =  Future.value(uploadTask);
       if(url !=''){
+
+        setState(() {
+          loading=false;
+        });
+
         return retorno;
       }else{
+
+        setState(() {
+          loading=false;
+        });
+
         return Get.defaultDialog(title: "Ops");
       }
     }
@@ -120,7 +133,9 @@ String uy = DateTime.now().millisecondsSinceEpoch.toString();
             }
 
 
-          }, icon: Icon(Icons.browse_gallery)),
+          },
+
+              icon: Icon(Icons.browse_gallery)),
           IconButton(onPressed: (){}, icon: Icon(Icons.add))
 
         ],

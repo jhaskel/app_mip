@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
 
 class OrdemController extends GetxController {
@@ -38,5 +39,20 @@ class OrdemController extends GetxController {
     });
   }
 
-  getOrdens(id) {}
+  alteraStatusUrl(String id, String url, String tipoFile) {
+    if(tipoFile=="sf"){
+      ref.child(id).update({
+        "urlSf": url,
+        "status":StatusApp.aguardandoNota.message
+      });
+    }else{
+      ref.child(id).update({
+        "urlNf": url,
+        "status":StatusApp.notaGerada.message
+      });
+    }
+
+
+    update();
+  }
 }

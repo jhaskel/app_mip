@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/ordem/pdf/oficio_pdf.dart';
 import 'package:mip_app/pages/ordem/pdf/pdf-ordem-empresa.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class OrdemDetails extends StatefulWidget {
@@ -42,18 +43,10 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   String licitacao = '';
   String empresa = '';
   String tipo = '1';
-
-  XFile? imageFile;
-  String urlOfUploadedImage = "";
-  chooseImageFromGallery() async {
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = pickedFile;
-      });
-    }
-  }
+  String urlSf = "";
+  String urlNf = "";
+  bool loading = false;
+  List<UploadTask> _uploadTasks = [];
 
   lici(String id) async {
     await conLic.getLicitacaoById(context, id);
@@ -63,6 +56,94 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   empre(String id) async {
     await conEmp.getEmpresa(context, id);
     empresa = (conLic.licitacao['empresa']);
+  }
+
+  Future<UploadTask?> uploadFile(XFile? file, String tipoFile) async {
+    setState(() {
+      loading = true;
+    });
+    if (file == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Nenhum arquivo Selecionado!'),
+        ),
+      );
+
+      return null;
+    }
+    String uy = DateTime.now().millisecondsSinceEpoch.toString();
+    late UploadTask uploadTask;
+    var mime = file.mimeType;
+    var extensao = "pdf";
+    print("mime $mime");
+
+    if (mime != 'application/pdf') {
+      Get.defaultDialog(
+        title: "Ops",
+        content: Text('Parece que esse arquivo não é um pdf'),
+      );
+
+      setState(() {
+        loading = false;
+      });
+    } else {
+      // Create a Reference to the file
+
+      Reference ref = await FirebaseStorage.instance
+          .ref()
+          .child('ordens/')
+          .child('${item['id']}')
+          .child('/$tipoFile-$uy.${extensao}');
+
+      final metadata = SettableMetadata(
+        contentType: 'aplication/pdf',
+        customMetadata: {'picked-file-path': file.path},
+      );
+
+      uploadTask = ref.putData(await file.readAsBytes(), metadata);
+
+      final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {
+        print('ok');
+      });
+      final progress =
+          100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+
+      int fgh = await taskSnapshot.bytesTransferred;
+      print("fgh $progress");
+      var s = await ref.getDownloadURL();
+
+      setState(() {
+        if (tipoFile == 'sf') {
+          urlSf = s.toString();
+        } else {
+          print("aquilll");
+          urlNf = s.toString();
+        }
+
+        loading = false;
+      });
+
+      Future<UploadTask?> retorno = Future.value(uploadTask);
+      if (urlSf != '') {
+        setState(() {
+          loading = false;
+        });
+
+        return retorno;
+      } else if (urlNf != '') {
+        setState(() {
+          loading = false;
+        });
+
+        return retorno;
+      } else {
+        setState(() {
+          loading = false;
+        });
+
+        return Get.defaultDialog(title: "Ops");
+      }
+    }
   }
 
   @override
@@ -94,6 +175,13 @@ class _OrdemDetailsState extends State<OrdemDetails> {
     }
   }
 
+  Future<void> launch(String url, {bool isNewTab = true}) async {
+    await launchUrl(
+      Uri.parse(url),
+      webOnlyWindowName: isNewTab ? '_blank' : '_self',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +190,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
         actions: [
           IconButton(
               onPressed: () {
-                print("07");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -117,13 +204,11 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                     content: TextFormField(
                       autofocus: true,
                       focusNode: FocusNode(),
-                      keyboardType:
-                      TextInputType.number,
+                      keyboardType: TextInputType.number,
                       maxLength: 2,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
                       ], // Only numbers can be entered
-
 
                       controller: numero,
                     ),
@@ -134,7 +219,6 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                         icon: Icon(Icons.cancel)),
                     confirm: IconButton(
                         onPressed: () {
-
                           var ofc = numero.text;
 
                           Navigator.pop(context);
@@ -151,10 +235,10 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                             );
                           } else {
                             Get.defaultDialog(
-                                title: 'Defina um numero',
-                                content: Text(
-                                    "Obrigatório definir um numero para o documento"),
-                             );
+                              title: 'Defina um numero',
+                              content: Text(
+                                  "Obrigatório definir um numero para o documento"),
+                            );
                           }
                         },
                         icon: Icon(Icons.check_circle)));
@@ -164,35 +248,9 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       ),
       body: Column(
         children: [
-          imageFile == null
-              ? const CircleAvatar(
-            radius: 86,
-            backgroundImage:
-            AssetImage("assets/images/avatarman.png"),
-          )
-              : Container(
-            width: 180,
-            height: 180,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey,
-                image: DecorationImage(
-                    fit: BoxFit.fitHeight,
-                    image: FileImage(
-                      File(imageFile!.path),
-                    ))),
-          ),
-          InkWell(
-            onTap: () {
-              chooseImageFromGallery();
-            },
-            child: const Text("Select Image",
-                style:
-                TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ),
           Container(
             padding: EdgeInsets.all(10),
-            height: 210,
+            height: 220,
             decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(color: Colors.amber, width: 2)),
@@ -234,11 +292,45 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                     width: 200,
                     child: Text("Solicitação de Fornecimento"),
                   ),
-                  Container(
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text("emitir"),
-                    ),
+                  Tooltip(
+                    message: "Visualizar",
+                    child: Container(
+                        child: item['urlSf'] == "" && urlSf == ""
+                            ? ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                            side: BorderSide(
+                                                color: Colors.red)))),
+                                onPressed: () async {
+                                  final file = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+
+                                  UploadTask? task =
+                                      await uploadFile(file, 'sf');
+
+                                  if (task != null) {
+                                    setState(() {
+                                      _uploadTasks = [..._uploadTasks, task];
+                                    });
+                                    if (urlSf != "") {
+                                      conOrd.alteraStatusUrl(
+                                          item['id'], urlSf, "sf");
+                                    }
+                                  }
+                                },
+                                child: Text("Enviar"),
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  urlSf != ""
+                                      ? launch(urlSf, isNewTab: true)
+                                      : launch(item['urlSf'], isNewTab: true);
+                                },
+                                icon: Icon(Icons.picture_as_pdf))),
                   )
                 ],
               ),
@@ -252,15 +344,56 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                     width: 200,
                     child: Text("Nota Fiscal"),
                   ),
-                  Container(
-                    child: Tooltip(
-                      message: 'Visualizar',
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.remove_red_eye_sharp),
-                      ),
-                    ),
-                  ),
+                  item['urlSf'] != ""
+                      ? Container(
+                          child: Tooltip(
+                              message: 'Visualizar',
+                              child: Container(
+                                  child: item['urlNf'] == "" && urlNf == ""
+                                      ? ElevatedButton(
+                                          style: ButtonStyle(
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18.0),
+                                                      side: BorderSide(
+                                                          color: Colors.red)))),
+                                          onPressed: () async {
+                                            final file = await ImagePicker()
+                                                .pickImage(
+                                                    source:
+                                                        ImageSource.gallery);
+
+                                            UploadTask? task =
+                                                await uploadFile(file, 'nf');
+
+                                            if (task != null) {
+                                              setState(() {
+                                                _uploadTasks = [
+                                                  ..._uploadTasks,
+                                                  task
+                                                ];
+                                              });
+                                              if (urlNf != "") {
+                                                conOrd.alteraStatusUrl(
+                                                    item['id'], urlNf, "nf");
+                                              }
+                                            }
+                                          },
+                                          child: Text("Enviar"),
+                                        )
+                                      : IconButton(
+                                          onPressed: () {
+                                            urlNf != ""
+                                                ? launch(urlNf, isNewTab: true)
+                                                : launch(item['urlNf'],
+                                                    isNewTab: true);
+                                          },
+                                          icon: Icon(Icons.picture_as_pdf)))),
+                        )
+                      : Text(""),
                 ],
               ),
               SizedBox(
