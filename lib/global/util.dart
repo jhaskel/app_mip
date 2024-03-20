@@ -47,11 +47,12 @@ class Util {
   ];
 
   static List roles = <String>[
-    "user",
-    "operador",
-    "supervisor",
-    "admin",
-    "dev"
+    "user",//contribuinte 0
+    "operador",//quem realiza o concerto 1
+    "supervisor",//superviso da empresa 2
+    "admin",//secretario, servidor da prefeitura 3
+    "master",//responsavel IP 4
+    "dev"//manutenção do sistema 5
   ];
 
   static List cores = <Color>[

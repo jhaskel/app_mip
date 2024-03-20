@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
+import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/global/util.dart';
 
 class ItemController extends GetxController {
@@ -14,17 +15,21 @@ class ItemController extends GetxController {
 
   List<dynamic> listaItens = [].obs;
   List<dynamic> listaItensChamado = [].obs;
+  List<dynamic> listaItensChamadoPdf = [].obs;
   List<dynamic> listaFiltrada = [].obs;
+  List<dynamic> listaChamados = [].obs;
+
   var totalOrdem = 0.0.obs;
   var textDetail = "Itens utilizados no conserto".obs;
   var totalChamado = 0.0.obs;
   var loading = false.obs;
 
   getItensByTipo(String ordem) async {
-
     await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
       listaItens.clear();
       listaFiltrada.clear();
+      listaChamados.clear();
+      totalOrdem(0.0);
       if (event.snapshot.exists) {
         print("existe");
         Map maps = event.snapshot.value as Map;
@@ -33,9 +38,11 @@ class ItemController extends GetxController {
           ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
 
         Set<String> nomesDuplicados = Set();
-        var df;
 
 
+      //  listaChamados =listaItens.map((e) => e['chamado']).toSet().toList();//seleciona os chamados para autulizar numero da ordem;
+
+//print("lista chamados $listaChamados");
 
         for (var x in listaItens) {
           if (!nomesDuplicados.contains(x['nome'])) {
@@ -85,7 +92,6 @@ class ItemController extends GetxController {
     loading(true);
     update();
 
-
     await ref.orderByChild('chamado').equalTo(chamado).onValue.listen((event) {
 
 
@@ -105,6 +111,63 @@ loading(false);
     });
   }
 
+  getItensByChamadoPdf(String ordem) async {
+    print("veio");
+    //chama no detalhe da ordem
+    listaItensChamadoPdf.clear();
+    loading(true);
+    update();
+
+
+    await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+
+        listaItensChamadoPdf = maps.values.toList()
+          ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
+
+
+
+var fg = listaItensChamadoPdf.map((e) => e['chamado']).toSet().toList();
+
+        List<Map<String,Map<String,dynamic>>> lista=[];
+
+
+        Map<String,Map<String,dynamic>> ls = {};
+for(var x in fg){
+  for(var y in listaItensChamadoPdf){
+    if(y['chamado']==x){
+      var pro = {
+        "chamado":x,
+        "nome":y['nome'],
+        "unidade":y['unidade'],
+        "quant":y['quant'],
+        "ip":y['idIp'],
+      };
+      print("Pro $pro");
+      ls.putIfAbsent(pro['chamado'], () => pro);
+
+    //  print("lssssssssssssss $ls");
+
+      lista.add(ls);
+   //   print("listaInicial $ls");
+     // lista.add(pro);
+
+    }
+  }
+
+}
+print("listaFinal $lista");
+
+
+        loading(false);
+        update();
+      }else{
+        print("passou");
+      }
+    });
+  }
+
   createItem(BuildContext context, List listaFinal, String message) async {
     int ordenar = 0;
     for (var x in listaFinal) {
@@ -119,6 +182,10 @@ loading(false);
       int est = estoque - quant;
 
       ref.child(id).set(x).then((value) async {
+      if(userRole==Util.roles[1]){
+        await conCha.alterarStatus(context, chamado, idIp, message, 0.0);
+      }
+
         await conCha.alterarStatus(context, chamado, idIp, message, 0.0);
         await conCon.alteraEstoque(idItem, est, ordenar);
 

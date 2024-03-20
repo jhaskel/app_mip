@@ -52,14 +52,14 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 icon: Icon(Icons.add)),
 
 
-            IconButton(
+         userRole==Util.roles[4]||userRole==Util.roles[5]?IconButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CreateOrdemHome()),
                   );
                 },
-                icon: Icon(Icons.savings_outlined)),
+                icon: Icon(Icons.table_chart)):Container(),
 
 
           ],

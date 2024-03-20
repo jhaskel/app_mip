@@ -57,9 +57,9 @@ class _DashboardState extends State<Dashboard>
           MapsChamadoPage(),
           ControlePage(),
           CreateDefeitoPage(),
-        //  ProfilePage(),
+          ProfilePage(),
 
-         TaskManager(),
+         //TaskManager(),
           CadastroPage(),
 
         ],

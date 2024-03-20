@@ -13,6 +13,7 @@ class OrdemController extends GetxController {
   createdOrdem(Map<String, Object> ord, BuildContext context, String ordem) {
     ref.child(ordem).set(ord).then((value) async {
       cMethods.displaySnackBar("Ordem adicionada!", context);
+
     }).onError((error, stackTrace) {
       cMethods.displaySnackBar("Erro ao adicionar a ordem!", context);
     });

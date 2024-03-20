@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
 import 'package:mip_app/widgets/ChamadoBottonSheet.dart';
@@ -333,23 +334,97 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
-    ref.child(id).update({
-      "status": message,
-      "total": total,
-      "isChamado": message == StatusApp.autorizado.message ? false : true,
-      "modifiedAt": DateTime.now().toString()
-    }).then((value) {
-      if (message == StatusApp.autorizado.message) {
-        conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
-      } else {
-        conIp.alteraStatusIp(idIp, message);
-      }
-    });
-    buscaPostesDefeito();
-    conIp.buscaPostes();
-    update();
+
+  alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
+    print("allll");
+
+    if(userRole==Util.roles[1]){
+      ref.child(id).update({
+        "status": message,
+        "total": total,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
+        "modifiedAt": DateTime.now().toString(),
+        "realizadoBy":userRole==Util.roles[1]&& message == StatusApp.realizado.message?userName:"",
+      }).then((value) {
+        if (message == StatusApp.autorizado.message) {
+          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+
+        } else {
+          conIp.alteraStatusIp(idIp, message);
+        }
+      });
+      buscaPostesDefeito();
+      conIp.buscaPostes();
+      update();
+
+    }
+    if(userRole==Util.roles[2]){
+      ref.child(id).update({
+        "status": message,
+        "total": total,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
+        "modifiedAt": DateTime.now().toString(),
+      }).then((value) {
+        if (message == StatusApp.autorizado.message) {
+          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+
+        } else {
+          conIp.alteraStatusIp(idIp, message);
+        }
+      });
+      buscaPostesDefeito();
+      conIp.buscaPostes();
+      update();
+
+    }
+    if(userRole==Util.roles[4]){
+      ref.child(id).update({
+        "status": message,
+        "total": total,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
+        "modifiedAt": DateTime.now().toString(),
+        "autorizationBy":message == StatusApp.autorizado.message?userName:"",
+        "autorizationAt": message == StatusApp.autorizado.message?DateTime.now().toString():"",
+
+      }).then((value) {
+        if (message == StatusApp.autorizado.message) {
+          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+
+        } else {
+          conIp.alteraStatusIp(idIp, message);
+        }
+      });
+      buscaPostesDefeito();
+      conIp.buscaPostes();
+      update();
+
+    }
+    if(userRole==Util.roles[3] || userRole==Util.roles[5]){
+      ref.child(id).update({
+        "status": message,
+        "total": total,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
+        "modifiedAt": DateTime.now().toString(),
+        "autorizationBy":message == StatusApp.autorizado.message?userName:"",
+        "autorizationAt": message == StatusApp.autorizado.message?DateTime.now().toString():"",
+
+      }).then((value) {
+        if (message == StatusApp.autorizado.message) {
+          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+
+        } else {
+          conIp.alteraStatusIp(idIp, message);
+        }
+      });
+      buscaPostesDefeito();
+      conIp.buscaPostes();
+      update();
+
+    }
+
+
+
   }
 
   alterarTotal(String id, double total) {

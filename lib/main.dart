@@ -4,17 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
-import 'package:mip_app/exportPage.dart';
-import 'package:mip_app/pages/chamados/chamados_page.dart';
 import 'package:mip_app/pages/dashboard.dart';
-import 'package:mip_app/pages/ip/ip_page.dart';
-
-import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
-
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-
-import 'package:mip_app/controllers/loginControllers.dart';
 import 'package:mip_app/firebase_options.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 

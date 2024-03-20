@@ -46,7 +46,7 @@ class LoginController extends GetxController {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) =>
-          LoadingDialog(messageText: "Allowing you to Login..."),
+          LoadingDialog(messageText: "LOGANDO EM SUA CONTA..."),
     );
 
     final User? userFirebase = (await FirebaseAuth.instance
@@ -61,7 +61,6 @@ class LoginController extends GetxController {
         .user;
 
     if (!context.mounted) return;
-    Navigator.pop(context);
 
     if (userFirebase != null) {
       DatabaseReference usersRef = FirebaseDatabase.instance
@@ -87,6 +86,9 @@ class LoginController extends GetxController {
         }
       });
     }
+
+    Navigator.pop(context);
+
   }
   
   logout(BuildContext context) async {

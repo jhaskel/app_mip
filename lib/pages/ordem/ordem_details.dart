@@ -150,6 +150,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   void initState() {
     super.initState();
     conPref.getPrefeitura(context);
+    conIte.getItensByChamadoPdf(item['cod']);
 
     lici(item['itensOrdem'][0]['licitacao']);
     empre(item['itensOrdem'][0]['empresa']);
