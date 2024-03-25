@@ -26,6 +26,8 @@ class IpController extends GetxController {
   var quantIpAgendado = 0.obs;
   var quantIpConcertando = 0.obs;
   var quantIpRealizado = 0.obs;
+  var bairro = "".obs;
+  var logradouro = "".obs;
 
   late StreamSubscription<Position> positionStream;
   LatLng _position = LatLng(-27.35661, -49.88283);
@@ -38,6 +40,29 @@ class IpController extends GetxController {
   get mapsController => _mapsController;
 
   get position => _position;
+
+  TextEditingController bairroController = TextEditingController();
+  TextEditingController ruaController = TextEditingController();
+  TextEditingController codController = TextEditingController();
+  TextEditingController tipoController = TextEditingController();
+  TextEditingController potenciaController = TextEditingController();
+  TextEditingController alturaController = TextEditingController();
+  TextEditingController latController = TextEditingController();
+  TextEditingController longController = TextEditingController();
+
+  clear() {
+    bairroController.clear();
+    alturaController.clear();
+    codController.clear();
+    latController.clear();
+    tipoController.clear();
+    ruaController.clear();
+    potenciaController.clear();
+    tipoController.clear();
+
+    update();
+  }
+
 
   /**/
 
@@ -306,5 +331,43 @@ class IpController extends GetxController {
     update();
   }
 
-  void addMarc() {}
+  createdIp(BuildContext context) {
+
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+   String gh = codController.text;
+   var gt = gh.split(" ");
+   String yu = gt[0].toLowerCase();
+   String yo = gt[1];
+   String cod = "${yu}${yo}";
+
+    var ip={
+      "id":cod,
+      "Bairro":bairro.value,
+      "logradouro":logradouro.value,
+      "cod":logradouro.value,
+      "cod":codController.text,
+      "tipo":tipoController.text,
+      "potencia":int.parse(potenciaController.text),
+      "altura":int.parse(alturaController.text),
+      "latitude":double.parse(latController.text),
+      "longitude":double.parse(longController.text),
+      "isAtivo":true,
+      "createdAt":DateTime.now().toString(),
+      "ModifiedAt":DateTime.now().toString(),
+      "status":StatusApp.normal.message
+
+    };
+    ref.child(cod).set(ip).then((value) async {
+      cMethods.displaySnackBar("IP adicionado!", context);
+
+    }).onError((error, stackTrace) {
+      cMethods.displaySnackBar("Erro ao adicionar a ip!", context);
+    });
+    clear();
+    getIp();
+
+    update();
+
+    Navigator.pop(context);
+  }
 }

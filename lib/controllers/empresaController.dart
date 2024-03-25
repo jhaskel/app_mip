@@ -15,6 +15,28 @@ class EmpresaController extends GetxController{
   var nomeEmpresa="".obs;
   var cnpjEmpresa="".obs;
 
+  TextEditingController fantasiaController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController cnpjController = TextEditingController();
+  TextEditingController contatoController = TextEditingController();
+  TextEditingController foneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController cidadeController = TextEditingController();
+
+
+  clear() {
+    foneController.clear();
+    fantasiaController.clear();
+    nomeController.clear();
+    cnpjController.clear();
+    contatoController.clear();
+    emailController.clear();
+    cidadeController.clear();
+
+
+    update();
+  }
+
   getEmpresa(BuildContext context, id) async {
     list.clear();
     await ref.orderByChild('id').equalTo(id).onValue.listen((event) {
@@ -45,6 +67,24 @@ class EmpresaController extends GetxController{
     update();
   }
 
+editEmpresa(BuildContext context,id){
+    print("iddd $id");
+  ref.child(id).update({
+    "fantasia": fantasiaController.text.trim(),
+    "nome": nomeController.text.trim(),
+    "cnpj": cnpjController.text.trim(),
+    "nomeContato": contatoController.text.trim(),
+    "fone": foneController.text.trim(),
+    "email": emailController.text.trim(),
+    "cidade": cidadeController.text.trim(),
+    "isAtivo":1
+  }).then((value) {
+    cMethods.displaySnackBar('Empresa editada com sucesso', context);
+  });
+  getEmpresa(context, id);
+  update();
+
+}
 
 
 }

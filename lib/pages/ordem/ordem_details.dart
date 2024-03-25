@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
+import 'package:mip_app/controllers/cosipController.dart';
 import 'package:mip_app/controllers/empresaController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/licitacaoController.dart';
@@ -14,6 +15,7 @@ import 'package:mip_app/controllers/ordemController.dart';
 import 'package:mip_app/controllers/prefeituraController.dart';
 import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/ordem/pdf/oficio_pdf.dart';
 import 'package:mip_app/pages/ordem/pdf/pdf-ordem-empresa.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,6 +36,7 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   final PrefeituraController conPref = Get.put(PrefeituraController());
   final EmpresaController conEmp = Get.put(EmpresaController());
   final LicitacaoController conLic = Get.put(LicitacaoController());
+  final CosipController conCos = Get.put(CosipController());
   var formatador = NumberFormat("#,##0.00", "pt_BR");
   TextEditingController numero = TextEditingController();
 
@@ -63,6 +66,8 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       loading = true;
     });
     if (file == null) {
+      print("abaixo");
+      print(conCos.listaDotacoes);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Nenhum arquivo Selecionado!'),
@@ -149,14 +154,17 @@ class _OrdemDetailsState extends State<OrdemDetails> {
   @override
   void initState() {
     super.initState();
+    print(("mes ${DateTime.now().month}"));
     conPref.getPrefeitura(context);
     conIte.getItensByChamadoPdf(item['cod']);
+
 
     lici(item['itensOrdem'][0]['licitacao']);
     empre(item['itensOrdem'][0]['empresa']);
 
     tipo = item['id'][item['id'].length - 1];
     print("tipo $tipo");
+    conCos.getDotacaoByAnoByTipo(DateTime.now().year.toString(),tipo);
 
     for (var x in item['itensOrdem']) {
       var cod = "";
@@ -307,6 +315,16 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                                             side: BorderSide(
                                                 color: Colors.red)))),
                                 onPressed: () async {
+
+                                  var despesa = {
+                                    "dotacao": conCos.codDotacao.value,
+                                    "id":DateTime.now().millisecondsSinceEpoch.toString(),
+                                    "mes":Util.meses[DateTime.now().month],
+                                    "nome":"manutenção",
+                                    "valor":item['valor']
+                                  };
+
+
                                   final file = await ImagePicker()
                                       .pickImage(source: ImageSource.gallery);
 
@@ -314,6 +332,8 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                                       await uploadFile(file, 'sf');
 
                                   if (task != null) {
+                                    conCos.createdDespesa(context,despesa);
+
                                     setState(() {
                                       _uploadTasks = [..._uploadTasks, task];
                                     });
@@ -321,7 +341,10 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                                       conOrd.alteraStatusUrl(
                                           item['id'], urlSf, "sf");
                                     }
+                                    print("iuios");
                                   }
+
+
                                 },
                                 child: Text("Enviar"),
                               )
@@ -410,7 +433,9 @@ class _OrdemDetailsState extends State<OrdemDetails> {
                   Container(
                     child: TextButton(
                         onPressed: () {
-                          setState(() {});
+                          setState(() {
+
+                          });
                         },
                         child: Text(item['status'])),
                   ),

@@ -10,7 +10,8 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 
 class UsuarioCreatePage extends StatefulWidget {
-  const UsuarioCreatePage({Key? key}) : super(key: key);
+  String? empresa;
+   UsuarioCreatePage({this.empresa,Key? key}) : super(key: key);
 
   @override
   State<UsuarioCreatePage> createState() => _UsuarioCreatePageState();
@@ -23,9 +24,13 @@ class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
   List <String>listRoleSupervisor = [Util.roles[1],Util.roles[2]];
   List <String>listRoleAdmin = [Util.roles[0],Util.roles[1],Util.roles[2],Util.roles[3]];
   List <String>listRoleDev = [Util.roles[0],Util.roles[1],Util.roles[2],Util.roles[3],Util.roles[4]];
-
+  String idEmpresa = '';
  @override
   void initState() {
+
+   if(widget.empresa!=null){
+     idEmpresa = widget.empresa!;
+   }
 
     super.initState();
     if(userRole=='supervisor'){
@@ -144,8 +149,8 @@ class _UsuarioCreatePageState extends State<UsuarioCreatePage> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            print("role = ${conUsu.role.value}");
-                           conUsu.checkNetworkIsAvailable(context);
+
+                           conUsu.checkNetworkIsAvailable(context,empresa: idEmpresa);
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.purple,

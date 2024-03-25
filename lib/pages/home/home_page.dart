@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../global/global_var.dart';
+import '../../global/global_var.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -52,27 +52,17 @@ class _HomePageState extends State<HomePage> {
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
+  var listTypeMap = [MapType.normal, MapType.satellite, MapType.hybrid];
+  int indice = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Iluminação Pública"),actions: [
+        IconButton(onPressed: (){}, icon: Icon(Icons.login))
+      ],),
       body: SafeArea(
-        child: Stack(
-          children: [
-            GoogleMap(
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              initialCameraPosition: googlePlexInitialPosition,
-              onMapCreated: (GoogleMapController mapController) {
-                controllerGoogleMap = mapController;
-                updateMapTheme(controllerGoogleMap!);
-
-                googleMapCompleterController.complete(controllerGoogleMap);
-
-                getCurrentLiveLocationOfDriver();
-              },
-            ),
-          ],
-        ),
+        child: Center(child: Text("home Page"),),
       ),
     );
   }

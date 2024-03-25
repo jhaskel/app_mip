@@ -50,7 +50,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
             },
             child: Center(
                 child: Text(
-              "Finalizar Lançamento",
+              "Finalizar Chamado",
               style: AppTextStyles.body20,
             ))),
       ),

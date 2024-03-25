@@ -74,7 +74,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
                       conCha.chamadosFinalizados.value.toString(),
                       'Chamados Finalizados'),
                   demonstrativoChamado(
-                      conCha.gastosTotalChamados.value.toString(),
+                      conCha.gastosTotalChamados.value.toStringAsFixed(2),
                       'Gastos Total com Chamados'),
                 ]),
               ),

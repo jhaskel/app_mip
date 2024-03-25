@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/pages/ip/create_ip_page.dart';
 import 'package:mip_app/pages/ip/ip_detail.dart';
 
 class IpPage extends StatefulWidget {
@@ -32,10 +33,18 @@ class _IpPageState extends State<IpPage> {
       () => Scaffold(
         appBar: AppBar(title: Text(conIp.textPage.value)),
         bottomNavigationBar: Container(
-          height: 100,
+          height: 50,
           color: Colors.amber,
           child: Center(
-            child: Text("Novo Ip"),
+            child: InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateIpPage(conIp: conIp,)),
+                );
+              },
+                child: Text("Novo Ip",style: AppTextStyles.bodyWhite20,)),
           ),
         ),
         body: _body(context),
@@ -238,4 +247,5 @@ class _IpPageState extends State<IpPage> {
       }
     );
   }
+
 }

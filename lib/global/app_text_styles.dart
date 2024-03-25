@@ -65,7 +65,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
   );
    static final TextStyle bodyTitleBold = GoogleFonts.notoSans(
-    color: AppColors.darkRed,
+    color: AppColors.blue50,
     fontSize: 16,
     fontWeight: FontWeight.bold,
   );

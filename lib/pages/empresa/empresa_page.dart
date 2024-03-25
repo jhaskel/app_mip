@@ -23,6 +23,7 @@ class _EmpresaPageState extends State<EmpresaPage> {
     super.initState();
     conEmp.getEmpresaAll(context);
 
+
   }
 
   @override
@@ -33,6 +34,7 @@ class _EmpresaPageState extends State<EmpresaPage> {
           title: Text(conEmp.textPage.value),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               height: 50,

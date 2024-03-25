@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
-import 'package:mip_app/pages/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard_anonimo.dart';
+
+import 'package:mip_app/pages/home/home_page.dart';
+import 'package:mip_app/splash.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mip_app/firebase_options.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -44,10 +48,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-    //  home: MapsChamadoPage(),
-      home: FirebaseAuth.instance.currentUser == null
-          ? LoginScreen()
-          : Dashboard(),
+     home: SplashScreen(),
+      /*home: FirebaseAuth.instance.currentUser == null
+          ? DashboardAnonimo()
+         // : HomePage(),
+          : Dashboard(),*/
 
 
       //home: MapsIp(),

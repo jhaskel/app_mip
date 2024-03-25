@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/pages/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard.dart';
 import 'package:mip_app/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';

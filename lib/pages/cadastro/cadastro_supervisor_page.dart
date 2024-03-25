@@ -11,23 +11,21 @@ import 'package:mip_app/pages/usuarios/usuarios_page.dart';
 import 'package:side_navigation/side_navigation.dart';
 
 
-class CadastroPage extends StatefulWidget {
-  const CadastroPage({Key? key}) : super(key: key);
+class CadastroSupervisorPage extends StatefulWidget {
+  const CadastroSupervisorPage({Key? key}) : super(key: key);
 
   @override
-  _CadastroPageState createState() => _CadastroPageState();
+  _CadastroSupervisorPageState createState() => _CadastroSupervisorPageState();
 }
 
-class _CadastroPageState extends State<CadastroPage> {
+class _CadastroSupervisorPageState extends State<CadastroSupervisorPage> {
   List<Widget> views = const [
-    IpPage(),
+
     ChamadosPage(),
     OrdemPage(),
     LicitacaoPage(),
-    CosipPage(),
     EmpresaPage(),
-    PrefeituraPage(),
-    UsuarioPage(),
+
 
 
   ];
@@ -49,10 +47,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
             selectedIndex: selectedIndex,
             items: const [
-              SideNavigationBarItem(
-                icon: Icons.podcasts,
-                label: 'IP',
-              ),
+
               SideNavigationBarItem(
                 icon: Icons.perm_contact_cal_rounded,
                 label: 'Chamados',
@@ -65,22 +60,12 @@ class _CadastroPageState extends State<CadastroPage> {
                 icon: Icons.import_contacts,
                 label: 'Licitação',
               ),
-              SideNavigationBarItem(
-                icon: Icons.monetization_on,
-                label: 'Cosip',
-              ),
+
               SideNavigationBarItem(
                 icon: Icons.house_outlined,
                 label: 'Empresa',
               ),
-              SideNavigationBarItem(
-                icon: Icons.account_balance,
-                label: 'Prefeitura',
-              ),
-              SideNavigationBarItem(
-                icon: Icons.person,
-                label: 'Usuários',
-              ),
+
             ],
             onTap: (index) {
               setState(() {

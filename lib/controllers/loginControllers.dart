@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/pages/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard.dart';
+import 'package:mip_app/splash.dart';
 
 import '../widgets/loading_dialog.dart';
 import 'package:get/get.dart';
@@ -72,8 +73,8 @@ class LoginController extends GetxController {
           if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
             userName = (snap.snapshot.value as Map)["nome"];
             userRole = (snap.snapshot.value as Map)["role"];
-            Navigator.push(
-                context, MaterialPageRoute(builder: (c) => Dashboard()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (c) => SplashScreen()));
           } else {
             auth.signOut();
             cMethods.displaySnackBar(
@@ -93,10 +94,12 @@ class LoginController extends GetxController {
   
   logout(BuildContext context) async {
    await auth.signOut();
+   userName="";
+   userRole="";
     Navigator.pushAndRemoveUntil(
         context, MaterialPageRoute(builder: (context) => LoginScreen()), (
         route) => false);
-    
+
   }
 
 

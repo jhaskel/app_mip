@@ -8,7 +8,9 @@ import 'package:mip_app/authentication/signup_screen.dart';
 import 'package:mip_app/controllers/loginControllers.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/pages/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard.dart';
+import 'package:mip_app/pages/home/dashboard_anonimo.dart';
+import 'package:mip_app/splash.dart';
 import 'package:mip_app/widgets/loading_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -96,7 +98,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   builder: (c) => const SignupScreen()));
                         },
                         child: const Text(
-                          "Don't have an Account? Register here",
+                          "Ainda não tenho conta? Registre aqui",
+                          style: TextStyle(color: Colors.grey),
+                        )),
+                    const SizedBox(
+                      height: 22,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (c) =>  SplashScreen()));
+                        },
+                        child: const Text(
+                          "Entrar anônimo",
                           style: TextStyle(color: Colors.grey),
                         ))
                   ],

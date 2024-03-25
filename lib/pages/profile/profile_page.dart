@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/authentication/login_screeen.dart';
+import 'package:mip_app/controllers/loginControllers.dart';
 import 'package:mip_app/global/global_var.dart';
 
-import '../controllers/loginControllers.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -28,6 +29,18 @@ class _ProfilePageState extends State<ProfilePage> {
             },
 
             child: Text('Sair')),
+        userName==""?InkWell(
+            onTap: (){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LoginScreen()),
+              );
+
+
+            },
+
+            child: Text('Logar')):Container(),
       ],
     );
   }

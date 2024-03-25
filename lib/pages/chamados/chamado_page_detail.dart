@@ -28,7 +28,11 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
   double gastoTotal = 0.0;
   double larguraContainer = 0.0;
 
-  Padding demonstrativoIp(String valor, String title) {
+  Padding demonstrativoIp(String valor, String title, bool bool) {
+    String valorr =valor;
+    if(bool){
+      valorr= double.parse(valor).toStringAsFixed(2);
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -38,7 +42,7 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
             border: Border.all(width: 2, color: AppColors.primaria)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            valor,
+            valorr,
             style: AppTextStyles.heading40White.copyWith(fontSize: 30),
           ),
           Text(title),
@@ -80,6 +84,7 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
               child: Text("Nenhum Item para esse chamado"),
             ));
           } else {
+            double larg = MediaQuery.of(context).size.width;
             itensChamado = 0;
             chamadosAbertos = 0;
             chamadosRealizados = 0;
@@ -106,9 +111,9 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
                 Container(
                   height: 200,
                   child: Row(children: [
-                    demonstrativoIp(item['idIp'], 'IP'),
-                    demonstrativoIp(itensChamado.toString(), 'total de itens'),
-                    demonstrativoIp(gastoTotal.toString(), 'Gasto total'),
+                    demonstrativoIp(item['idIp'], 'IP',false),
+                    demonstrativoIp(itensChamado.toString(), 'total de itens',false),
+                    demonstrativoIp(gastoTotal.toString(), 'Gasto total',true),
                   ]),
                 ),
                 Container(
@@ -136,6 +141,7 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
                       child: Text("unidade"),
                     ),
                     Container(
+                      width: larg-600,
                       child: Text("item"),
                     ),
                     Spacer(),
@@ -163,6 +169,8 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
                       var total = item['total'];
                       int caractere= item['ordem'].length;
 
+                      print("lar $larg");
+
                       return Container(
                           width: MediaQuery.of(context).size.width,
                           child: Row(children: [
@@ -179,7 +187,8 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
                               child: Text(item['unidade']),
                             ),
                             Container(
-                              child: Text(item['nome']),
+                              width: larg-600,
+                              child: Text(item['nome'],overflow: TextOverflow.ellipsis,maxLines: 2,),
                             ),
                             Spacer(),
                             Container(

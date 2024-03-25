@@ -6,6 +6,7 @@ import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/chamados/chamado_page_detail.dart';
+import 'package:mip_app/pages/ip/geraQrcodePage.dart';
 
 import '../../global/app_colors.dart';
 
@@ -30,7 +31,11 @@ class _IpDetailState extends State<IpDetail> {
   double gastoTotal = 0.0;
   double larguraContainer = 0.0;
 
-  Padding demonstrativoIp(String valor, String title) {
+  Padding demonstrativoIp(String valor, String title, bool bool) {
+    String valorr =valor;
+    if(bool){
+     valorr= double.parse(valor).toStringAsFixed(2);
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -40,7 +45,7 @@ class _IpDetailState extends State<IpDetail> {
             BoxDecoration(border: Border.all(width: 2, color: Colors.amber)),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            valor,
+            valorr,
             style: AppTextStyles.heading40White.copyWith(fontSize: 30),
           ),
           Text(title),
@@ -59,9 +64,9 @@ class _IpDetailState extends State<IpDetail> {
           actions: [
             IconButton(
                 onPressed: () {
-                  setState(() {});
+                  showDialogQrcode(item);
                 },
-                icon: Icon(Icons.refresh))
+                icon: Icon(Icons.qr_code))
           ],
         ),
         body: _body(),
@@ -113,12 +118,12 @@ class _IpDetailState extends State<IpDetail> {
                   height: 200,
                   child: Row(children: [
                     demonstrativoIp(
-                        chamadosTotal.toString(), 'total de chamados'),
+                        chamadosTotal.toString(), 'total de chamados',false),
                     demonstrativoIp(
-                        chamadosAbertos.toString(), 'Chamados Abertos'),
+                        chamadosAbertos.toString(), 'Chamados Abertos',false),
                     demonstrativoIp(
-                        chamadosRealizados.toString(), 'Chamados Realizados'),
-                    demonstrativoIp(gastoTotal.toString(), 'Gasto total'),
+                        chamadosRealizados.toString(), 'Chamados Realizados',false),
+                    demonstrativoIp(gastoTotal.toString(), 'Gasto total',true),
                   ]),
                 ),
                 Obx(() => Container(
@@ -201,7 +206,7 @@ class _IpDetailState extends State<IpDetail> {
                               ),
                               Container(
                                 width: 100,
-                                child: Text(total.toString()),
+                                child: Text(total.toStringAsFixed(2)),
                               ),
                               Spacer(),
                               Container(
@@ -230,6 +235,31 @@ class _IpDetailState extends State<IpDetail> {
             );
           }
         }
+      },
+    );
+  }
+  Future<void> showDialogQrcode(dynamic item) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("${item['cod']}"),
+          content:
+          Container(width: 400, height: 400, child: GeraQrcodePage(item['cod'])),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('cancelar')),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                 // conCard.alterar(id,context);
+                },
+                child: Text('OK')),
+          ],
+        );
       },
     );
   }

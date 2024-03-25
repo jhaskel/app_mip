@@ -5,12 +5,10 @@ import 'package:mip_app/pages/cadastro/cadastro_page.dart';
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
 import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
-import 'package:mip_app/pages/novos.dart';
-import 'package:mip_app/pages/profile_page.dart';
-import 'package:mip_app/pages/storagePage.dart';
-import 'package:mip_app/pages/trips_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/pages/profile/profile_page.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({super.key});
@@ -59,7 +57,7 @@ class _DashboardState extends State<Dashboard>
           CreateDefeitoPage(),
           ProfilePage(),
 
-         //TaskManager(),
+          //TaskManager(),
           CadastroPage(),
 
         ],

@@ -45,6 +45,8 @@ dependencies:
   image_web_picker: ^0.0.1
   image_picker_web: ^2.0.2
   url_launcher: ^6.1.0
+  qrcode_reader_web: ^1.1.1
+  syncfusion_flutter_barcodes: ^23.1.44
 
 dev_dependencies:
   flutter_test:

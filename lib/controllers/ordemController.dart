@@ -8,6 +8,8 @@ class OrdemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Ordens');
   CommonMethods cMethods = CommonMethods();
   List<dynamic> listaOrdens = [].obs;
+  List<dynamic> listaOrdensByAno = [].obs;
+  var totalByAno = 0.0.obs;
   var nomePage = 'Ordens'.obs;
 
   createdOrdem(Map<String, Object> ord, BuildContext context, String ordem) {
@@ -34,6 +36,26 @@ class OrdemController extends GetxController {
         for (var x in listaOrdens) {
           for (var z in x['itensOrdem']) {}
         }
+
+        update();
+      }
+    });
+  }
+
+  getOrdensByAno(String ano) async {
+    //ainda não utilizado
+    await ref.onValue.listen((event) {
+      listaOrdensByAno.clear();
+
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+
+        listaOrdensByAno = maps.values.toList()
+          ..sort(((a, b) => (b["mes"]).compareTo((a["mes"]))));
+
+        var totalizando = listaOrdensByAno.map((e) => e['valor']).reduce((v, e) => v+e);
+        totalByAno(totalizando);
+
 
         update();
       }

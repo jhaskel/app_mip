@@ -54,6 +54,10 @@ class Util {
     "master",//responsavel IP 4
     "dev"//manutenção do sistema 5
   ];
+  static List meses = <String>[
+    "zero","jan","fev","mar","abr","mai","jun","Jul","ago",'set','out','nov','dez'
+
+  ];
 
   static List cores = <Color>[
     Colors.yellow,
