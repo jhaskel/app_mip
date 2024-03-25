@@ -5,10 +5,14 @@ class CommonMethods {
 
   checkConnectivity(BuildContext context)async{
     var connectionResult = await Connectivity().checkConnectivity();
-    if(connectionResult != ConnectivityResult.mobile && connectionResult != ConnectivityResult.wifi){
-      if(!context.mounted) return;
-
+    print("internet ${connectionResult.first}");
+    if(connectionResult.first != ConnectivityResult.mobile || connectionResult.first != ConnectivityResult.wifi){
+print("00009x");
+if(!context.mounted) return;
        displaySnackBar('Você está sem internet!', context);
+    }else{
+      print("00009xy");
+
     }
 
 

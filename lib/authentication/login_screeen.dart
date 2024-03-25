@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
               ),
               Image.asset(
-                'assets/images/uberexec.png',
+                'assets/images/ip_logo.png',
                 width: 220,
               ),
               const SizedBox(

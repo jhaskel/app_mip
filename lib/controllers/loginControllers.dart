@@ -23,6 +23,12 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   CommonMethods cMethods = CommonMethods();
 
+  clear(){
+    emailController.clear();
+    passwordController.clear();
+  }
+
+
 
 
 
@@ -73,6 +79,7 @@ class LoginController extends GetxController {
           if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
             userName = (snap.snapshot.value as Map)["nome"];
             userRole = (snap.snapshot.value as Map)["role"];
+            clear();
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (c) => SplashScreen()));
           } else {
