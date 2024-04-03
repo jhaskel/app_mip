@@ -1,11 +1,11 @@
 {
-    "name": "drivers_app",
-    "short_name": "drivers_app",
+    "name": "Ilumina Braço",
+    "short_name": "Ilumina Braço",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Controle da Iluminação publica",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

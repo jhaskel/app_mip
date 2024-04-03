@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/authentication/fogot_password.dart';
 import 'package:mip_app/authentication/signup_screen.dart';
 import 'package:mip_app/controllers/loginControllers.dart';
 import 'package:mip_app/global/global_var.dart';
@@ -34,14 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 50,
               ),
-              Image.asset(
-                'assets/images/ip_logo.png',
-                width: 220,
-              ),
+             Icon(Icons.lightbulb,size: 200,color: Colors.amber,),
               const SizedBox(
-                height: 30,
+                height: 20,
               ),
-              const Text("Login",
+              const Text("Ilumina Braço",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               const SizedBox(
                 height: 22,
@@ -51,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     const SizedBox(
-                      height: 22,
+                      height: 16,
                     ),
                     TextField(
                       controller: conLog.emailController,
@@ -63,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
                     ),
                     const SizedBox(
-                      height: 22,
+                      height: 16,
                     ),
                     TextField(
                       controller: conLog.passwordController,
@@ -75,8 +73,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
                     ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ForgotPasswordScreen()));
+                          },
+                          child: Text('Esqueceu a Senha?')),
+                    ),
                     const SizedBox(
-                      height: 44,
+                      height: 20,
                     ),
                     ElevatedButton(
                         onPressed: () {
@@ -88,33 +98,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                 horizontal: 80, vertical: 10)),
                         child: const Text('Login')),
                     const SizedBox(
-                      height: 22,
+                      height: 16,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (c) => const SignupScreen()));
-                        },
-                        child: const Text(
-                          "Ainda não tenho conta? Registre aqui",
-                          style: TextStyle(color: Colors.grey),
-                        )),
-                    const SizedBox(
-                      height: 22,
+                    Column(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (c) => const SignupScreen()));
+                            },
+                            child: const Text(
+                              "Ainda não tenho conta? Registre aqui",
+                              style: TextStyle(color: Colors.grey),
+                            )),
+
+
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                  SplashScreen()), (Route<dynamic> route) => false);
+
+                            },
+                            child: const Text(
+                              "Entrar anônimo",
+                              style: TextStyle(color: Colors.grey),
+                            ))
+                      ],
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (c) =>  SplashScreen()));
-                        },
-                        child: const Text(
-                          "Entrar anônimo",
-                          style: TextStyle(color: Colors.grey),
-                        ))
+
+
                   ],
                 ),
               )

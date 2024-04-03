@@ -6,6 +6,7 @@ import 'package:mip_app/controllers/chamadoController.dart';
 
 import 'package:intl/intl.dart';
 import 'package:mip_app/global/app_colors.dart';
+import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/pages/controle/autorizacao_page.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
 
@@ -30,8 +31,9 @@ class _ControlePageState extends State<ControlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Controle',),actions: [
-          Obx(
+        title: Text('Controle',)
+        ,actions: [
+          userRole=="master"?Obx(
           ()=> IconButton(
             onPressed: () {
               Navigator.push(
@@ -50,7 +52,7 @@ class _ControlePageState extends State<ControlePage> {
                     child: CircleAvatar(backgroundColor:Colors.white,radius:10,child: Text("${conCha.quantLancados.value}",style: TextStyle(color: Colors.red) ,)))
               ],
             )),
-          ),SizedBox(width: 20,)],
+          ):Container(),SizedBox(width: 20,)],
       ),
       body: Obx(
         () => Column(

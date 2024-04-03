@@ -30,8 +30,6 @@ class LoginController extends GetxController {
 
 
 
-
-
   void checkNetworkIsAvailable(BuildContext context) {
     cMethods.checkConnectivity(context);
     signInFormValidation(context);
@@ -80,8 +78,11 @@ class LoginController extends GetxController {
             userName = (snap.snapshot.value as Map)["nome"];
             userRole = (snap.snapshot.value as Map)["role"];
             clear();
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (c) => SplashScreen()));
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                SplashScreen()), (Route<dynamic> route) => false);
+
+
+
           } else {
             auth.signOut();
             cMethods.displaySnackBar(
@@ -103,6 +104,8 @@ class LoginController extends GetxController {
    await auth.signOut();
    userName="";
    userRole="";
+   empresaOperador="";
+   userId="";
     Navigator.pushAndRemoveUntil(
         context, MaterialPageRoute(builder: (context) => LoginScreen()), (
         route) => false);

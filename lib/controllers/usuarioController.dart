@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/methods/common_methods.dart';
-import 'package:mip_app/pages/home/dashboard.dart';
+
 import 'package:mip_app/widgets/loading_dialog.dart';
 
 class UsuarioController extends GetxController {
@@ -16,11 +16,20 @@ class UsuarioController extends GetxController {
   var textPageCreate = 'Adicionar um Novo Usuário'.obs;
   var role = "user".obs;
   final User? userFirebasee = FirebaseAuth.instance.currentUser;
+  var alturaPadding = 12.0.obs;
+  var loading = false.obs;
+  final formKey = GlobalKey<FormState>();
+  var usuario = {}.obs;
+  var status = "no".obs;
+  var halCon = 150.0.obs;
+
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController empresaController = TextEditingController();
+
 
   userCurrent(BuildContext context) async {
     final User? userFirebase = await FirebaseAuth.instance.currentUser;
@@ -35,6 +44,12 @@ class UsuarioController extends GetxController {
           if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
             userName = (snap.snapshot.value as Map)["nome"];
             userRole = (snap.snapshot.value as Map)["role"];
+            userId = (snap.snapshot.value as Map)["id"];
+            userFone = (snap.snapshot.value as Map)["fone"];
+
+            if(userRole=="supervisor"|| userRole=="operador"){
+              empresaOperador = (snap.snapshot.value as Map)["empresa"];
+            }
           } else {
             FirebaseAuth.instance.signOut();
             cMethods.displaySnackBar(
@@ -65,35 +80,48 @@ class UsuarioController extends GetxController {
     update();
   }
 
+  getUsuario(
+      BuildContext context,
+      ) async {
+    await ref.onValue.listen((event) {
+      usuario.clear();
+      if (event.snapshot.exists) {
+        Map pos = event.snapshot.value as Map;
+        usuario.clear();
+        usuario.value = pos;
+      }
+      print("usuario = $usuario");
+    });
+    update();
+  }
+
   getUsuariosByEmpresa(
     BuildContext context,
     String empresa,
   ) async {
-    print("emprsa $empresa");
+
     await ref.orderByChild('empresa').equalTo(empresa).onValue.listen((event) {
       listUsuariosByEmpresa.clear();
       if (event.snapshot.exists) {
-        print("temkkkxkc");
+
         Map pos = event.snapshot.value as Map;
 
         listUsuariosByEmpresa = pos.values.toList();
       } else {
-        print("erro");
+
       }
     });
-    print("listUser ${listUsuariosByEmpresa}");
+
     update();
   }
 
   void checkNetworkIsAvailable(BuildContext context, {String? empresa}) {
-    print("cuuuuuuuuuuuuuuuuuuuu");
-    print("EMPRESA $empresa");
-
     cMethods.checkConnectivity(context);
     signUpFormValidation(context, empresa: empresa);
   }
 
   signUpFormValidation(BuildContext context, {String? empresa}) {
+
     if (userNameController.text.trim() == '') {
       cMethods.displaySnackBar('digite o nome do usuário', context);
     } else if (userNameController.text.trim().length < 3) {
@@ -126,20 +154,26 @@ class UsuarioController extends GetxController {
             password: passwordController.text.trim())
         .then((value) {
       uid = value.user!.uid;
-      print("value ${value.user!.uid}");
-      print("nome $userName");
+
       Map usuario = {};
+
+
+      if((role.value=="operador"||role.value=="supervisor")&&empresaController.text.length>0){
+       empresa=empresaController.text;
+      }
+
 
 
       if (empresa != null){
         usuario = {
           "nome": userNameController.text.trim(),
           "email": emailController.text.trim(),
-          "phone": phoneController.text.trim(),
+          "fone": phoneController.text.trim(),
           "empresa": empresa,
           "id": uid,
           "blockStatus": "no",
           "role": role.value,
+
         };
       }else{
         usuario = {
@@ -153,7 +187,7 @@ class UsuarioController extends GetxController {
 
       }
 
-      print("Usuario $usuario");
+
 
       FirebaseDatabase.instance.ref().child('Users').child(uid).set(usuario);
 
@@ -169,5 +203,44 @@ class UsuarioController extends GetxController {
     });
     Navigator.pop(context);
     update();
+  }
+
+  editUsuario(BuildContext context,id){
+
+    ref.child(id).update({
+      "nome": userNameController.text.trim(),
+      "fone": phoneController.text.trim(),
+    }).then((value) {
+      userName=userNameController.text;
+      cMethods.displaySnackBar('Usuário editado com sucesso', context);
+    });
+    Navigator.pop(context);
+
+    update();
+
+  }
+  editUsuarioStatus(BuildContext context,String id){
+    print("id  $id");
+    ref.child(id).update({
+      "blockStatus": status.value,
+    }).then((value) {
+      userName=userNameController.text;
+
+    });
+
+    update();
+
+  }
+  editUsuarioRole(BuildContext context,String id){
+    ref.child(id).update({
+
+      "role": role.value,
+    }).then((value) {
+      userName=userNameController.text;
+
+    });
+
+    update();
+
   }
 }

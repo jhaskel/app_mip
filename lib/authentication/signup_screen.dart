@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
 import 'package:mip_app/methods/common_methods.dart';
 import 'package:mip_app/pages/home/dashboard.dart';
+import 'package:mip_app/splash.dart';
 import 'package:mip_app/widgets/loading_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,22 +26,10 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  TextEditingController vehicleModelController = TextEditingController();
-  TextEditingController vehicleColorController = TextEditingController();
-  TextEditingController vehicleNumberController = TextEditingController();
 
   CommonMethods cMethods = CommonMethods();
-  XFile? imageFile;
-  String urlOfUploadedImage = "";
-  chooseImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        imageFile = pickedFile;
-      });
-    }
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,36 +42,17 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(
                 height: 40,
               ),
-              imageFile == null
-                  ? const CircleAvatar(
-                      radius: 86,
-                      backgroundImage:
-                          AssetImage("assets/images/avatarman.png"),
-                    )
-                  : Container(
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey,
-                          image: DecorationImage(
-                              fit: BoxFit.fitHeight,
-                              image: FileImage(
-                                File(imageFile!.path),
-                              ))),
-                    ),
-              InkWell(
-                onTap: () {
-                  chooseImageFromGallery();
-                },
-                child: const Text("Select Image",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
               const SizedBox(
                 height: 30,
               ),
-              const Text("Create a Driver's Account",
+              Icon(Icons.lightbulb,size: 200,color: Colors.amber,),
+              const Text("Ilumina Braço",
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+
+              const SizedBox(
+                height: 30,
+              ),
+              const Text("Criar uma nova Conta",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               const SizedBox(
                 height: 22,
@@ -95,7 +65,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: userNameController,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
-                        labelText: 'Your name',
+                        labelText: 'Seu Nome',
                         labelStyle: TextStyle(fontSize: 14),
                       ),
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
@@ -107,7 +77,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: phoneController,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
-                        labelText: 'Phone',
+                        labelText: 'Fone',
                         labelStyle: TextStyle(fontSize: 14),
                       ),
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
@@ -132,47 +102,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       keyboardType: TextInputType.emailAddress,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Senha',
                         labelStyle: TextStyle(fontSize: 14),
                       ),
                       style: const TextStyle(color: Colors.grey, fontSize: 15),
                     ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    TextField(
-                      controller: vehicleModelController,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: 'modelo do Veículo',
-                        labelStyle: TextStyle(fontSize: 14),
-                      ),
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    TextField(
-                      controller: vehicleColorController,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: 'Cor do Veículo',
-                        labelStyle: TextStyle(fontSize: 14),
-                      ),
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    TextField(
-                      controller: vehicleNumberController,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: 'Placa do Veículo',
-                        labelStyle: TextStyle(fontSize: 14),
-                      ),
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    ),
+
+
+
                     const SizedBox(
                       height: 44,
                     ),
@@ -184,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             backgroundColor: Colors.purple,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 80, vertical: 10)),
-                        child: const Text('Create Account')),
+                        child: const Text('Criar uma Conta')),
                     const SizedBox(
                       height: 22,
                     ),
@@ -196,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   builder: (c) => const LoginScreen()));
                         },
                         child: const Text(
-                          'Already have an account? login here',
+                          'Já tenho uma conta! logar agora!',
                           style: TextStyle(color: Colors.grey),
                         ))
                   ],
@@ -212,68 +149,39 @@ class _SignupScreenState extends State<SignupScreen> {
   void checkNetworkIsAvailable() {
     cMethods.checkConnectivity(context);
 
-    if (imageFile != null) {
+
       signUpFormValidation();
-    } else {
-      cMethods.displaySnackBar('Please choose image first', context);
-    }
+
   }
 
   signUpFormValidation() {
     if (userNameController.text.trim() == '') {
-      cMethods.displaySnackBar('digite um user name', context);
+      cMethods.displaySnackBar('digite seu nome', context);
     } else if (userNameController.text.trim().length < 3) {
       cMethods.displaySnackBar(
-          'name precisa ser maior que 3 catachters', context);
+          'nome precisa ser maior que 3 catachters', context);
     } else if (phoneController.text.trim().length < 8) {
       cMethods.displaySnackBar(
-          'phone precisa ser maior que 8 catachters', context);
+          'fone precisa ser maior que 8 catachters', context);
     } else if (passwordController.text.trim().length < 3) {
       cMethods.displaySnackBar(
           'senha precisa ser maior que 3 catachters', context);
     } else if (!emailController.text.trim().contains("@")) {
       cMethods.displaySnackBar('digite um email válido', context);
-    } else if (vehicleModelController.text.trim().length < 3) {
-      cMethods.displaySnackBar(
-          'modelo doveiculo  precisa ser maior que 3 catachters', context);
-    } else if (vehicleColorController.text.trim().length < 3) {
-      cMethods.displaySnackBar(
-          'cor do veiculo  precisa ser maior que 3 catachters', context);
-    } else if (vehicleModelController.text.trim().length < 3) {
-      cMethods.displaySnackBar(
-          'placa do veiculo precisa ser maior que 3 catachters', context);
-    } else {
-      //    registerNewDriver();
-      uploadImageToStorage();
+    }  else {
+
+      registerNewDriver();
     }
   }
 
-  uploadImageToStorage() async {
-    String imageIDName = DateTime.now().millisecondsSinceEpoch.toString();
 
-    Reference referenceImage =
-        FirebaseStorage.instance.ref().child("images").child(imageIDName);
-
-    UploadTask uploadTask = referenceImage.putFile(File(imageFile!.path));
-
-    TaskSnapshot snapshot = await uploadTask;
-
-    urlOfUploadedImage = await snapshot.ref.getDownloadURL();
-
-    setState(() {
-      urlOfUploadedImage;
-    });
-    print("uuuuuuuuuuuu07");
-    print("url $urlOfUploadedImage");
-    registerNewDriver();
-  }
 
   registerNewDriver() async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) =>
-          LoadingDialog(messageText: 'Registrando you account....'),
+          LoadingDialog(messageText: 'Registrando sua conta....'),
     );
     final User? userFirebase = (await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
@@ -289,25 +197,22 @@ class _SignupScreenState extends State<SignupScreen> {
 
     DatabaseReference usersRef = FirebaseDatabase.instance
         .ref()
-        .child('drivers')
+        .child('Users')
         .child(userFirebase!.uid);
 
-    Map driveCarInfo = {
-      "carModel": vehicleModelController.text.trim(),
-      "carColor": vehicleColorController.text.trim(),
-      "carNUmber": vehicleNumberController.text.trim(),
-    };
+
     Map driversDataMap = {
-      "photo": urlOfUploadedImage,
-      "car_details": driveCarInfo,
-      "name": userNameController.text.trim(),
+
+
+      "nome": userNameController.text.trim(),
       "email": emailController.text.trim(),
-      "phone": phoneController.text.trim(),
+      "fone": phoneController.text.trim(),
       "id": userFirebase.uid,
       "blockStatus": "no",
     };
     usersRef.set(driversDataMap);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+        SplashScreen()), (Route<dynamic> route) => false);
 
-    Navigator.push(context, MaterialPageRoute(builder: (c) => Dashboard()));
   }
 }

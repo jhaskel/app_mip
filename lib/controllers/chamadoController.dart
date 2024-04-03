@@ -155,6 +155,7 @@ class ChamadoController extends GetxController {
       'longitude': longi.value,
       'status': StatusApp.defeito.message,
       'defeito': defeito.value,
+        'empresa': '',
       'total': 0.0,
       'isChamado': true,
     };
@@ -337,11 +338,12 @@ class ChamadoController extends GetxController {
 
 
   alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
-    print("allll");
+
 
     if(userRole==Util.roles[1]){
       ref.child(id).update({
         "status": message,
+        "empresa":userRole==Util.roles[1]?empresaOperador:"",
         "total": total,
         "isChamado": message == StatusApp.autorizado.message ? false : true,
         "modifiedAt": DateTime.now().toString(),

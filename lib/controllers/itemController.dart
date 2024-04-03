@@ -6,9 +6,10 @@ import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/global/util.dart';
 
+import '../methods/common_methods.dart';
+
 class ItemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Itens');
-
 
   final ChamadoController conCha = Get.put(ChamadoController());
   final ControleController conCon = Get.put(ControleController());
@@ -18,6 +19,7 @@ class ItemController extends GetxController {
   List<dynamic> listaItensChamadoPdf = [].obs;
   List<dynamic> listaFiltrada = [].obs;
   List<dynamic> listaChamados = [].obs;
+  CommonMethods cMethods = CommonMethods();
 
   var totalOrdem = 0.0.obs;
   var textDetail = "Itens utilizados no conserto".obs;
@@ -31,7 +33,7 @@ class ItemController extends GetxController {
       listaChamados.clear();
       totalOrdem(0.0);
       if (event.snapshot.exists) {
-        print("existe");
+
         Map maps = event.snapshot.value as Map;
 
         listaItens = maps.values.toList()
@@ -40,9 +42,6 @@ class ItemController extends GetxController {
         Set<String> nomesDuplicados = Set();
 
 
-      //  listaChamados =listaItens.map((e) => e['chamado']).toSet().toList();//seleciona os chamados para autulizar numero da ordem;
-
-//print("lista chamados $listaChamados");
 
         for (var x in listaItens) {
           if (!nomesDuplicados.contains(x['nome'])) {
@@ -56,9 +55,15 @@ class ItemController extends GetxController {
           int gh = b.reduce((v, e) => v + e);
           var c = listaItens
               .where((e) => e['nome'] == f)
-              .map((e) => [e['cod'], e['unidade'], e['valor'],e['licitacao'],e['empresa']])
+              .map((e) => [
+                    e['cod'],
+                    e['unidade'],
+                    e['valor'],
+                    e['licitacao'],
+                    e['empresa']
+                  ])
               .toSet();
-          print("lst $listaItens}");
+
 
           var total = gh * c.first[2];
 
@@ -77,11 +82,11 @@ class ItemController extends GetxController {
           totalOrdem.value =
               listaFiltrada.map((e) => e['total']).reduce((a, b) => a + b);
         }
-        print("it $totalOrdem");
+
 
         update();
-      }else{
-        print("não existe");
+      } else {
+
       }
     });
   }
@@ -93,8 +98,6 @@ class ItemController extends GetxController {
     update();
 
     await ref.orderByChild('chamado').equalTo(chamado).onValue.listen((event) {
-
-
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;
 
@@ -104,7 +107,7 @@ class ItemController extends GetxController {
         totalChamado.value =
             listaItensChamado.map((e) => e['total']).reduce((v, e) => v + e);
 
-loading(false);
+        loading(false);
 
         update();
       }
@@ -112,12 +115,11 @@ loading(false);
   }
 
   getItensByChamadoPdf(String ordem) async {
-    print("veio");
+
     //chama no detalhe da ordem
     listaItensChamadoPdf.clear();
     loading(true);
     update();
-
 
     await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
       if (event.snapshot.exists) {
@@ -126,44 +128,33 @@ loading(false);
         listaItensChamadoPdf = maps.values.toList()
           ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
 
+        var fg = listaItensChamadoPdf.map((e) => e['chamado']).toSet().toList();
 
+        List<Map<String, Map<String, dynamic>>> lista = [];
 
-var fg = listaItensChamadoPdf.map((e) => e['chamado']).toSet().toList();
+        Map<String, Map<String, dynamic>> ls = {};
+        for (var x in fg) {
+          for (var y in listaItensChamadoPdf) {
+            if (y['chamado'] == x) {
+              var pro = {
+                "chamado": x,
+                "nome": y['nome'],
+                "unidade": y['unidade'],
+                "quant": y['quant'],
+                "ip": y['idIp'],
+              };
 
-        List<Map<String,Map<String,dynamic>>> lista=[];
+              ls.putIfAbsent(pro['chamado'], () => pro);
 
-
-        Map<String,Map<String,dynamic>> ls = {};
-for(var x in fg){
-  for(var y in listaItensChamadoPdf){
-    if(y['chamado']==x){
-      var pro = {
-        "chamado":x,
-        "nome":y['nome'],
-        "unidade":y['unidade'],
-        "quant":y['quant'],
-        "ip":y['idIp'],
-      };
-      print("Pro $pro");
-      ls.putIfAbsent(pro['chamado'], () => pro);
-
-    //  print("lssssssssssssss $ls");
-
-      lista.add(ls);
-   //   print("listaInicial $ls");
-     // lista.add(pro);
-
-    }
-  }
-
-}
-print("listaFinal $lista");
-
+              lista.add(ls);
+            }
+          }
+        }
 
         loading(false);
         update();
-      }else{
-        print("passou");
+      } else {
+
       }
     });
   }
@@ -178,33 +169,23 @@ print("listaFinal $lista");
       int estoque = x['estoque'];
       String idItem = x['idItem'];
       ordenar = x['ordenacao'] + 1;
-
       int est = estoque - quant;
-
       ref.child(id).set(x).then((value) async {
-      if(userRole==Util.roles[1]){
-        await conCha.alterarStatus(context, chamado, idIp, message, 0.0);
-      }
 
         await conCha.alterarStatus(context, chamado, idIp, message, 0.0);
         await conCon.alteraEstoque(idItem, est, ordenar);
+         cMethods.displaySnackBar("Itens adicionados!", context);
 
-        // cMethods.displaySnackBar("Luminária adicionada!", context);
 
-        //     conIp.postes.removeWhere((key, value) => key == ipIds);
       }).onError((error, stackTrace) {
-        //    cMethods.displaySnackBar("Erro ao Luminária adicionada!", context);
+            cMethods.displaySnackBar("Erro ao adicionar itens!", context);
       });
     }
-
-
 
     conCha.buscaPostesDefeito();
 
     if (message != StatusApp.lancado.message) {
-
       Navigator.pop(context);
-
     }
     update();
     // clear();

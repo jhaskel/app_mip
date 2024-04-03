@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/controleController.dart';
+import 'package:mip_app/global/global_var.dart';
 
 class ListaItensLicitados extends StatefulWidget {
   dynamic item;
@@ -39,7 +40,7 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
               'idItem': item['id'].toString(),
               'estoque': estoque,
               'ordenacao': item['ordenacao'],
-              'user': "Paulo Almeida",
+              'user': userName,
               'tipo': tipo,
               'ordem': "$tipo",
               'unidade': item['unidade'].toString(),

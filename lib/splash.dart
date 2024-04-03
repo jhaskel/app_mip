@@ -33,7 +33,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Manutenção Iluminação Pública' , style: TextStyle(fontSize: 30),),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Manutenção Iluminação' , style: TextStyle(fontSize: 30),),
+            Text('Pública' , style: TextStyle(fontSize: 30),),
+          ],
+        ),
       ),
     );
   }

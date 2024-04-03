@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/authentication/login_screeen.dart';
+import 'package:mip_app/authentication/signup_screen.dart';
 import 'package:mip_app/pages/home/dashboard.dart';
 import 'package:mip_app/pages/home/dashboard_anonimo.dart';
 
@@ -43,11 +44,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       locale: Locale('pt', 'BR'),
-      title: 'CoMip',
+      title: 'Ilumina Braço',
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
-
+    // home: LoginScreen(),
      home: SplashScreen(),
       /*home: FirebaseAuth.instance.currentUser == null
           ? DashboardAnonimo()

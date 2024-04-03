@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mip_app/authentication/signup_screen.dart';
+
 import 'package:mip_app/controllers/usuarioController.dart';
 import 'package:mip_app/global/app_colors.dart';
+
 import 'package:mip_app/pages/usuarios/usuario_create_page.dart';
+import 'package:mip_app/pages/usuarios/usuario_detail_page.dart';
 
 class UsuarioPage extends StatefulWidget {
   const UsuarioPage({Key? key}) : super(key: key);
@@ -75,12 +77,12 @@ class _UsuarioPageState extends State<UsuarioPage> {
                           dynamic item = conUsu.listUsuarios[index];
                           return InkWell(
                             onTap: () {
-                              /* Navigator.push(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>UsuarioDetail(
+                                    builder: (context) => UsuarioDetailPage(
                                         conUsu.listUsuarios[index])),
-                              );*/
+                              );
                             },
                             child: Row(
                               children: [
@@ -113,7 +115,7 @@ class _UsuarioPageState extends State<UsuarioPage> {
                         },
                       )
                     : Center(
-                        child: Text("Nenhum Usuario Encontrado"),
+                        child: Text("Nenhum Usuário Encontrado"),
                       ),
               ),
             ),
@@ -122,6 +124,4 @@ class _UsuarioPageState extends State<UsuarioPage> {
       ),
     );
   }
-
-
 }

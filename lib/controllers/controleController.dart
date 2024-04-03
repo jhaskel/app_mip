@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/methods/common_methods.dart';
 
 class ControleController extends GetxController {
   var index = 0.obs;
@@ -13,6 +14,7 @@ class ControleController extends GetxController {
   var loading = false.obs;
   var quant = 1.obs;
   var total = 0.0.obs;
+  CommonMethods cMethods = CommonMethods();
 
   getItens() async {
     listaItens.clear();
@@ -66,9 +68,7 @@ class ControleController extends GetxController {
     listaFinal.add(listaIten);
     total(listaIten['total']);
 
-    // var tes = listaFinal.map((e) => e['total']);
-    //   total(tes.reduce((a, b) => a+b));
-    //   print('total $total');
+
     update();
   }
 

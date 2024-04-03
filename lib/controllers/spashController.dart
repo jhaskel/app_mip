@@ -77,7 +77,7 @@ class SplashServices {
                 ));
       }
     } else {
-      print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
       Timer(
           const Duration(seconds: 2),
           () => Navigator.pushReplacement(
