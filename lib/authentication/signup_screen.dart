@@ -147,7 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void checkNetworkIsAvailable() {
-    cMethods.checkConnectivity(context);
+    
 
 
       signUpFormValidation();

@@ -15,13 +15,12 @@ import 'package:mip_app/pages/home/dashboard_supervisor.dart';
 
 class SplashServices {
   UsuarioController conUse = Get.put(UsuarioController());
-  void isLogin(BuildContext context) async {
-    final auth = FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance;
 
-    await conUse.userCurrent(context);
+  void isLogin(BuildContext context) async {
     final user = auth.currentUser;
 
-    print("userRole $userRole");
+    await conUse.userCurrent(context);
 
     if (user != null) {
       if (userRole == "user") {
@@ -47,27 +46,14 @@ class SplashServices {
                   MaterialPageRoute(
                       builder: (context) => DashboardSupervisor()),
                 ));
-      } else if (userRole == "admin") {
+      } else if (userRole == "admin" || userRole == "master" ||userRole == "dev") {
         Timer(
             const Duration(seconds: 2),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Dashboard()),
                 ));
-      } else if (userRole == "master") {
-        Timer(
-            const Duration(seconds: 2),
-            () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Dashboard()),
-                ));
-      } else if (userRole == "dev") {
-        Timer(
-            const Duration(seconds: 2),
-            () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Dashboard()),
-                ));
+
       } else {
         Timer(
             const Duration(seconds: 2),

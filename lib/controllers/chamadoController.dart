@@ -31,6 +31,8 @@ class ChamadoController extends GetxController {
   var longitude = 0.0.obs;
   var lati = 0.0.obs;
   var longi = 0.0.obs;
+  var bairro = "".obs;
+  var logradouro = "".obs;
   LatLng? markerPosition;
   var dragged = false.obs;
 
@@ -145,10 +147,12 @@ class ChamadoController extends GetxController {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
 
     String ipIds = idIp.value;
+   int  ano = DateTime.now().year;
 
     var chamado = {
       'id': id,
-      'idIp': ipIds, //id do Ip
+      'idIp': ipIds,
+      'ano':ano,
       'createdAt': DateTime.now().toString(),
       'modifiedAt': DateTime.now().toString(),
       'latitude': lati.value,
@@ -158,6 +162,8 @@ class ChamadoController extends GetxController {
         'empresa': '',
       'total': 0.0,
       'isChamado': true,
+      'bairro':bairro.value,
+      'logradouro':logradouro.value
     };
 
     ref.child(id).set(chamado).then((value) async {
@@ -252,24 +258,35 @@ class ChamadoController extends GetxController {
       Map ips = value.value as Map;
       lati.value = ips['latitude'];
       longi.value = ips['longitude'];
-      print("latis = ${lati.value}");
+      bairro.value = ips['Bairro'];
+      logradouro.value = ips['logradouro'];
+      print("ksksksk ${logradouro.value}");
+
+
     });
 
     update();
   }
 
+
   void getChamados(BuildContext context) async {
+    int ano = DateTime.now().year;
     quantChamados(0);
     chamadosAndamento(0);
     chamadosFinalizados(0);
     gastosTotalChamados(0.0);
-    await ref.get().then((value) {
+   ////////////////////
+
+
+    await ref.orderByChild('ano').equalTo(ano).get().then((value) async {
       Map pos = value.value as Map;
 
       listaChamados.clear();
-
       listaChamados = pos.values.toList()
         ..sort(((a, b) => (b["createdAt"]).compareTo((a["createdAt"]))));
+
+
+   ////////////////
 
       quantChamados(listaChamados.length);
       double soma =

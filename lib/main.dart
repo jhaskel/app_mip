@@ -48,16 +48,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
-    // home: LoginScreen(),
+
      home: SplashScreen(),
-      /*home: FirebaseAuth.instance.currentUser == null
-          ? DashboardAnonimo()
-         // : HomePage(),
-          : Dashboard(),*/
 
-
-      //home: MapsIp(),
-      //  home: const LoginPage(),
     );
   }
 }

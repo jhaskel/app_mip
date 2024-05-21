@@ -28,6 +28,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("haskel");
     return Scaffold(
       appBar: AppBar(
           title: Obx(
@@ -129,10 +130,15 @@ class _ChamadosPageState extends State<ChamadosPage> {
                     ),
                   ),
                   Container(
+                    width: 400,
+                    child: Text("Local"),
+                  ),
+                  Spacer(),
+                  Container(
                     width: 100,
                     child: Text("Valor Gasto"),
                   ),
-                  Spacer(),
+
                   Container(
                     width: 100,
                     child: Text("status"),
@@ -176,11 +182,16 @@ class _ChamadosPageState extends State<ChamadosPage> {
                               child: Text(item['idIp']),
                             ),
                             Container(
+                              width: 400,
+                              child: Text(item['logradouro'],overflow: TextOverflow.ellipsis,),
+                            ),
+                            Spacer(),
+                            Container(
                               width: 100,
                               child: Text(
                                   'R\$ ${formatador.format(item['total'])}'),
                             ),
-                            Spacer(),
+
                             Container(
                               width: 100,
                               child: Text(item['status']),

@@ -29,6 +29,7 @@ class _CreateIpPageState extends State<CreateIpPage> {
     super.initState();
     conBai.getBairros();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +51,15 @@ class _CreateIpPageState extends State<CreateIpPage> {
 
                //     conCha.idIp.value = id;
                     conBai.bairroAtivo.value=v!;
+                    conBai.bairroAtivoId.value=id!;
                     widget.conIp.bairro.value = v!;
-                    print("ggggg ${conBai.bairroAtivo.value}");
+
                     conBai.getRuas();
+                    conBai.listaRuas.clear();
+
+                   conBai.ruaAtivo.value='';
+                   conBai.ruaAtivoId.value="";
+                   widget.conIp.logradouro.value ="";
 
 
 
@@ -69,21 +76,17 @@ class _CreateIpPageState extends State<CreateIpPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownSearch<String>(
+
                   selectedItem: 'Selecione um Logradouro',
                   items: conBai.ruas.values.toList(),
                   onChanged: (v) async {
-                    var id = conBai.bairros.keys.firstWhere(
-                            (k) => conBai.bairros[k] == v,
+                    var id = conBai.ruas.keys.firstWhere(
+                            (k) => conBai.ruas[k] == v,
                         orElse: () => "null");
-
-
-
+                    conBai.ruaAtivo.value=v!;
+                    conBai.ruaAtivoId.value=id!;
                     widget.conIp.logradouro.value = v!;
 
-
-
-
-                    //   await conCha.getIpUnico(conCha.idIp.value);
                   },
                   popupProps: const PopupPropsMultiSelection.menu(
                     isFilterOnline: false,

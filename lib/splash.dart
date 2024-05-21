@@ -16,15 +16,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SplashServices splashScreen = SplashServices();
 
-  final UsuarioController conUse= Get.put(UsuarioController());
+
+
   init()async{
-    await  conUse.userCurrent(context);
+
     splashScreen.isLogin(context);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
    init();
 

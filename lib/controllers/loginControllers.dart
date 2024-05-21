@@ -31,7 +31,7 @@ class LoginController extends GetxController {
 
 
   void checkNetworkIsAvailable(BuildContext context) {
-    cMethods.checkConnectivity(context);
+
     signInFormValidation(context);
   }
   signInFormValidation(BuildContext context) {

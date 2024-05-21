@@ -29,27 +29,47 @@ class UsuarioController extends GetxController {
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController empresaController = TextEditingController();
+  var roleUsuario= "".obs;
+  var nomeUsuario= "".obs;
+  var nomeEmpresaOperador = "".obs;
+  var idUser = "".obs;
+  var foneUser = "".obs;
+  final auth = FirebaseAuth.instance;
 
 
   userCurrent(BuildContext context) async {
-    final User? userFirebase = await FirebaseAuth.instance.currentUser;
+    final userFirebase = auth.currentUser;
 
     if (userFirebase != null) {
-      DatabaseReference usersRef = FirebaseDatabase.instance
+
+      DatabaseReference usersRef = await FirebaseDatabase.instance
           .ref()
           .child("Users")
-          .child(userFirebase!.uid);
-      usersRef.once().then((snap) {
+          .child(userFirebase.uid);
+      await usersRef.once().then((snap) {
+
         if (snap.snapshot.value != null) {
+
+
           if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
-            userName = (snap.snapshot.value as Map)["nome"];
-            userRole = (snap.snapshot.value as Map)["role"];
-            userId = (snap.snapshot.value as Map)["id"];
-            userFone = (snap.snapshot.value as Map)["fone"];
+
+            roleUsuario.value = (snap.snapshot.value as Map)["role"];
+            nomeUsuario.value=(snap.snapshot.value as Map)["nome"];
+            idUser.value = (snap.snapshot.value as Map)["id"];
+            foneUser.value = (snap.snapshot.value as Map)["fone"];
+
+            userRole = roleUsuario.value;
+            userName = nomeUsuario.value;
+            userId = idUser.value;
+            userFone = foneUser.value;
 
             if(userRole=="supervisor"|| userRole=="operador"){
-              empresaOperador = (snap.snapshot.value as Map)["empresa"];
+
+              nomeEmpresaOperador.value = (snap.snapshot.value as Map)["empresa"];
+              empresaOperador = nomeEmpresaOperador.value;
+
             }
+            update();
           } else {
             FirebaseAuth.instance.signOut();
             cMethods.displaySnackBar(
@@ -63,7 +83,9 @@ class UsuarioController extends GetxController {
         }
       });
     }
+
     update();
+
   }
 
   getUsuarios(
@@ -116,7 +138,7 @@ class UsuarioController extends GetxController {
   }
 
   void checkNetworkIsAvailable(BuildContext context, {String? empresa}) {
-    cMethods.checkConnectivity(context);
+
     signUpFormValidation(context, empresa: empresa);
   }
 
