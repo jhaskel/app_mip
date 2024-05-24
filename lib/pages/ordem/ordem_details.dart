@@ -234,62 +234,70 @@ bool confirmado = true;
         appBar: AppBar(
           title: Text('Detalhe da Ordem ${item['cod']}'),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PdfOrdemEmpresa(listaItens)),
-                  );
-                },
-                icon: Icon(Icons.picture_as_pdf)),
-            IconButton(
-                onPressed: () {
-                  Get.defaultDialog(
-                      title: "Numero do Documento",
-                      content: TextFormField(
-                        autofocus: true,
-                        focusNode: FocusNode(),
-                        keyboardType: TextInputType.number,
-                        maxLength: 2,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ], // Only numbers can be entered
+            userRole==Util.roles[2]
+                ?Container()
+                :Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PdfOrdemEmpresa(listaItens)),
+                      );
+                    },
+                    icon: Icon(Icons.picture_as_pdf)),
+                IconButton(
+                    onPressed: () {
+                      Get.defaultDialog(
+                          title: "Numero do Documento",
+                          content: TextFormField(
+                            autofocus: true,
+                            focusNode: FocusNode(),
+                            keyboardType: TextInputType.number,
+                            maxLength: 2,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ], // Only numbers can be entered
 
-                        controller: numero,
-                      ),
-                      cancel: IconButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          icon: Icon(Icons.cancel)),
-                      confirm: IconButton(
-                          onPressed: () {
-                            var ofc = numero.text;
+                            controller: numero,
+                          ),
+                          cancel: IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: Icon(Icons.cancel)),
+                          confirm: IconButton(
+                              onPressed: () {
+                                var ofc = numero.text;
 
-                            Navigator.pop(context);
+                                Navigator.pop(context);
 
-                            if (ofc.length > 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OficioPdf(
-                                        item['cod'],
-                                        numero.text,
-                                        item['valor'],
-                                        tipo == "1" ? true : false)),
-                              );
-                            } else {
-                              Get.defaultDialog(
-                                title: 'Defina um numero',
-                                content: Text(
-                                    "Obrigatório definir um numero para o documento"),
-                              );
-                            }
-                          },
-                          icon: Icon(Icons.check_circle)));
-                },
-                icon: Icon(Icons.picture_as_pdf_sharp))
+                                if (ofc.length > 0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => OficioPdf(
+                                            item['cod'],
+                                            numero.text,
+                                            item['valor'],
+                                            tipo == "1" ? true : false)),
+                                  );
+                                } else {
+                                  Get.defaultDialog(
+                                    title: 'Defina um numero',
+                                    content: Text(
+                                        "Obrigatório definir um numero para o documento"),
+                                  );
+                                }
+                              },
+                              icon: Icon(Icons.check_circle)));
+                    },
+                    icon: Icon(Icons.picture_as_pdf_sharp))
+
+              ],
+            )
+
           ],
         ),
         body: Column(
@@ -333,7 +341,7 @@ bool confirmado = true;
                 ),
 
                 Visibility(
-                  visible: userRole=="supervisor",
+                  visible: userRole==Util.roles[2] ,
                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [

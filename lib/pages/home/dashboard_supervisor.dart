@@ -1,12 +1,9 @@
 import 'package:mip_app/controllers/homeController.dart';
 import 'package:mip_app/controllers/usuarioController.dart';
-import 'package:mip_app/pages/cadastro/cadastro_page.dart';
 import 'package:mip_app/pages/cadastro/cadastro_supervisor_page.dart';
-
 import 'package:mip_app/pages/chamados/create-defeito-page.dart';
 import 'package:mip_app/pages/controle/controle_page.dart';
 import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/pages/profile/profile_page.dart';
@@ -31,7 +28,7 @@ class _DashboardSupervisorState extends State<DashboardSupervisor>
       controller!.index = indexSelected;
     });
   }
-  List <String>telas = ["Home","Controle","Chamado","Profile","Cadastro"];
+  List <String>telas = ["Home","Controle","Chamado","Cadastro","Profile"];
 
   @override
   void initState() {
@@ -57,8 +54,8 @@ class _DashboardSupervisorState extends State<DashboardSupervisor>
           MapsChamadoPage(),
           ControlePage(),
           CreateDefeitoPage(),
-          ProfilePage(),
           CadastroSupervisorPage(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

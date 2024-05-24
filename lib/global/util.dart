@@ -12,6 +12,7 @@ enum StatusApp {
   ordemGerada(message: 'ordem Gerada'),
   ordemConfirmada(message: 'ordem Confirmada'),
   gerandoSF(message: 'gerando SF'),
+  SfGerada(message: 'SF gerada'),
   aguardandoNota(message: 'Aguardando Nota'),
   notaGerada(message: 'Nota Gerada'),
   tesouraria(message: 'tesouraria'), //status da mmanutencao

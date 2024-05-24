@@ -29,7 +29,7 @@ class _DashboardState extends State<Dashboard>
       controller!.index = conHome.indexSelected.value;
     });
   }
-  List <String>telas = ["Home","Controle","Chamado","Profile","Cadastros"];
+  List <String>telas = ["Home","Controle","Chamado","Cadastros","Profile"];
 
   @override
   void initState() {
@@ -55,10 +55,8 @@ class _DashboardState extends State<Dashboard>
           MapsChamadoPage(),
           ControlePage(),
           CreateDefeitoPage(),
-          ProfilePage(),
-
-          //TaskManager(),
           CadastroPage(),
+          ProfilePage(),
 
         ],
       ),
