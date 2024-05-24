@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/methods/common_methods.dart';
 
@@ -9,6 +8,7 @@ class ControleController extends GetxController {
   List<dynamic> listaItens = [].obs;
   List<dynamic> listaServicos = [].obs;
   List<dynamic> listaFinal = [].obs;
+  List<dynamic> listaFinalizando = [].obs;
   final ref = FirebaseDatabase.instance.ref('ItensLicitados');
   final refIten = FirebaseDatabase.instance.ref('Itens');
   var loading = false.obs;
@@ -49,12 +49,9 @@ class ControleController extends GetxController {
     await refIten.orderByChild('chamado').equalTo(chamado).get().then((value) {
       if (value.exists) {
         Map maps = value.value as Map;
-
         var lista = maps.values.toList();
-
         lista = maps.values.toList()
           ..sort(((a, b) => (b["nome"]).compareTo((a["nome"]))));
-
         for (var x in lista) {
           listaFinal.add(x);
         }
@@ -62,45 +59,6 @@ class ControleController extends GetxController {
         update();
       }
     });
-  }
-
-  adicionarItemLicitado(listaIten) {
-    listaFinal.add(listaIten);
-    total(listaIten['total']);
-
-
-    update();
-  }
-
-  alteraQuant(dynamic lista, int index, bool tipo) {
-    double valor = lista['valor'];
-    int esto = lista['estoque'];
-    int quan = lista['quant'];
-
-    if (tipo) {
-      if (quan < esto) {
-        listaFinal[index]['quant']++;
-
-        print("${listaFinal[index]['quant']}");
-        update();
-      } else {
-        Get.defaultDialog(title: "OOPs", content: Text("Estoque insuficiente"));
-      }
-    } else {
-      if (listaFinal[index]['quant'] > 1) {
-        listaFinal[index]['quant']--;
-        update();
-      }
-    }
-    double tot = valor * lista['quant'];
-
-    listaFinal[index]['total'] = tot;
-    update();
-  }
-
-  removerItemLicitado(dynamic item) {
-    listaFinal.removeWhere((e) => e['id'] == item['id']);
-    update();
   }
 
   resetarListaItemLicitado() {

@@ -8,9 +8,15 @@ class OrdemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Ordens');
   CommonMethods cMethods = CommonMethods();
   List<dynamic> listaOrdens = [].obs;
+  List<dynamic> listaOrdensAbertas = [].obs;
   List<dynamic> listaOrdensByAno = [].obs;
   var totalByAno = 0.0.obs;
   var nomePage = 'Ordens'.obs;
+  var tem = false.obs;
+  var idOrdem = "".obs;
+  var ordemConfirmada = false.obs;
+
+
 
   createdOrdem(Map<String, Object> ord, BuildContext context, String ordem) {
     ref.child(ordem).set(ord).then((value) async {
@@ -20,6 +26,44 @@ class OrdemController extends GetxController {
       cMethods.displaySnackBar("Erro ao adicionar a ordem!", context);
     });
     update();
+  }
+
+  updateOrdem(Map<String, Object> ord, BuildContext context, String ordem) {
+    ref.child(ordem).update(ord).then((value) async {
+      cMethods.displaySnackBar("Ordem adicionada!", context);
+
+    }).onError((error, stackTrace) {
+      cMethods.displaySnackBar("Erro ao adicionar a ordem!", context);
+    });
+    update();
+  }
+  getOrdemByFinalizada(String id) async {
+    print("HAS ${tem.value}");
+    print("HAS2 ${id}");
+
+
+    await ref.orderByChild('isAberta').equalTo("1.1").onValue.listen((event) {
+      listaOrdensAbertas.clear();
+
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+
+        for(var x in maps.keys){
+          idOrdem.value = x;
+print("xxxxxxx ${idOrdem.value}");
+        }
+        tem(true);
+        update();
+        print("HAS1 ${maps}");
+      }else{
+        print("não foi encontrado ");
+      }
+    });
+
+
+
+
+
   }
 
   getOrdem() async {
@@ -41,6 +85,7 @@ class OrdemController extends GetxController {
       }
     });
   }
+
 
   getOrdensByAno(String ano) async {
     //ainda não utilizado
@@ -77,5 +122,14 @@ class OrdemController extends GetxController {
 
 
     update();
+  }
+
+  void alterarStatus(BuildContext context, String message, item) {
+
+    ref.child(item['id']).update({
+      "status": message,
+      "isConfirmada":true
+
+    });
   }
 }

@@ -42,15 +42,15 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
         color: AppColors.primaria,
         child: InkWell(
             onTap: () async {
-              await conIte.createItem(
-                  context, conCon.listaFinal, StatusApp.lancado.message);
+              await conCha.finalizarConcerto(
+                  context, StatusApp.lancado.message,widget.chamado);
 
               Navigator.pop(context);
 
             },
             child: Center(
                 child: Text(
-              "Finalizar Chamado",
+              "Finalizar Serviços  Chamado",
               style: AppTextStyles.body20,
             ))),
       ),
@@ -145,18 +145,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                         }),
                   ),
                 ),
-          Container(
-            height: 30,
-            child: Center(
-              child: Text(
-                'ITENS E SERVIÇOS UTILIZADOS - (${conCon.listaFinal.length}) itens',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -164,7 +153,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.amber, width: 2)),
                   padding: EdgeInsets.all(5),
-                  child: ListaItensServicosUtilizados()),
+                  child: ListaItensServicosUtilizados(widget.chamado['id'])),
             ),
           )
         ],

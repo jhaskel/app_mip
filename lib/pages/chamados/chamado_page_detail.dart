@@ -72,7 +72,9 @@ class _ChamadoPageDetailState extends State<ChamadoPageDetail> {
   }
 
   _body() {
+    print("jjjjjjjj ${item['id']}");
     return StreamBuilder(
+
       stream: conIte.ref.orderByChild('chamado').equalTo(item['id']).onValue,
       builder: (context, snapshott) {
         if (!snapshott.hasData) {

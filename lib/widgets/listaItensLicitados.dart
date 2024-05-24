@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/controleController.dart';
+import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/global_var.dart';
 
 class ListaItensLicitados extends StatefulWidget {
@@ -17,6 +18,7 @@ class ListaItensLicitados extends StatefulWidget {
 
 class _ListaItensLicitadosState extends State<ListaItensLicitados> {
   final ControleController conCon = Get.put(ControleController());
+  final ItemController conIte = Get.put(ItemController());
   get item => widget.item;
   get nome => widget.nome;
   get tipo => widget.tipo;
@@ -25,20 +27,17 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          int estoque = item['estoque'];
-          if (estoque <= 0) {
-            Get.defaultDialog(
-                title: "OOps", content: Text('Estoque é insuficiente'));
-          } else {
+
+            var id = DateTime.now().millisecondsSinceEpoch.toString();
             var iten = {
               'chamado': chamado['id'],
               'nome': nome,
               'createdAt': DateTime.now().toString(),
               'modifiedAt': DateTime.now().toString(),
-              'id': DateTime.now().millisecondsSinceEpoch.toString(),
+              'id': "id${id}",
               'idIp': chamado['idIp'],
               'idItem': item['id'].toString(),
-              'estoque': estoque,
+              'estoque': item['estoque'],
               'ordenacao': item['ordenacao'],
               'user': userName,
               'tipo': tipo,
@@ -52,8 +51,8 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
               'empresa': item['empresa'],
             };
 
-            conCon.adicionarItemLicitado(iten);
-          }
+            conIte.adicionarItemLicitado(iten);
+
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

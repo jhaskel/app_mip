@@ -6,7 +6,6 @@ import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/global/util.dart';
-import 'package:mip_app/pages/controle/finalizando_page.dart';
 import 'package:mip_app/pages/ordem/widget/cabecalho_create_ordem.dart';
 import 'package:mip_app/pages/ordem/widget/lista_itens.dart';
 
@@ -55,7 +54,9 @@ class _CreateOrdemServicosState extends State<CreateOrdemServicos> {
                   "id": ordem.toString(),
                   "cod": ordem,
                   "valor": conIte.totalOrdem.value,
+                  "tipo":tipo,
                   "isFinalizada": false,
+                  "isConfirmada": false,
                   "createdAt": DateTime.now().toString(),
                   "modifiedAt": DateTime.now().toString(),
                   "isAtivo": true,

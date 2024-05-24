@@ -9,6 +9,9 @@ import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/pages/controle/autorizacao_page.dart';
 import 'package:mip_app/pages/controle/finalizando_page.dart';
+import 'package:mip_app/pages/ordem/create_ordem_home.dart';
+
+import '../../global/util.dart';
 
 class ControlePage extends StatefulWidget {
   const ControlePage({Key? key}) : super(key: key);
@@ -52,7 +55,18 @@ class _ControlePageState extends State<ControlePage> {
                     child: CircleAvatar(backgroundColor:Colors.white,radius:10,child: Text("${conCha.quantLancados.value}",style: TextStyle(color: Colors.red) ,)))
               ],
             )),
-          ):Container(),SizedBox(width: 20,)],
+          ):Container(),SizedBox(width: 20,),
+        userRole==Util.roles[4]||userRole==Util.roles[5]?IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateOrdemHome()),
+              );
+            },
+            icon: Icon(Icons.table_chart)):Container(),
+
+
+      ],
       ),
       body: Obx(
         () => Column(

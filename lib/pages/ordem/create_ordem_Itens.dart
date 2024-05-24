@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,11 +25,17 @@ class _CreateOrdemItensState extends State<CreateOrdemItens> {
   String ordem = "";
   String tipo = "1";
 
+  iniciar() async {
+    ordem = '${DateFormat("yyMMdd").format(DateTime.now())}$tipo';
+    await conOrd.getOrdemByFinalizada(ordem);
+    conIte.getItensByTipo(tipo);
+  //  conIte.updateItens( context, ordem);
+  }
+
   @override
   void initState() {
     super.initState();
-    conIte.getItensByTipo(tipo);
-    ordem = '${DateFormat("yyMMdd").format(DateTime.now())}$tipo';
+    iniciar();
   }
 
   @override
@@ -39,43 +46,49 @@ class _CreateOrdemItensState extends State<CreateOrdemItens> {
         color: AppColors.primaria,
         width: MediaQuery.of(context).size.width,
         child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(() => Text(
-                  "Total da Ordem R\$ ${formatador.format(conIte.totalOrdem.value)}",
-                  style: AppTextStyles.heading15.copyWith(fontSize: 20),
-                )),
-            InkWell(
-              onTap: () async {
-                Map<String, Object> ord = {
-                  "ano": DateFormat("yyyy").format(DateTime.now()),
-                  "mes": DateFormat("MM").format(DateTime.now()),
-                  "id": ordem.toString(),
-                  "cod": ordem,
-                  "valor": conIte.totalOrdem.value,
-                  "isFinalizada": false,
-                  "createdAt": DateTime.now().toString(),
-                  "modifiedAt": DateTime.now().toString(),
-                  "isAtivo": true,
-                  "itensOrdem": conIte.listaFiltrada,
-                  "status": StatusApp.ordemGerada.message,
-                  "urlSf":"",
-                  "urlNf":""
-                };
-
-                await conOrd.createdOrdem(ord, context, ordem);
-
-                for (var x in conIte.listaItens) {
-                  conIte.alteraOrdem(x['id'], ordem);
-                }
-              },
-              child: Text(
-                "Gerar Ordem de Itens",
-                style: AppTextStyles.heading,
+            child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Total da Ordem R\$ ${formatador.format(conIte.totalOrdem.value)}",
+                style: AppTextStyles.heading15.copyWith(fontSize: 20),
               ),
-            ),
-          ],
+               InkWell(
+                      onTap: () async {
+                        Map<String, Object> ord = {
+                          "ano": DateFormat("yyyy").format(DateTime.now()),
+                          "mes": DateFormat("MM").format(DateTime.now()),
+                          "id": ordem.toString(),
+                          "cod": ordem,
+                          "tipo": tipo,
+                          "valor": conIte.totalOrdem.value,
+                          "isFinalizada": false,
+                          "isConfirmada": false,
+                          "isAberta": "${tipo}.1",
+                          "createdAt": DateTime.now().toString(),
+                          "modifiedAt": DateTime.now().toString(),
+                          "isAtivo": true,
+                          "itensOrdem": conIte.listaFiltrada,
+                          "status": StatusApp.ordemGerada.message,
+                          "urlSf": "",
+                          "urlNf": ""
+                        };
+
+                        await conOrd.createdOrdem(ord, context, ordem);
+
+                        for (var x in conIte.listaItens) {
+                          conIte.alteraOrdem(x['id'],ordem);
+                        }
+                      },
+                      child: Text(
+                        "Gerar Ordem de Itens",
+                        style: AppTextStyles.heading,
+                      ),
+                    )
+
+            ],
+          ),
         )),
       ),
       body: Obx(

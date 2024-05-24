@@ -212,6 +212,8 @@ class IpController extends GetxController {
     }
   }
 
+
+
   alteraStatusIp(String idIp, String status) {
     ref.child(idIp).update({
       "status": status,

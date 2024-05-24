@@ -26,9 +26,7 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
         title: Text('Autorização'),
         actions: [
           IconButton(onPressed: (){
-            setState(() {
-
-            });
+            setState(() {});
           }, icon: Icon(Icons.refresh))
         ],
       ),
@@ -75,12 +73,7 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
                             ));
                       }
                     }else{
-
                       Map maps = snapshot.data!.snapshot.value as Map;
-
-
-
-
                       var list = maps.values.toList()
                         ..sort(((a, b) => (b["modifiedAt"]).compareTo((a["modifiedAt"]))));
 
@@ -139,7 +132,6 @@ class _AutorizacaoPageState extends State<AutorizacaoPage> {
 
                   }
                   return Container();
-
 
                 }
               ),

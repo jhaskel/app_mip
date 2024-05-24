@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/ordemController.dart';
 import 'package:mip_app/global/app_colors.dart';
+
 import 'package:mip_app/pages/ordem/ordem_details.dart';
 
 class OrdemPage extends StatefulWidget {
@@ -35,6 +35,7 @@ class _OrdemPageState extends State<OrdemPage> {
       () => Scaffold(
         appBar: AppBar(
           title: Text(conOrd.nomePage.value),
+
         ),
         body: Column(
           children: [

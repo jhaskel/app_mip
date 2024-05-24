@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/ipController.dart';
+import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/global_var.dart';
 import 'package:mip_app/global/util.dart';
 import 'package:mip_app/methods/common_methods.dart';
@@ -22,7 +23,12 @@ class ChamadoController extends GetxController {
   var loading = false.obs;
   var defeito = "".obs;
   CommonMethods cMethods = CommonMethods();
+  var totalChamado = 0.0.obs;
+
   final IpController conIp = Get.put(IpController());
+
+
+
   var textPage = "Chamados".obs;
   var alturaWidget = 120.0.obs;
   List<dynamic> listaChamados = [].obs;
@@ -58,7 +64,8 @@ class ChamadoController extends GetxController {
   LatLng _position = LatLng(-27.35661, -49.88283);
   var position2 = LatLng(-27.35661, -49.88283).obs;
   late GoogleMapController _mapsController;
-  static IpController get to => Get.find<IpController>();
+
+  static ItemController get itecon => Get.find<ItemController>();
   get mapsController => _mapsController;
   get position => _position;
 
@@ -150,9 +157,8 @@ class ChamadoController extends GetxController {
    int  ano = DateTime.now().year;
 
     var chamado = {
-      'id': id,
+      'id': "id$id",
       'idIp': ipIds,
-      'ano':ano,
       'createdAt': DateTime.now().toString(),
       'modifiedAt': DateTime.now().toString(),
       'latitude': lati.value,
@@ -163,10 +169,11 @@ class ChamadoController extends GetxController {
       'total': 0.0,
       'isChamado': true,
       'bairro':bairro.value,
-      'logradouro':logradouro.value
+      'logradouro':logradouro.value,
+      'ano':ano,
     };
 
-    ref.child(id).set(chamado).then((value) async {
+    ref.child("id$id").set(chamado).then((value) async {
       await conIp.alteraStatusIp(ipIds, StatusApp.defeito.message);
       cMethods.displaySnackBar("Luminária adicionada!", context);
 
@@ -353,19 +360,33 @@ class ChamadoController extends GetxController {
   }
 
 
+  finalizarConcerto(BuildContext context, String message, dynamic chamado) async {
+
+    String idIp = chamado['idIp'];
+    alterarStatus(context, chamado['id'], idIp, message, 0.0);
+
+    buscaPostesDefeito();
+    if (message != StatusApp.lancado.message) {
+      Navigator.pop(context);
+    }
+    update();
+    // clear();
+  }
+
 
   alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
-
-
     if(userRole==Util.roles[1]){
       ref.child(id).update({
         "status": message,
         "empresa":userRole==Util.roles[1]?empresaOperador:"",
-        "total": total,
+        "total": totalChamado.value,
         "isChamado": message == StatusApp.autorizado.message ? false : true,
         "modifiedAt": DateTime.now().toString(),
         "realizadoBy":userRole==Util.roles[1]&& message == StatusApp.realizado.message?userName:"",
       }).then((value) {
+        cMethods.displaySnackBar(
+            "Chamado concertado com sucesso! ${textPage.value}", context);
+
         if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
@@ -378,7 +399,8 @@ class ChamadoController extends GetxController {
       update();
 
     }
-    if(userRole==Util.roles[2]){
+
+    if(userRole==Util.roles[2]||userRole==Util.roles[3]||userRole==Util.roles[3]||userRole==Util.roles[4]||userRole==Util.roles[5]){
       ref.child(id).update({
         "status": message,
         "total": total,

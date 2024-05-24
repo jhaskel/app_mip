@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_colors.dart';
@@ -20,6 +21,7 @@ class ConsertandoPage extends StatefulWidget {
 class _ConsertandoPageState extends State<ConsertandoPage> {
   final ControleController conCon = Get.put(ControleController());
   final ItemController conIte = Get.put(ItemController());
+  final ChamadoController conCha = Get.put(ChamadoController());
 
   @override
   void initState() {
@@ -40,8 +42,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
         color: Colors.amber,
         child: InkWell(
             onTap: () {
-              conIte.createItem(
-                  context, conCon.listaFinal, StatusApp.realizado.message);
+              conCha.finalizarConcerto(
+                  context, StatusApp.realizado.message,widget.chamado);
             },
             child: Center(
                 child: Text(
@@ -106,6 +108,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
               ],
             ),
           ),
+
+
           conCon.index == 0
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -141,18 +145,8 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                         }),
                   ),
                 ),
-          Container(
-            height: 30,
-            child: Center(
-              child: Text(
-                'ITENS E SERVIÇOS UTILIZADOS - (${conCon.listaFinal.length}) itens',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -160,7 +154,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.amber, width: 2)),
                   padding: EdgeInsets.all(5),
-                  child: ListaItensServicosUtilizados()),
+                  child: ListaItensServicosUtilizados(widget.chamado['id'])),
             ),
           )
         ],

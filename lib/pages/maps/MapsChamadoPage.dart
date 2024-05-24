@@ -3,16 +3,11 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/usuarioController.dart';
-import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/global_var.dart';
-
 import 'package:mip_app/global/util.dart';
-import 'package:mip_app/pages/controle/autorizacao_page.dart';
-import 'package:mip_app/pages/chamados/create-defeito-page.dart';
-
 import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/ordem/create_ordem_home.dart';
-import 'package:mip_app/pages/ordem/ordem_page.dart';
+
 
 class MapsChamadoPage extends StatefulWidget {
   const MapsChamadoPage({super.key});
@@ -52,14 +47,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 icon: Icon(Icons.add)),
 
 
-         userRole==Util.roles[4]||userRole==Util.roles[5]?IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateOrdemHome()),
-                  );
-                },
-                icon: Icon(Icons.table_chart)):Container(),
+
 
 
           ],

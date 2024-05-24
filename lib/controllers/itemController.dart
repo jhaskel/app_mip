@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
-import 'package:mip_app/global/global_var.dart';
+import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/global/util.dart';
-
 import '../methods/common_methods.dart';
 
 class ItemController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Itens');
+  final ref2 = FirebaseDatabase.instance.ref('ItensLicitados');
 
   final ChamadoController conCha = Get.put(ChamadoController());
   final ControleController conCon = Get.put(ControleController());
+  final IpController ipCon = Get.put(IpController());
 
   List<dynamic> listaItens = [].obs;
   List<dynamic> listaItensChamado = [].obs;
@@ -20,11 +21,11 @@ class ItemController extends GetxController {
   List<dynamic> listaFiltrada = [].obs;
   List<dynamic> listaChamados = [].obs;
   CommonMethods cMethods = CommonMethods();
-
   var totalOrdem = 0.0.obs;
   var textDetail = "Itens utilizados no conserto".obs;
   var totalChamado = 0.0.obs;
   var loading = false.obs;
+
 
   getItensByTipo(String ordem) async {
     await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
@@ -33,15 +34,11 @@ class ItemController extends GetxController {
       listaChamados.clear();
       totalOrdem(0.0);
       if (event.snapshot.exists) {
-
         Map maps = event.snapshot.value as Map;
-
         listaItens = maps.values.toList()
           ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
 
         Set<String> nomesDuplicados = Set();
-
-
 
         for (var x in listaItens) {
           if (!nomesDuplicados.contains(x['nome'])) {
@@ -64,9 +61,7 @@ class ItemController extends GetxController {
                   ])
               .toSet();
 
-
           var total = gh * c.first[2];
-
           var it = {
             "cod": c.first[0],
             "unidade": c.first[1],
@@ -89,6 +84,26 @@ class ItemController extends GetxController {
 
       }
     });
+  }
+
+  updateItens( BuildContext context, String ordem) async {
+    List lista=[];
+    await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) async {
+
+      Map maps = event.snapshot.value as Map;
+       for(var x in maps.values){
+         lista.add(x['id']);
+       }
+       print("lisx $lista");
+
+       for(var u in lista){
+         await ref.child(u).update({ordem:"1"});
+       }
+
+
+    });
+
+    update();
   }
 
   getItensByChamado(String chamado) async {
@@ -145,7 +160,6 @@ class ItemController extends GetxController {
               };
 
               ls.putIfAbsent(pro['chamado'], () => pro);
-
               lista.add(ls);
             }
           }
@@ -159,37 +173,53 @@ class ItemController extends GetxController {
     });
   }
 
-  createItem(BuildContext context, List listaFinal, String message) async {
-    int ordenar = 0;
-    for (var x in listaFinal) {
-      String id = x['id'].toString();
-      String idIp = x['idIp'].toString();
-      String chamado = x['chamado'].toString();
-      int quant = x['quant'];
-      int estoque = x['estoque'];
-      String idItem = x['idItem'];
-      ordenar = x['ordenacao'] + 1;
-      int est = estoque - quant;
-      ref.child(id).set(x).then((value) async {
+  adicionarItemLicitado(Map<String, dynamic> iten) async {
+   await  ref.child(iten['id']).set(iten);
+   ref2.child(iten['idItem']).update({
+     "ordenacao": iten['ordenacao']+1,
 
-        await conCha.alterarStatus(context, chamado, idIp, message, 0.0);
-        await conCon.alteraEstoque(idItem, est, ordenar);
-         cMethods.displaySnackBar("Itens adicionados!", context);
-
-
-      }).onError((error, stackTrace) {
-            cMethods.displaySnackBar("Erro ao adicionar itens!", context);
-      });
-    }
-
-    conCha.buscaPostesDefeito();
-
-    if (message != StatusApp.lancado.message) {
-      Navigator.pop(context);
-    }
+   });
     update();
-    // clear();
   }
+
+
+
+
+
+  alteraQuant(dynamic item, bool acrescenta) {
+    String id = item['id'];
+    double valor = item['valor'];
+    double total = item['total'];
+    int quan = item['quant'];
+    if (acrescenta) {
+   quan=quan+1;
+   total =  quan*valor;
+      ref.child(id).update({
+        "quant": quan,
+        "total":total
+      });
+
+
+    } else {
+      if (quan > 1) {
+        quan=quan-1;
+        total =  quan*valor;
+        ref.child(id).update({
+          "quant": quan,
+          "total":total
+        });
+
+      }
+    }
+
+    update();
+  }
+
+  removeItemFirebase(item){
+    ref.child(item['id']).remove();
+    update();
+  }
+
 
   alteraOrdem(id, ordem) {
     ref.child(id).update({

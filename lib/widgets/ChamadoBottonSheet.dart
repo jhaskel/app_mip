@@ -117,7 +117,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                         ),
 
                         //button concertar
-                        widget.chamado['status'] == StatusApp.agendado.message
+                        widget.chamado['status'] == StatusApp.agendado.message ||  widget.chamado['status'] == StatusApp.concertando.message
                             ? MaterialButton(
                                 onPressed: () async {
                                   if (userRole == Util.roles[1]) {
