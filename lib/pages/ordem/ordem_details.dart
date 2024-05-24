@@ -331,69 +331,99 @@ bool confirmado = true;
                 SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 200,
-                      child: Text("Solicitação de Fornecimento"),
-                    ),
-                    Tooltip(
-                      message: "Visualizar",
-                      child: Container(
-                          child: item['urlSf'] == "" && urlSf == ""
-                              ? ElevatedButton(
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                              side: BorderSide(
-                                                  color: Colors.red)))),
-                                  onPressed: () async {
 
-                                    var despesa = {
-                                      "dotacao": conCos.codDotacao.value,
-                                      "id":DateTime.now().millisecondsSinceEpoch.toString(),
-                                      "mes":Util.meses[DateTime.now().month],
-                                      "nome":"manutenção",
-                                      "valor":item['valor']
-                                    };
+                Visibility(
+                  visible: userRole=="supervisor",
+                 child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 200,
+                        child: Text("Solicitação de Fornecimento"),
+                      ),
+                      Tooltip(
+                        message: "Visualizar",
+                        child: Container(
+                            child: item['urlSf'] == "" && urlSf == ""
+                                ? Container()
+                                : IconButton(
+                                onPressed: () {
+                                  urlSf != ""
+                                      ? launch(urlSf, isNewTab: true)
+                                      : launch(item['urlSf'], isNewTab: true);
+                                },
+                                icon: Icon(Icons.picture_as_pdf))),
+                      )
+                    ],
+                  ),
+               ),
+
+                Visibility(
+                  visible: userRole !="supervisor",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 200,
+                        child: Text("Solicitação de Fornecimento"),
+                      ),
+                      Tooltip(
+                        message: "Visualizar",
+                        child: Container(
+                            child: item['urlSf'] == "" && urlSf == ""
+                                ? ElevatedButton(
+                                    style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18.0),
+                                                side: BorderSide(
+                                                    color: Colors.red)))),
+                                    onPressed: () async {
+
+                                      var despesa = {
+                                        "dotacao": conCos.codDotacao.value,
+                                        "id":DateTime.now().millisecondsSinceEpoch.toString(),
+                                        "mes":Util.meses[DateTime.now().month],
+                                        "nome":"manutenção",
+                                        "valor":item['valor']
+                                      };
 
 
-                                    final file = await ImagePicker()
-                                        .pickImage(source: ImageSource.gallery);
+                                      final file = await ImagePicker()
+                                          .pickImage(source: ImageSource.gallery);
 
-                                    UploadTask? task =
-                                        await uploadFile(file, 'sf');
+                                      UploadTask? task =
+                                          await uploadFile(file, 'sf');
 
-                                    if (task != null) {
-                                      conCos.createdDespesa(context,despesa);
+                                      if (task != null) {
+                                        conCos.createdDespesa(context,despesa);
 
-                                      setState(() {
-                                        _uploadTasks = [..._uploadTasks, task];
-                                      });
-                                      if (urlSf != "") {
-                                        conOrd.alteraStatusUrl(
-                                            item['id'], urlSf, "sf");
+                                        setState(() {
+                                          _uploadTasks = [..._uploadTasks, task];
+                                        });
+                                        if (urlSf != "") {
+                                          conOrd.alteraStatusUrl(
+                                              item['id'], urlSf, "sf");
+                                        }
+                                        print("iuios");
                                       }
-                                      print("iuios");
-                                    }
 
 
-                                  },
-                                  child: Text("Enviar"),
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    urlSf != ""
-                                        ? launch(urlSf, isNewTab: true)
-                                        : launch(item['urlSf'], isNewTab: true);
-                                  },
-                                  icon: Icon(Icons.picture_as_pdf))),
-                    )
-                  ],
+                                    },
+                                    child: Text("Enviar"),
+                                  )
+                                : IconButton(
+                                    onPressed: () {
+                                      urlSf != ""
+                                          ? launch(urlSf, isNewTab: true)
+                                          : launch(item['urlSf'], isNewTab: true);
+                                    },
+                                    icon: Icon(Icons.picture_as_pdf))),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 10,
