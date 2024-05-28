@@ -90,14 +90,18 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                         widget.chamado['status'] == StatusApp.defeito.message
                             ? MaterialButton(
                                 onPressed: () async {
+
+
                                   if (userRole == Util.roles[4]) {
-                                    await conCha.alterarStatus(
+                                    Navigator.pop(context);
+
+                                     conCha.alterarStatus(
                                         context,
                                         widget.chamado['id'],
                                         widget.chamado['idIp'],
                                         StatusApp.agendado.message,
                                         0.0);
-                                    Get.back();
+
                                   } else {
                                     await Get.defaultDialog(
                                         title: 'Opps',

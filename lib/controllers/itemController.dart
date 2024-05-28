@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
 import 'package:mip_app/controllers/ipController.dart';
-import 'package:mip_app/global/util.dart';
 import '../methods/common_methods.dart';
 
 class ItemController extends GetxController {
@@ -28,23 +27,35 @@ class ItemController extends GetxController {
 
 
   getItensByTipo(String ordem) async {
+    listaItens.clear();
+    listaFiltrada.clear();
     await ref.orderByChild('ordem').equalTo(ordem).onValue.listen((event) {
-      listaItens.clear();
-      listaFiltrada.clear();
       listaChamados.clear();
       totalOrdem(0.0);
       if (event.snapshot.exists) {
-        Map maps = event.snapshot.value as Map;
-        listaItens = maps.values.toList()
-          ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
 
         Set<String> nomesDuplicados = Set();
+        Map maps = event.snapshot.value as Map;
+        listaItens.clear();
+       for(var f in maps.values) {
+         if(f['autorizado']==true){
+
+           listaItens.add(f);
+         }
+
+       }
+       listaItens..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
 
         for (var x in listaItens) {
-          if (!nomesDuplicados.contains(x['nome'])) {
-            nomesDuplicados.add(x['nome']);
+          if(x['autorizado']==true){
+            if (!nomesDuplicados.contains(x['nome'])) {
+              nomesDuplicados.add(x['nome']);
+            }
+
           }
+
         }
+
 
         for (var f in nomesDuplicados) {
           var b =
@@ -107,27 +118,36 @@ class ItemController extends GetxController {
   }
 
   getItensByChamado(String chamado) async {
+    print("okllll");
     listaItensChamado.clear();
-
     loading(true);
-    update();
-
     await ref.orderByChild('chamado').equalTo(chamado).onValue.listen((event) {
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;
-
         listaItensChamado = maps.values.toList()
           ..sort(((a, b) => (a["nome"]).compareTo((b["nome"]))));
-
         totalChamado.value =
             listaItensChamado.map((e) => e['total']).reduce((v, e) => v + e);
-
         loading(false);
+        print("Kkkkkkkkkkk ${listaItensChamado.first}");
 
         update();
       }
     });
   }
+
+
+  updateItenAutorizado(){
+
+    for(var x in listaItensChamado){
+      print("Hasksl ${x['idItem']}");
+
+      ref.child(x['id']).update({
+        "autorizado":true
+      });
+    }
+  }
+
 
   getItensByChamadoPdf(String ordem) async {
 

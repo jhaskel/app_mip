@@ -9,6 +9,7 @@ import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/controllers/licitacaoController.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/chamados/chamado_page_detail.dart';
+import 'package:mip_app/pages/licitacao/itensByChamados.dart';
 
 import '../../global/app_colors.dart';
 
@@ -176,14 +177,12 @@ class _LicitacaoDetailState extends State<LicitacaoDetail> {
                           itemBuilder: (context, index) {
                             var item = list[index];
 
-
                             return InkWell(
                               onTap: (){
-
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ChamadoPageDetail(item)),
+                                      builder: (context) => ItensByChamado(item)),
                                 );
                               },
                               child: Container(

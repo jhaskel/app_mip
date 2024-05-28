@@ -198,19 +198,17 @@ class ChamadoController extends GetxController {
 
   buscaPostesDefeito() async {
     loading(true);
-    update();
     markers.clear();
-
     await ref.orderByChild('isChamado').equalTo(true).onValue.listen((event) {
       if (event.snapshot.exists) {
         Map maps = event.snapshot.value as Map;
         list.clear();
         list = maps.values.toList();
         for (var x in list) {
+          print("x ${x['idIp']}");
           addMarcadorDefeito(x);
         }
       }
-
       loading(false);
       update();
     });
@@ -374,7 +372,7 @@ class ChamadoController extends GetxController {
   }
 
 
-  alterarStatus(BuildContext context,String id, String idIp, String message, double total) {
+  alterarStatus(BuildContext context,String id, String idIp, String message, double total) async {
     if(userRole==Util.roles[1]){
       ref.child(id).update({
         "status": message,
@@ -387,6 +385,7 @@ class ChamadoController extends GetxController {
         cMethods.displaySnackBar(
             "Chamado concertado com sucesso! ${textPage.value}", context);
 
+
         if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
@@ -394,13 +393,12 @@ class ChamadoController extends GetxController {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-      buscaPostesDefeito();
+      await buscaPostesDefeito();
       conIp.buscaPostes();
       update();
 
     }
-
-    if(userRole==Util.roles[2]||userRole==Util.roles[3]||userRole==Util.roles[3]||userRole==Util.roles[4]||userRole==Util.roles[5]){
+    if(userRole==Util.roles[2]){
       ref.child(id).update({
         "status": message,
         "total": total,
@@ -414,12 +412,13 @@ class ChamadoController extends GetxController {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-      buscaPostesDefeito();
+      await buscaPostesDefeito();
       conIp.buscaPostes();
       update();
 
     }
     if(userRole==Util.roles[4]){
+
       ref.child(id).update({
         "status": message,
         "total": total,
@@ -436,9 +435,9 @@ class ChamadoController extends GetxController {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-      buscaPostesDefeito();
+      await buscaPostesDefeito();
       conIp.buscaPostes();
-      update();
+
 
     }
     if(userRole==Util.roles[3] || userRole==Util.roles[5]){
@@ -458,14 +457,11 @@ class ChamadoController extends GetxController {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-      buscaPostesDefeito();
+      await buscaPostesDefeito();
       conIp.buscaPostes();
       update();
 
     }
-
-
-
   }
 
   alterarTotal(String id, double total) {

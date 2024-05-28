@@ -60,12 +60,13 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                   content: Text(
                       'Tem certeza que deseja autorizar o concerto no Ip ${chamado['idIp']}'),
                   onCancel: () {},
-                  onConfirm: () {
-                    conCha.alterarStatus(context,
+                  onConfirm: () async {
+                    await conCha.alterarStatus(context,
                         chamado['id'],
                         chamado['idIp'],
                         StatusApp.autorizado.message,
                         conIte.totalChamado.value);
+                   await conIte.updateItenAutorizado();
                     Get.back();
                     Navigator.pop(context);
                   },

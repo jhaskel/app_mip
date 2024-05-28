@@ -14,7 +14,6 @@ class OrdemController extends GetxController {
   var nomePage = 'Ordens'.obs;
   var tem = false.obs;
   var idOrdem = "".obs;
-  var ordemConfirmada = false.obs;
 
 
 
@@ -119,7 +118,7 @@ print("xxxxxxx ${idOrdem.value}");
         "status":StatusApp.notaGerada.message
       });
     }
-
+ getOrdem();
 
     update();
   }

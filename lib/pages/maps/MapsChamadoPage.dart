@@ -148,6 +148,9 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                           controller.markers.clear();
 
                           controller.buscaPostesDefeito();
+                          setState(() {
+                            print("refresh");
+                          });
                         },
                       )),
                   controller.loading == true

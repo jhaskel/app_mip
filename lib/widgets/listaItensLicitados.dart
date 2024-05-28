@@ -41,6 +41,7 @@ class _ListaItensLicitadosState extends State<ListaItensLicitados> {
               'ordenacao': item['ordenacao'],
               'user': userName,
               'tipo': tipo,
+              'autorizado': false,
               'ordem': "$tipo",
               'unidade': item['unidade'].toString(),
               'cod': item['cod'],

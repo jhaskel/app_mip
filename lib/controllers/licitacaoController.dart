@@ -8,12 +8,14 @@ class LicitacaoController extends GetxController{
 
   final ref = FirebaseDatabase.instance.ref('Licitacao');
   final refLicItens = FirebaseDatabase.instance.ref('ItensLicitados');
+  final refIte = FirebaseDatabase.instance.ref('Itens');
   CommonMethods cMethods = CommonMethods();
   var textPage = "Licitacao".obs;
   var textPageDetail = "Detalhe da Licitação".obs;
   var alturaContainer = 50.0.obs;
 
   List<dynamic> list = [].obs;
+  List<dynamic> listItens = [].obs;
   List<dynamic> listLicitacoes = [].obs;
   dynamic licitacao=[];
 
@@ -28,7 +30,7 @@ class LicitacaoController extends GetxController{
         listLicitacoes.clear();
         listLicitacoes = pos.values.toList();
         licitacao= listLicitacoes.first;
-        print("licitacaoB $licitacao");
+
       }
     });
   }
@@ -43,7 +45,7 @@ class LicitacaoController extends GetxController{
         list.clear();
         list = pos.values.toList();
         licitacao= list.first;
-        print("licitacaoB $licitacao");
+
       }
     });
   }

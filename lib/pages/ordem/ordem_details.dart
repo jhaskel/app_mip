@@ -150,22 +150,22 @@ class _OrdemDetailsState extends State<OrdemDetails> {
       }
     }
   }
-bool confirmado = true;
+
+  bool confirmado = false;
   @override
   void initState() {
     super.initState();
-    conOrd.ordemConfirmada.value= item['isConfirmada'];
+    confirmado = item['isConfirmada'];
     print(("mes ${DateTime.now().month}"));
     conPref.getPrefeitura(context);
     conIte.getItensByChamadoPdf(item['cod']);
-
 
     lici(item['itensOrdem'][0]['licitacao']);
     empre(item['itensOrdem'][0]['empresa']);
 
     tipo = item['id'][item['id'].length - 1];
     print("tipo $tipo");
-    conCos.getDotacaoByAnoByTipo(DateTime.now().year.toString(),tipo);
+    conCos.getDotacaoByAnoByTipo(DateTime.now().year.toString(), tipo);
 
     for (var x in item['itensOrdem']) {
       var cod = "";
@@ -192,112 +192,117 @@ bool confirmado = true;
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    return Obx(()=>
-       Scaffold(
-        bottomNavigationBar:
-
-       conOrd.ordemConfirmada.value==false&&confirmado==true?Container(
+    print("confirmado  $confirmado");
+    return Obx(
+      () => Scaffold(
+        bottomNavigationBar: userRole == Util.roles[2] &&
+                confirmado == false
+            ? Container(
+                height: 50,
+                color: Colors.amber,
+                child: InkWell(
+                    onTap: () {
+                      conOrd.alterarStatus(context,
+                          StatusApp.ordemConfirmada.message, widget.item);
+                      setState(() {
+                        confirmado = true;
+                      });
+                    },
+                    child: Center(
+                        child: Text(
+                      "Confirmar Ordem",
+                      style: AppTextStyles.body20,
+                    ))),
+              )
+            : userRole == Util.roles[2]||confirmado?Container(
+                height: 50,
+                color: Colors.grey,
+                child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                        child: Text(
+                      "Ordem Confirmada",
+                      style: AppTextStyles.body20,
+                    ))),
+              ):Container(
           height: 50,
-          color: Colors.amber,
+          color: Colors.grey,
           child: InkWell(
-              onTap: () {
-                conOrd.alterarStatus(
-                    context, StatusApp.ordemConfirmada.message,widget.item);
-                setState(() {
-                  confirmado=false;
-                });
-              },
+              onTap: () {},
               child: Center(
                   child: Text(
-                    "Confirmar Ordem",
+                    "Ordem a serConfirmada",
                     style: AppTextStyles.body20,
                   ))),
-        ): Container(
-         height: 50,
-         color: Colors.grey,
-         child: InkWell(
-             onTap: () {
-
-             },
-             child: Center(
-                 child: Text(
-                   "Ordem Confirmada",
-                   style: AppTextStyles.body20,
-                 ))),
-       ),
-
-
+        ),
         appBar: AppBar(
           title: Text('Detalhe da Ordem ${item['cod']}'),
           actions: [
-            userRole==Util.roles[2]
-                ?Container()
-                :Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PdfOrdemEmpresa(listaItens)),
-                      );
-                    },
-                    icon: Icon(Icons.picture_as_pdf)),
-                IconButton(
-                    onPressed: () {
-                      Get.defaultDialog(
-                          title: "Numero do Documento",
-                          content: TextFormField(
-                            autofocus: true,
-                            focusNode: FocusNode(),
-                            keyboardType: TextInputType.number,
-                            maxLength: 2,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ], // Only numbers can be entered
+            userRole == Util.roles[2]||!confirmado
+                ? Container()
+                : Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PdfOrdemEmpresa(listaItens)),
+                            );
+                          },
+                          icon: Icon(Icons.picture_as_pdf)),
+                      IconButton(
+                          onPressed: () {
+                            Get.defaultDialog(
+                                title: "Numero do Documento",
+                                content: TextFormField(
+                                  autofocus: true,
+                                  focusNode: FocusNode(),
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 2,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ], // Only numbers can be entered
 
-                            controller: numero,
-                          ),
-                          cancel: IconButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              icon: Icon(Icons.cancel)),
-                          confirm: IconButton(
-                              onPressed: () {
-                                var ofc = numero.text;
+                                  controller: numero,
+                                ),
+                                cancel: IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    icon: Icon(Icons.cancel)),
+                                confirm: IconButton(
+                                    onPressed: () {
+                                      var ofc = numero.text;
 
-                                Navigator.pop(context);
+                                      Navigator.pop(context);
 
-                                if (ofc.length > 0) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OficioPdf(
-                                            item['cod'],
-                                            numero.text,
-                                            item['valor'],
-                                            tipo == "1" ? true : false)),
-                                  );
-                                } else {
-                                  Get.defaultDialog(
-                                    title: 'Defina um numero',
-                                    content: Text(
-                                        "Obrigatório definir um numero para o documento"),
-                                  );
-                                }
-                              },
-                              icon: Icon(Icons.check_circle)));
-                    },
-                    icon: Icon(Icons.picture_as_pdf_sharp))
-
-              ],
-            )
-
+                                      if (ofc.length > 0) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => OficioPdf(
+                                                  item['cod'],
+                                                  numero.text,
+                                                  item['valor'],
+                                                  tipo == "1" ? true : false)),
+                                        );
+                                      } else {
+                                        Get.defaultDialog(
+                                          title: 'Defina um numero',
+                                          content: Text(
+                                              "Obrigatório definir um numero para o documento"),
+                                        );
+                                      }
+                                    },
+                                    icon: Icon(Icons.check_circle)));
+                          },
+                          icon: Icon(Icons.picture_as_pdf_sharp))
+                    ],
+                  )
           ],
         ),
         body: Column(
@@ -339,10 +344,9 @@ bool confirmado = true;
                 SizedBox(
                   height: 10,
                 ),
-
                 Visibility(
-                  visible: userRole==Util.roles[2] ,
-                 child: Row(
+                  visible: userRole == Util.roles[2],
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
@@ -355,19 +359,19 @@ bool confirmado = true;
                             child: item['urlSf'] == "" && urlSf == ""
                                 ? Container()
                                 : IconButton(
-                                onPressed: () {
-                                  urlSf != ""
-                                      ? launch(urlSf, isNewTab: true)
-                                      : launch(item['urlSf'], isNewTab: true);
-                                },
-                                icon: Icon(Icons.picture_as_pdf))),
+                                    onPressed: () {
+                                      urlSf != ""
+                                          ? launch(urlSf, isNewTab: true)
+                                          : launch(item['urlSf'],
+                                              isNewTab: true);
+                                    },
+                                    icon: Icon(Icons.picture_as_pdf))),
                       )
                     ],
                   ),
-               ),
-
+                ),
                 Visibility(
-                  visible: userRole !="supervisor",
+                  visible: userRole != "supervisor",
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -389,27 +393,31 @@ bool confirmado = true;
                                                 side: BorderSide(
                                                     color: Colors.red)))),
                                     onPressed: () async {
-
                                       var despesa = {
                                         "dotacao": conCos.codDotacao.value,
-                                        "id":DateTime.now().millisecondsSinceEpoch.toString(),
-                                        "mes":Util.meses[DateTime.now().month],
-                                        "nome":"manutenção",
-                                        "valor":item['valor']
+                                        "id": DateTime.now()
+                                            .millisecondsSinceEpoch
+                                            .toString(),
+                                        "mes": Util.meses[DateTime.now().month],
+                                        "nome": "manutenção",
+                                        "valor": item['valor']
                                       };
 
-
                                       final file = await ImagePicker()
-                                          .pickImage(source: ImageSource.gallery);
+                                          .pickImage(
+                                              source: ImageSource.gallery);
 
                                       UploadTask? task =
                                           await uploadFile(file, 'sf');
 
                                       if (task != null) {
-                                        conCos.createdDespesa(context,despesa);
+                                        conCos.createdDespesa(context, despesa);
 
                                         setState(() {
-                                          _uploadTasks = [..._uploadTasks, task];
+                                          _uploadTasks = [
+                                            ..._uploadTasks,
+                                            task
+                                          ];
                                         });
                                         if (urlSf != "") {
                                           conOrd.alteraStatusUrl(
@@ -417,8 +425,6 @@ bool confirmado = true;
                                         }
                                         print("iuios");
                                       }
-
-
                                     },
                                     child: Text("Enviar"),
                                   )
@@ -426,7 +432,8 @@ bool confirmado = true;
                                     onPressed: () {
                                       urlSf != ""
                                           ? launch(urlSf, isNewTab: true)
-                                          : launch(item['urlSf'], isNewTab: true);
+                                          : launch(item['urlSf'],
+                                              isNewTab: true);
                                     },
                                     icon: Icon(Icons.picture_as_pdf))),
                       )
@@ -455,10 +462,11 @@ bool confirmado = true;
                                                         RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                18.0),
+                                                            BorderRadius
+                                                                .circular(18.0),
                                                         side: BorderSide(
-                                                            color: Colors.red)))),
+                                                            color:
+                                                                Colors.red)))),
                                             onPressed: () async {
                                               final file = await ImagePicker()
                                                   .pickImage(
@@ -479,6 +487,7 @@ bool confirmado = true;
                                                   conOrd.alteraStatusUrl(
                                                       item['id'], urlNf, "nf");
                                                 }
+                                                Get.back();
                                               }
                                             },
                                             child: Text("Enviar"),
@@ -486,7 +495,8 @@ bool confirmado = true;
                                         : IconButton(
                                             onPressed: () {
                                               urlNf != ""
-                                                  ? launch(urlNf, isNewTab: true)
+                                                  ? launch(urlNf,
+                                                      isNewTab: true)
                                                   : launch(item['urlNf'],
                                                       isNewTab: true);
                                             },
@@ -508,9 +518,7 @@ bool confirmado = true;
                     Container(
                       child: TextButton(
                           onPressed: () {
-                            setState(() {
-
-                            });
+                            setState(() {});
                           },
                           child: Text(item['status'])),
                     ),
@@ -525,7 +533,8 @@ bool confirmado = true;
               height: 50,
               decoration: BoxDecoration(
                   border: Border(
-                      top: BorderSide(width: 2, color: AppColors.borderCabecalho),
+                      top: BorderSide(
+                          width: 2, color: AppColors.borderCabecalho),
                       bottom: BorderSide(
                           width: 2, color: AppColors.borderCabecalho))),
               width: MediaQuery.of(context).size.width,
