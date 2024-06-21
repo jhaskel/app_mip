@@ -66,7 +66,7 @@ class Util {
     Colors.red,
     Colors.blue,
     Colors.green,
-    Colors.yellow,
+    Colors.orange,
     Colors.purple,
     Colors.orange,
   ];
@@ -78,6 +78,6 @@ class Util {
     StatusApp.concertando.message: cores[3],
     StatusApp.realizado.message: cores[4],
     StatusApp.lancado.message: cores[5],
-    StatusApp.realizado.message: cores[6]
+
   };
 }

@@ -16,7 +16,6 @@ import 'package:mip_app/widgets/ChamadoBottonSheet.dart';
 class ChamadoController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Chamado');
   final refIp = FirebaseDatabase.instance.ref('Ip');
-
   var alturaContainer = 50.0.obs;
   var idIp = "".obs;
   var codIp = "".obs;
@@ -24,11 +23,7 @@ class ChamadoController extends GetxController {
   var defeito = "".obs;
   CommonMethods cMethods = CommonMethods();
   var totalChamado = 0.0.obs;
-
   final IpController conIp = Get.put(IpController());
-
-
-
   var textPage = "Chamados".obs;
   var alturaWidget = 120.0.obs;
   List<dynamic> listaChamados = [].obs;
@@ -41,7 +36,6 @@ class ChamadoController extends GetxController {
   var logradouro = "".obs;
   LatLng? markerPosition;
   var dragged = false.obs;
-
   var quantChamados = 0.obs;
   var chamadosAndamento = 0.obs;
   var chamadosFinalizados = 0.obs;
@@ -51,7 +45,8 @@ class ChamadoController extends GetxController {
     'assets/poste-normal.png',
     'assets/poste-defeito.png',
     'assets/poste-agendado.png',
-    'assets/poste-relatado.png'
+    'assets/poste-relatado.png',
+    'assets/poste-realizado.png'
   ];
   final markers = Set<Marker>().obs;
   List<dynamic> list = [].obs;
@@ -133,8 +128,6 @@ class ChamadoController extends GetxController {
     update();
   }
 
-
-
   void getChamadosByIp(BuildContext context, ip) async {
     print("ip,....$ip");
     listChamadosByIP.clear();
@@ -152,10 +145,8 @@ class ChamadoController extends GetxController {
 
   void createChamado(BuildContext context) async {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-
     String ipIds = idIp.value;
    int  ano = DateTime.now().year;
-
     var chamado = {
       'id': "id$id",
       'idIp': ipIds,
@@ -165,7 +156,7 @@ class ChamadoController extends GetxController {
       'longitude': longi.value,
       'status': StatusApp.defeito.message,
       'defeito': defeito.value,
-        'empresa': '',
+      'empresa': '',
       'total': 0.0,
       'isChamado': true,
       'bairro':bairro.value,
@@ -225,6 +216,10 @@ class ChamadoController extends GetxController {
       iconPoste = icones[2];
     } else if (x['status'] == StatusApp.concertando.message) {
       iconPoste = icones[3];
+
+    } else if (x['status'] == StatusApp.realizado.message) {
+      iconPoste = icones[4];
+
     } else {
       iconPoste = icones[0];
     }
@@ -265,8 +260,6 @@ class ChamadoController extends GetxController {
       longi.value = ips['longitude'];
       bairro.value = ips['Bairro'];
       logradouro.value = ips['logradouro'];
-      print("ksksksk ${logradouro.value}");
-
 
     });
 
@@ -385,7 +378,6 @@ class ChamadoController extends GetxController {
         cMethods.displaySnackBar(
             "Chamado concertado com sucesso! ${textPage.value}", context);
 
-
         if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
@@ -430,14 +422,12 @@ class ChamadoController extends GetxController {
       }).then((value) {
         if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
-
         } else {
           conIp.alteraStatusIp(idIp, message);
         }
       });
       await buscaPostesDefeito();
       conIp.buscaPostes();
-
 
     }
     if(userRole==Util.roles[3] || userRole==Util.roles[5]){

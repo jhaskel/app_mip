@@ -68,7 +68,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
               builder: (value) {
                 return Stack(children: [
                   GoogleMap(
-                    mapType: MapType.normal,
+                    mapType: MapType.satellite,
                     zoomControlsEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: controller.position,
@@ -129,7 +129,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                             children: [
                               const Icon(
                                 Icons.circle,
-                                color: Colors.amber,
+                                color: Colors.orange,
                               ),
                               SizedBox(
                                 width: 5,

@@ -62,7 +62,7 @@ class _MapsIpState extends State<MapsIp> {
               builder: (value) {
                 return Stack(children: [
                   GoogleMap(
-                    mapType: MapType.normal,
+                    mapType: MapType.satellite,
                     zoomControlsEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: controller.position,
