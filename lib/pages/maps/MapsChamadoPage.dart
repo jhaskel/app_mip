@@ -23,7 +23,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   @override
   void initState() {
     super.initState();
-    // controller.buscaPostesDefeito();
+     controller.buscaPostesDefeito();
   }
 
   late GoogleMapController con;
@@ -72,7 +72,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                     zoomControlsEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: controller.position,
-                      zoom: 16,
+                      zoom: 18,
                     ),
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,

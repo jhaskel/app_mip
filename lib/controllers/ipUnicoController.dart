@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mip_app/widgets/ipDetails.dart';
 
-class IpController extends GetxController {
+class IpUnicoController extends GetxController {
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
 
@@ -35,7 +35,7 @@ class IpController extends GetxController {
   late GoogleMapController _mapsController;
   final markers = Set<Marker>();
 
-  static IpController get to => Get.find<IpController>();
+
 
   get mapsController => _mapsController;
 
@@ -358,11 +358,11 @@ class IpController extends GetxController {
   createdIp(BuildContext context) {
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-   String gh = codController.text;
-   var gt = gh.split(" ");
-   String yu = gt[0].toLowerCase();
-   String yo = gt[1];
-   String cod = "${yu}${yo}";
+    String gh = codController.text;
+    var gt = gh.split(" ");
+    String yu = gt[0].toLowerCase();
+    String yo = gt[1];
+    String cod = "${yu}${yo}";
 
     var ip={
       "id":cod,

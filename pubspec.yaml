@@ -41,6 +41,8 @@ dependencies:
   url_launcher: ^6.1.0
   qrcode_reader_web: ^1.1.1
   syncfusion_flutter_barcodes: ^23.1.44
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

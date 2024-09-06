@@ -6,6 +6,7 @@ import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
 import 'package:mip_app/pages/ip/create_ip_page.dart';
 import 'package:mip_app/pages/ip/ip_detail.dart';
+import 'package:mip_app/pages/ip/ip_detail_page.dart';
 
 class IpPage extends StatefulWidget {
   const IpPage({super.key});
@@ -53,8 +54,6 @@ class _IpPageState extends State<IpPage> {
   }
 
   Column _body(BuildContext context) {
-
-
 
 
       switch (index) {
@@ -172,7 +171,7 @@ class _IpPageState extends State<IpPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => IpDetail(item)),
+                                    builder: (context) => IpDetailPage(item)),
                               );
                             },
                             child: Row(

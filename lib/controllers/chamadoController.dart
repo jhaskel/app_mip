@@ -67,8 +67,6 @@ class ChamadoController extends GetxController {
   onMapCreated(GoogleMapController gmc) async {
     _mapsController = gmc;
     getPosicao();
-    buscaPostesDefeito();
-
     var style = await rootBundle.loadString('assets/map/dark.json');
     _mapsController.setMapStyle(style);
   }
@@ -198,6 +196,9 @@ class ChamadoController extends GetxController {
         for (var x in list) {
           print("x ${x['idIp']}");
           addMarcadorDefeito(x);
+          refIp.child(x['idIp']).update({
+            "status": 'defeito',
+          });
         }
       }
       loading(false);

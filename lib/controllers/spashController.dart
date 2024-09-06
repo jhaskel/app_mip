@@ -21,11 +21,12 @@ class SplashServices {
     final user = auth.currentUser;
 
     await conUse.userCurrent(context);
+    print("userX $userRole");
 
     if (user != null) {
       if (userRole == "user") {
         Timer(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => DashboardAnonimo()),
@@ -33,14 +34,14 @@ class SplashServices {
       }
       else if  (userRole == "operador") {
         Timer(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => DashboardOperador()),
                 ));
       } else if (userRole == "supervisor") {
         Timer(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -48,7 +49,7 @@ class SplashServices {
                 ));
       } else if (userRole == "admin" || userRole == "master" ||userRole == "dev") {
         Timer(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Dashboard()),
@@ -56,7 +57,7 @@ class SplashServices {
 
       } else {
         Timer(
-            const Duration(seconds: 2),
+            const Duration(seconds: 1),
             () => Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -65,7 +66,7 @@ class SplashServices {
     } else {
 
       Timer(
-          const Duration(seconds: 2),
+          const Duration(seconds: 1),
           () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => DashboardAnonimo()),
