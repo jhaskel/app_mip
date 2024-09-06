@@ -254,6 +254,7 @@ class IpController extends GetxController {
 
   changeLat(LatLng target) {
     position2(target);
+    position(target);
     update();
   }
 

@@ -30,7 +30,7 @@ class IpUnicoController extends GetxController {
   var logradouro = "".obs;
 
   late StreamSubscription<Position> positionStream;
-  LatLng _position = LatLng(-27.35661, -49.88283);
+  LatLng position = LatLng(-27.35661, -48.88283);
   var position2 = LatLng(-27.35661, -49.88283).obs;
   late GoogleMapController _mapsController;
   final markers = Set<Marker>();
@@ -38,8 +38,6 @@ class IpUnicoController extends GetxController {
 
 
   get mapsController => _mapsController;
-
-  get position => _position;
 
   TextEditingController bairroController = TextEditingController();
   TextEditingController ruaController = TextEditingController();
@@ -96,71 +94,16 @@ class IpUnicoController extends GetxController {
   var postes = Map<String, String>().obs;
   List<dynamic> listaIp = [].obs;
 
-  getIp() async {
-    loading(true);
-    await ref.get().then((value) {
-      Map pos = value.value as Map;
 
-
-      listaIp.clear();
-
-      listaIp = pos.values.toList()
-        ..sort(((a, b) => (a["id"]).compareTo((b["id"]))));
-
-      quantIp(listaIp.length);
-      quantIpNormal(0);
-      quantIpAgendado(0);
-      quantIpDefeito(0);
-
-      for (var x in listaIp) {
-        if (x['status'] == "normal") {
-          postes.addAll({x['id']: x['cod']});
-
-          quantIpNormal.value++;
-        }
-        if (x['status'] == "defeito") {
-          quantIpDefeito.value++;
-        }
-
-        if (x['status'] == "agendado") {
-          quantIpAgendado.value++;
-        }
-      }
-    });
-    loading(false);
-
-    update();
-  }
 
   onMapCreated(GoogleMapController gmc) async {
     _mapsController = gmc;
     getPosicao();
-    buscaPostes();
+
     var style = await rootBundle.loadString('assets/map/dark.json');
     _mapsController.setMapStyle(style);
   }
 
-  buscaPostes() async {
-    loading(true);
-    update();
-
-    markers.clear();
-    list.clear();
-    await ref.orderByChild('isAtivo').equalTo(true).onValue.listen((event) {
-      if (event.snapshot.exists) {
-        maps = event.snapshot.value as Map;
-        list = maps.values.toList();
-
-        for (var x in list) {
-          loading(true);
-          addMarcador(x);
-        }
-        loading(false);
-
-        update();
-      }
-    });
-  }
 
   AlteraAllStatus() async {
     list.clear();
@@ -184,55 +127,6 @@ class IpUnicoController extends GetxController {
 
 
 
-  addMarcador(x) async {
-    String iconPoste = icones[0];
-    var texto = x['cod'];
-
-    double eixoLat = 0.008529;
-    double eixoLong = 0.004324;
-
-    double boundLatNo = position2.value.latitude + eixoLat;
-    double boundLongNo = position2.value.longitude + eixoLong;
-    double boundLatSu = position2.value.latitude - eixoLat;
-    double boundLongSu = position2.value.longitude - eixoLong;
-
-    var latitudeMarcador = x['latitude'];
-    var longitudeMarcador = x['longitude'];
-
-    if (latitudeMarcador > boundLatSu &&
-        latitudeMarcador < boundLatNo &&
-        longitudeMarcador > boundLongSu &&
-        longitudeMarcador < boundLongNo) {
-      final MarkerId markerId = MarkerId(x['cod']);
-      if (x['status'] == StatusApp.normal.message) {
-        iconPoste = icones[0];
-      } else if (x['status'] == StatusApp.defeito.message) {
-        iconPoste = icones[1];
-      } else if (x['status'] == StatusApp.agendado.message) {
-        iconPoste = icones[2];
-      } else {
-        iconPoste = icones[3];
-      }
-
-      markers.add(
-        Marker(
-          markerId: markerId,
-          position: LatLng(x['latitude'], x['longitude']),
-          infoWindow: InfoWindow(title: texto),
-
-          icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(20.5, 20.5)), iconPoste),
-          draggable: dragged.value,
-          //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
-          //   onDrag: (LatLng position) => _onMarkerDrag(markerId, position),
-          onTap: () => {showDetails(x)},
-        ),
-      );
-      update();
-    } else {
-      markers.clear();
-    }
-  }
 
 
 
@@ -254,6 +148,12 @@ class IpUnicoController extends GetxController {
 
   changeLat(LatLng target) {
     position2(target);
+    print((position2.value));
+    update();
+  }
+  changeLati(LatLng target) {
+    position2(target);
+    print((position2.value));
     update();
   }
 
@@ -308,7 +208,7 @@ class IpUnicoController extends GetxController {
       return Future.error('Autorize o acesso à localização nas configurações.');
     }
 
-    return await Geolocator.getCurrentPosition().then((value) => buscaPostes());
+    return await Geolocator.getCurrentPosition().then((value) => buscaPostes2());
   }
 
   getPosicao() async {
@@ -318,7 +218,7 @@ class IpUnicoController extends GetxController {
       longitude.value = posicao.longitude;
       position2(LatLng(latitude.value, longitude.value));
       print("pos2 $position2");
-      buscaPostes();
+
 
       _mapsController.animateCamera(
           CameraUpdate.newLatLng(LatLng(latitude.value, longitude.value)));
@@ -333,65 +233,9 @@ class IpUnicoController extends GetxController {
     }
   }
 
-  toggleDraggable() async {
-    dragged(!dragged.value);
-    print(dragged.value);
+  buscaPostes2() {}
 
-    update();
-  }
 
-  Future<void> _onMarkerDrag(MarkerId markerId, LatLng newPosition) async {
-    markerPosition = newPosition;
-    //  _position2 = markerPosition;
 
-    update();
-  }
 
-  final Marker? tappedMarker = null;
-
-  Future<void> _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
-    markerPosition = null;
-    print(newPosition);
-    update();
-  }
-
-  createdIp(BuildContext context) {
-
-    String id = DateTime.now().millisecondsSinceEpoch.toString();
-    String gh = codController.text;
-    var gt = gh.split(" ");
-    String yu = gt[0].toLowerCase();
-    String yo = gt[1];
-    String cod = "${yu}${yo}";
-
-    var ip={
-      "id":cod,
-      "Bairro":bairro.value,
-      "logradouro":logradouro.value,
-      "cod":logradouro.value,
-      "cod":codController.text,
-      "tipo":tipoController.text,
-      "potencia":int.parse(potenciaController.text),
-      "altura":int.parse(alturaController.text),
-      "latitude":double.parse(latController.text),
-      "longitude":double.parse(longController.text),
-      "isAtivo":true,
-      "createdAt":DateTime.now().toString(),
-      "ModifiedAt":DateTime.now().toString(),
-      "status":StatusApp.normal.message
-
-    };
-    ref.child(cod).set(ip).then((value) async {
-      cMethods.displaySnackBar("IP adicionado!", context);
-
-    }).onError((error, stackTrace) {
-      cMethods.displaySnackBar("Erro ao adicionar a ip!", context);
-    });
-    clear();
-    getIp();
-
-    update();
-
-    Navigator.pop(context);
-  }
 }

@@ -53,8 +53,9 @@ class _IpDetailPageState extends State<IpDetailPage>
             ),
             body: TabBarView(
               children: [
-                MapsIpUnico(item),
                 IpDetail(item),
+                MapsIpUnico(item),
+
 
 
               ],

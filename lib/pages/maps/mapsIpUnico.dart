@@ -8,12 +8,9 @@ import 'package:mip_app/controllers/ipUnicoController.dart';
 import 'package:mip_app/pages/chamados/chamados_page.dart';
 import 'package:mip_app/pages/ip/ip_page.dart';
 
-
 class MapsIpUnico extends StatefulWidget {
   dynamic item;
   MapsIpUnico(this.item, {super.key});
-
-
 
   @override
   State<MapsIpUnico> createState() => _MapsIpUnicoState();
@@ -25,72 +22,67 @@ class _MapsIpUnicoState extends State<MapsIpUnico> {
   @override
   void initState() {
     super.initState();
-    //  controller.buscaPostes(context);
+    controller.latitude.value = item['latitude'];
+    controller.longitude.value = item['longitude'];
+    controller.position=LatLng(item['latitude'], item['longitude']);
   }
 
-  static const CameraPosition _kInitialPosition = CameraPosition(
-    target: LatLng(-33.852, 151.211),
-    zoom: 15.0,
-  );
 
-
-  CameraPosition _position = _kInitialPosition;
-  late GoogleMapController con;
-  final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
-
         body: _body(),
       ),
     );
   }
 
   _body() {
-    return Stack(children: [
-      GoogleMap(
-        mapType: MapType.hybrid,
-        zoomControlsEnabled: true,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(item['latitude'],item['longitude']),
-          zoom: 17,
-        ),
+    return Column(
+      children: [
+        Expanded(
+          child: GetBuilder<IpUnicoController>(
+              init: controller,
+              builder: (value) {
+                return Stack(children: [
+                  GoogleMap(
+                    mapType: MapType.hybrid,
+                    zoomControlsEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: controller.position,
+                      zoom: 16,
+                    ),
+                    onMapCreated: controller.onMapCreated,
+                    myLocationEnabled: true,
+                    markers: {
+                      Marker(
+                        markerId: MarkerId('01'),
+                        position: controller.position,
+                      )
+                    },
 
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        myLocationEnabled: true,
-        markers: { Marker(
-    markerId: MarkerId('001'),
-    position: LatLng(item['latitude'],item['longitude']),
-           infoWindow: InfoWindow(
-          title: "${item['id']}",
-          snippet: "${item['status']}",
-      ), // Inf
-
-    )}
-
-
-      ),
-
-
-      controller.loading == true
-          ? const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("carregando marcadores...."),
-            CircularProgressIndicator(),
-          ],
-        ),
-      )
-          : Container()
-    ]);
+                    onCameraMove: ((position) =>      print(position)),
+                    onTap: (pos) {
+                      controller.changeLat(pos);
+                    },
+                  ),
+                  controller.loading == true
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("carregando marcadores...."),
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        )
+                      : Container()
+                ]);
+              }),
+        )
+      ],
+    );
   }
-
-
-
 }
