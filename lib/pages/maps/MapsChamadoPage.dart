@@ -23,7 +23,7 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
   @override
   void initState() {
     super.initState();
-     controller.buscaPostesDefeito();
+
   }
 
   late GoogleMapController con;
@@ -47,9 +47,6 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 icon: Icon(Icons.add)),
 
 
-
-
-
           ],
         ),
         body: _body(),
@@ -69,14 +66,14 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                 return Stack(children: [
                   GoogleMap(
                     mapType: MapType.satellite,
-                    zoomControlsEnabled: true,
+                  //  zoomControlsEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: controller.position,
                       zoom: 18,
                     ),
                     onMapCreated: controller.onMapCreated,
                     myLocationEnabled: true,
-                    markers: controller.markers,
+
                   ),
 
                   Positioned(
@@ -145,12 +142,10 @@ class _MapsChamadoPageState extends State<MapsChamadoPage> {
                       child: IconButton(
                         icon: Icon(Icons.refresh),
                         onPressed: () {
-                          controller.markers.clear();
 
-                          controller.buscaPostesDefeito();
-                          setState(() {
-                            print("refresh");
-                          });
+
+
+
                         },
                       )),
                   controller.loading == true

@@ -6,7 +6,8 @@ enum StatusApp {
   defeito(message: 'defeito'), //status do poste
   agendado(message: 'agendado'), //status do poste
   concertando(message: 'concertando'), //status do poste
-  realizado(message: 'realizado'), //status da mmanutencao
+  concertado(message: 'concertado'), //status da mmanutencao
+  finalizado(message: 'finalizado'), //status da mmanutencao
   lancado(message: 'lancado'), //status da mmanutencao
   autorizado(message: 'autorizado'), //status da mmanutencao
   ordemGerada(message: 'ordem Gerada'),
@@ -76,7 +77,7 @@ class Util {
     StatusApp.defeito.message: cores[1],
     StatusApp.agendado.message: cores[2],
     StatusApp.concertando.message: cores[3],
-    StatusApp.realizado.message: cores[4],
+    StatusApp.concertado.message: cores[4],
     StatusApp.lancado.message: cores[5],
 
   };

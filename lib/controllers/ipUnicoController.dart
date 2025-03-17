@@ -72,7 +72,7 @@ class IpUnicoController extends GetxController {
     'assets/poste-normal.png',
     'assets/poste-defeito.png',
     'assets/poste-agendado.png',
-    'assets/poste-relatado.png'
+    'assets/poste-concertando.png'
   ];
 
   List<dynamic> list = [].obs;

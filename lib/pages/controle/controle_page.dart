@@ -83,6 +83,7 @@ class _ControlePageState extends State<ControlePage> {
               child: Row(
                 children: [
                   Flexible(flex: 1, fit: FlexFit.tight, child: Text("Data")),
+                  Flexible(flex: 2, fit: FlexFit.tight, child: Text("Chamado")),
                   Flexible(flex: 2, fit: FlexFit.tight, child: Text("Defeito")),
                   Flexible(flex: 1, fit: FlexFit.tight, child: Text("Ip")),
                   Flexible(flex: 2, fit: FlexFit.tight, child: Text("Status")),
@@ -96,20 +97,25 @@ class _ControlePageState extends State<ControlePage> {
               child: StreamBuilder(
                   stream: conCha.ref
                       .orderByChild('status')
-                      .equalTo('realizado')
+                      .equalTo(StatusApp.concertado.message)
                       .onValue,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
+
                       return CircularProgressIndicator();
                     }else{
+
                       if (snapshot.data!.snapshot.value == null) {
+
                         if (snapshot.data!.snapshot.value == null) {
+
                           return Center(
                               child: Container(
-                                child: Text("Nenhum Chamado Para esse IP"),
+                                child: Text("Nenhum Chamado Realizado"),
                               ));
                         }
                       }else{
+
 
                         Map maps = snapshot.data!.snapshot.value as Map;
 
@@ -142,6 +148,10 @@ class _ControlePageState extends State<ControlePage> {
                                         fit: FlexFit.tight,
                                         child: Text(DateFormat("dd/MM")
                                             .format(crea))),
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: Text(item['id'])),
                                     Flexible(
                                         flex: 2,
                                         fit: FlexFit.tight,

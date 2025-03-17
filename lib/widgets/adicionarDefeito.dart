@@ -20,8 +20,6 @@ class AdicionarDefeito extends StatelessWidget {
   }
 
   _body(BuildContext context) {
-    print("${conCha.defeito.value}");
-    print("${isMapIp}");
 
     if (isMapIp == true) {
       return conCha.defeito.value == ''
@@ -40,7 +38,10 @@ class AdicionarDefeito extends StatelessWidget {
               child: MaterialButton(
                 color: AppColors.primaria,
                 onPressed: () async {
-                  conCha.createChamado(context);
+                  print("XCXC01");
+
+                  await conCha.createChamado(context);
+                  Navigator.pop(context);
                 },
                 child: Text(
                   "Adicionar",
@@ -57,7 +58,10 @@ class AdicionarDefeito extends StatelessWidget {
               child: MaterialButton(
                 color: Colors.amber,
                 onPressed: () async {
-                  conCha.createChamado(context);
+                  print("XCXC02");
+
+                 await conCha.createChamado(context);
+
                 },
                 child: Text("Adicionar"),
               ),

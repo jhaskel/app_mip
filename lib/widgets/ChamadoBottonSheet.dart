@@ -18,15 +18,17 @@ class ChamadoBottonSheet extends StatefulWidget {
 
 class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
   final ChamadoController conCha = Get.put(ChamadoController());
-
+  var chamado;
   @override
   void initState() {
+    chamado = widget.chamado.first;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime crea = DateTime.parse(widget.chamado['createdAt']);
+    DateTime crea = DateTime.parse(chamado['createdAt']);
+    print('chamado ${chamado['id']}');
     return Container(
         padding: EdgeInsets.all(10),
         color: Colors.white,
@@ -34,6 +36,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
         width: 500,
         child: Column(
           children: [
+            //inicio primeira parte do bottonsheet
             Row(
               children: [
                 Column(
@@ -42,7 +45,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                     Row(
                       children: [
                         Text(
-                          "Chamado : ${widget.chamado['id']}",
+                          "Chamado : ${chamado['id']}",
                           style: TextStyle(color: Colors.black),
                         ),
                       ],
@@ -51,14 +54,14 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                       height: 10,
                     ),
                     Text(
-                      "IP : ${widget.chamado['idIp']}",
+                      "IP : ${chamado['idIp']}",
                       style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "Defeito : ${widget.chamado['defeito']}",
+                      "Defeito : ${chamado['defeito']}",
                       style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
@@ -72,6 +75,7 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
                 ),
               ],
             ),
+            //fim primeira parte do bottonsheet
             SizedBox(
               width: 30,
             ),
@@ -79,120 +83,90 @@ class _ChamadoBottonSheetState extends State<ChamadoBottonSheet> {
               thickness: 2,
               color: Colors.blue,
             ),
-            userRole == Util.roles[1] ||
-                    userRole == Util.roles[4] ||
-                    userRole == Util.roles[5]
-                ? Container(
-                    height: 50,
-                    child: Row(
-                      children: [
-                        //button Agendar
-                        widget.chamado['status'] == StatusApp.defeito.message
-                            ? MaterialButton(
-                                onPressed: () async {
-
-
-                                  if (userRole == Util.roles[4]) {
-                                    Navigator.pop(context);
-
-                                     conCha.alterarStatus(
-                                        context,
-                                        widget.chamado['id'],
-                                        widget.chamado['idIp'],
-                                        StatusApp.agendado.message,
-                                        0.0);
-
-                                  } else {
-                                    await Get.defaultDialog(
-                                        title: 'Opps',
-                                        content: Text("Sem autorização"));
-                                    Get.back();
-                                  }
-                                },
-                                color: Colors.blue,
-                                child: Text(
-                                  "Agendar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          width: 10,
-                        ),
-
-                        //button concertar
-                        widget.chamado['status'] == StatusApp.agendado.message ||  widget.chamado['status'] == StatusApp.concertando.message
-                            ? MaterialButton(
-                                onPressed: () async {
-                                  if (userRole == Util.roles[1]) {
-                                    await conCha.alterarStatus(
-                                        context,
-                                        widget.chamado['id'],
-                                        widget.chamado['idIp'],
-                                        StatusApp.concertando.message,
-                                        0.0);
-                                    Get.back();
-
-                                    Get.to(ConsertandoPage(widget.chamado));
-                                  } else {
-                                    await Get.defaultDialog(
-                                        title: 'Opps',
-                                        content: Text("Sem autorização"));
-                                    Get.back();
-                                  }
-                                },
-                                color: Colors.green,
-                                child: Text(
-                                  "Consertar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            : Container(),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        //button normal
-                        MaterialButton(
-                          onPressed: () async {
-                            await conCha.alterarStatus(
-                                context,
-                                widget.chamado['id'],
-                                widget.chamado['idIp'],
-                                StatusApp.normal.message,
-                                0.0);
-                            Get.back();
-                          },
-                          color: Colors.amber,
-                          child: Text(
-                            "Normal",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        //button defeito
-                        MaterialButton(
-                          onPressed: () async {
-                            await conCha.alterarStatus(
-                                context,
-                                widget.chamado['id'],
-                                widget.chamado['idIp'],
-                                StatusApp.defeito.message,
-                                0.0);
-                            Get.back();
-                          },
-                          color: Colors.red,
-                          child: Text(
-                            "Defeito",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+            userRole == Util.roles[1] ? _operador() : Container(),
+            userRole == Util.roles[4] || userRole == Util.roles[5]
+                ? _master()
                 : Container(),
           ],
         ));
+  }
+
+  _operador() {
+    return Row(
+      children: [
+        chamado['status'] == StatusApp.agendado.message ||
+                chamado['status'] == StatusApp.concertando.message
+            ? _buttonConsertar()
+            : Container(),
+        SizedBox(
+          width: 10,
+        ),
+        chamado['status'] != StatusApp.concertado.message
+            ? _buttonNormal()
+            : Container(),
+      ],
+    );
+  }
+
+  _master() {
+    return Row(
+      children: [
+        chamado['status'] == StatusApp.defeito.message
+            ? _buttonAgendar()
+            : Container(),
+        SizedBox(
+          width: 10,
+        ),
+        chamado['status'] != StatusApp.concertado.message
+            ? _buttonNormal()
+            : Container(),
+      ],
+    );
+  }
+
+  MaterialButton _buttonNormal() {
+    return MaterialButton(
+      onPressed: () async {
+        await conCha.alterarStatus(context, chamado['id'], chamado['idIp'],
+            StatusApp.normal.message, 0.0);
+
+        await conCha.removeChamado(chamado['id'], context);
+
+        Get.back();
+      },
+      color: Colors.amber,
+      child: Text(
+        "Normal",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  MaterialButton _buttonConsertar() {
+    return MaterialButton(
+      onPressed: () async {
+        Get.to(ConsertandoPage(chamado));
+      },
+      color: Colors.green,
+      child: Text(
+        "Consertar",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  MaterialButton _buttonAgendar() {
+    return MaterialButton(
+      onPressed: () async {
+        Navigator.pop(context);
+        conCha.alterarStatus(context, chamado['id'], chamado['idIp'],
+            StatusApp.agendado.message, 0.0);
+      },
+      color: Colors.blue,
+      child: Text(
+        "Agendar",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
 }

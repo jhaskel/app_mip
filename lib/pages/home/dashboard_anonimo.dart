@@ -8,6 +8,7 @@ import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/pages/maps/mapsPage.dart';
 import 'package:mip_app/pages/profile/profile_page.dart';
 
 class DashboardAnonimo extends StatefulWidget {
@@ -53,7 +54,7 @@ class _DashboardAnonimoState extends State<DashboardAnonimo>
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          MapsChamadoPage(),
+          MapsPage(),
 
           CreateDefeitoPage(),
           ProfilePage(),

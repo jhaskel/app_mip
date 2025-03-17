@@ -129,7 +129,7 @@ class ItemController extends GetxController {
         totalChamado.value =
             listaItensChamado.map((e) => e['total']).reduce((v, e) => v + e);
         loading(false);
-        print("Kkkkkkkkkkk ${listaItensChamado.first}");
+
 
         update();
       }
@@ -138,10 +138,7 @@ class ItemController extends GetxController {
 
 
   updateItenAutorizado(){
-
     for(var x in listaItensChamado){
-      print("Hasksl ${x['idItem']}");
-
       ref.child(x['id']).update({
         "autorizado":true
       });

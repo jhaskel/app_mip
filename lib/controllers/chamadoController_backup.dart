@@ -17,7 +17,6 @@ class ChamadoController extends GetxController {
   final ref = FirebaseDatabase.instance.ref('Chamado');
   final refIp = FirebaseDatabase.instance.ref('Ip');
   var alturaContainer = 50.0.obs;
-  var alturaContainerDetails = 500.0.obs;
   var idIp = "".obs;
   var codIp = "".obs;
   var loading = false.obs;
@@ -41,15 +40,27 @@ class ChamadoController extends GetxController {
   var chamadosAndamento = 0.obs;
   var chamadosFinalizados = 0.obs;
   var gastosTotalChamados = 0.0.obs;
-  var quantLancados = 0.obs;
+
+  List<String> icones = [
+    'assets/poste-normal.png',
+    'assets/poste-defeito.png',
+    'assets/poste-agendado.png',
+    'assets/poste-concertando.png',
+    'assets/poste-realizado.png'
+  ];
+  final markers = Set<Marker>().obs;
   List<dynamic> list = [].obs;
   List<dynamic> listChamadosByIP = [].obs;
-  List<dynamic> chamadoByIP = [].obs;
-  var Chamado = <String, dynamic>{}.obs;
+
   Map maps = {};
+
   var postes = Map<String, dynamic>().obs;
+
   LatLng _position = LatLng(-27.358057, -49.883445);
+
+
   late GoogleMapController _mapsController;
+
   static ItemController get itecon => Get.find<ItemController>();
   get mapsController => _mapsController;
   get position => _position;
@@ -111,31 +122,24 @@ class ChamadoController extends GetxController {
     update();
   }
 
-  getChamadosByIp( ip) async {
+
+
+  void getChamadosByIp(BuildContext context, ip) async {
+    print("ip,....$ip");
     listChamadosByIP.clear();
-        await ref
-         .orderByChild('idIp')
-         .equalTo(ip)
-         .limitToLast(1)
-        .onValue.listen((event) {
+    update();
+
+    await ref.orderByChild('idIp').equalTo(ip).onValue.listen((event) {
       if (event.snapshot.exists) {
-        print("aki");
         Map pos = event.snapshot.value as Map;
         listChamadosByIP.clear();
         listChamadosByIP = pos.values.toList();
-
-      }else{
-        listChamadosByIP.clear();
-        listChamadosByIP=[];
-
+        print(listChamadosByIP.length);
       }
-      print("saida");
-      update();
     });
   }
 
-  createChamado(BuildContext context) async {
-
+  void createChamado(BuildContext context) async {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     String ipIds = idIp.value;
    int  ano = DateTime.now().year;
@@ -154,7 +158,6 @@ class ChamadoController extends GetxController {
       'bairro':bairro.value,
       'logradouro':logradouro.value,
       'ano':ano,
-      'isAutorizado':false,
     };
 
     ref.child("id$id").set(chamado).then((value) async {
@@ -165,12 +168,10 @@ class ChamadoController extends GetxController {
     }).onError((error, stackTrace) {
       cMethods.displaySnackBar("Erro ao Luminária adicionada!", context);
     });
-    clear();
-    print("cadastrou...");
-  //  Navigator.of(context,rootNavigator: true).pop();
+
+  //  Navigator.pop(context);
     // buscaPostesDefeito();
-
-
+    clear();
   }
 
   removeChamado(String id, BuildContext context) {
@@ -180,6 +181,66 @@ class ChamadoController extends GetxController {
       cMethods.displaySnackBar(
           "Não foi possivel Excluir ${textPage.value}", context);
     });
+  }
+
+  buscaPostesDefeito() async {
+    loading(true);
+    markers.clear();
+    await ref.orderByChild('isChamado').equalTo(true).onValue.listen((event) {
+      if (event.snapshot.exists) {
+        Map maps = event.snapshot.value as Map;
+        list.clear();
+        list = maps.values.toList();
+        for (var x in list) {
+          print("x ${x['idIp']}");
+          addMarcadorDefeito(x);
+          refIp.child(x['idIp']).update({
+            "status": 'defeito',
+          });
+        }
+      }
+      loading(false);
+      update();
+    });
+  }
+
+  addMarcadorDefeito(x) async {
+    String iconPoste = icones[0];
+
+    if (x['status'] == StatusApp.normal.message) {
+      iconPoste = icones[0];
+    } else if (x['status'] == StatusApp.defeito.message) {
+      iconPoste = icones[1];
+    } else if (x['status'] == StatusApp.agendado.message) {
+      iconPoste = icones[2];
+    } else if (x['status'] == StatusApp.concertando.message) {
+      iconPoste = icones[3];
+
+    } else if (x['status'] == StatusApp.concertado.message) {
+      iconPoste = icones[4];
+
+    } else {
+      iconPoste = icones[0];
+    }
+
+    final MarkerId markerId = MarkerId(x['idIp']);
+    markers.add(
+      Marker(
+        markerId: markerId,
+        position: LatLng(x['latitude'], x['longitude']),
+        infoWindow: InfoWindow(title: x['idIp']),
+
+        icon: await BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(20, 20)), iconPoste),
+        //   icon: BitmapDescriptor.defaultMarkerWithHue(250),
+        draggable: dragged.value,
+        //  onDragEnd: (LatLng position) => _onMarkerDragEnd(markerId, position),
+        //   onDrag: (LatLng position) => _onMarkerDrag(markerId, position),
+        onTap: () => {bottonSheet(x)},
+      ),
+    );
+
+    update();
   }
 
   Future<dynamic> bottonSheet(chamado) async {
@@ -203,6 +264,7 @@ class ChamadoController extends GetxController {
 
     update();
   }
+
 
   void getChamados(BuildContext context) async {
     int ano = DateTime.now().year;
@@ -253,6 +315,8 @@ class ChamadoController extends GetxController {
     update();
   }
 
+  var quantLancados = 0.obs;
+
   getChamadosLancado(BuildContext context) async {
 
     await ref.orderByChild('status').equalTo('lancado').onValue.listen((event) {
@@ -276,21 +340,28 @@ class ChamadoController extends GetxController {
     });
   }
 
+  clear() {
+    idIp("");
+    codIp("");
+    defeito("");
+    indexDefeito(100);
+    defeito("");
+    update();
+  }
 
 
   finalizarConcerto(BuildContext context, String message, dynamic chamado) async {
 
     String idIp = chamado['idIp'];
-    await alterarStatus(context, chamado['id'], idIp, message, 0.0);
+    alterarStatus(context, chamado['id'], idIp, message, 0.0);
 
+    buscaPostesDefeito();
     if (message != StatusApp.lancado.message) {
       Navigator.pop(context);
     }
     update();
-Get.back();
     // clear();
   }
-
 
 
   alterarStatus(BuildContext context,String id, String idIp, String message, double total) async {
@@ -299,124 +370,92 @@ Get.back();
         "status": message,
         "empresa":userRole==Util.roles[1]?empresaOperador:"",
         "total": totalChamado.value,
-        "isChamado": message == StatusApp.concluido.message ? false : true,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
         "modifiedAt": DateTime.now().toString(),
         "realizadoBy":userRole==Util.roles[1]&& message == StatusApp.concertado.message?userName:"",
-
       }).then((value) {
         cMethods.displaySnackBar(
             "Chamado concertado com sucesso! ${textPage.value}", context);
 
-        if (message == StatusApp.concluido.message||message == StatusApp.lancado.message) {
+        if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
         } else {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-
-    //  conIp.buscaPostes();
+      await buscaPostesDefeito();
+      conIp.buscaPostes();
       update();
 
     }
     if(userRole==Util.roles[2]){
       ref.child(id).update({
-        "status": message != StatusApp.concluido.message?message:StatusApp.concluido.message,
+        "status": message,
         "total": total,
-        "isChamado": false,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
         "modifiedAt": DateTime.now().toString(),
-
       }).then((value) {
-        cMethods.displaySnackBar(
-            "Chamado concertado com sucesso! ${textPage.value}", context);
-
-        if (message == StatusApp.concluido.message||message == StatusApp.lancado.message) {
+        if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
         } else {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-
-     // conIp.buscaPostes();
-      update();
-
-    }
-    if(userRole==Util.roles[3] || userRole==Util.roles[5]){
-      ref.child(id).update({
-        "status": message != StatusApp.concluido.message?message:StatusApp.concluido.message,
-        "total": total,
-        "isChamado": message == StatusApp.concluido.message ? true : false,
-        "modifiedAt": DateTime.now().toString(),
-        "autorizationBy":message == StatusApp.autorizado.message?userName:"",
-        "autorizationAt": message == StatusApp.autorizado.message?DateTime.now().toString():"",
-        "isAutorizado": message == StatusApp.concluido.message?true:false,
-
-      }).then((value) {
-        cMethods.displaySnackBar(
-            "Chamado concertado com sucesso! ${textPage.value}", context);
-
-        if (message == StatusApp.concluido.message||message == StatusApp.lancado.message) {
-          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
-
-        } else {
-          conIp.alteraStatusIp(idIp, message);
-        }
-      });
-
-      //  conIp.buscaPostes();
+      await buscaPostesDefeito();
+      conIp.buscaPostes();
       update();
 
     }
     if(userRole==Util.roles[4]){
+
       ref.child(id).update({
-        "status": message != StatusApp.concluido.message?message:StatusApp.concluido.message,
+        "status": message,
         "total": total,
-        "isChamado": message == StatusApp.concluido.message ? true : false,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
         "modifiedAt": DateTime.now().toString(),
         "autorizationBy":message == StatusApp.autorizado.message?userName:"",
         "autorizationAt": message == StatusApp.autorizado.message?DateTime.now().toString():"",
-        "isAutorizado": message == StatusApp.concluido.message?true:false,
 
       }).then((value) {
-        cMethods.displaySnackBar(
-            "Chamado concertado com sucesso! ${textPage.value}", context);
+        if (message == StatusApp.autorizado.message) {
+          conIp.alteraStatusIp(idIp, StatusApp.normal.message);
+        } else {
+          conIp.alteraStatusIp(idIp, message);
+        }
+      });
+      await buscaPostesDefeito();
+      conIp.buscaPostes();
 
-        if (message == StatusApp.concluido.message||message == StatusApp.lancado.message) {
+    }
+    if(userRole==Util.roles[3] || userRole==Util.roles[5]){
+      ref.child(id).update({
+        "status": message,
+        "total": total,
+        "isChamado": message == StatusApp.autorizado.message ? false : true,
+        "modifiedAt": DateTime.now().toString(),
+        "autorizationBy":message == StatusApp.autorizado.message?userName:"",
+        "autorizationAt": message == StatusApp.autorizado.message?DateTime.now().toString():"",
+
+      }).then((value) {
+        if (message == StatusApp.autorizado.message) {
           conIp.alteraStatusIp(idIp, StatusApp.normal.message);
 
         } else {
           conIp.alteraStatusIp(idIp, message);
         }
       });
-
-     // conIp.buscaPostes();
+      await buscaPostesDefeito();
+      conIp.buscaPostes();
+      update();
 
     }
-  }
-
-  alterarStatusChamado(BuildContext context,String id, String idIp, String message){
-
-    ref.child(id).update({
-      "status": message,
-      "modifiedAt": DateTime.now().toString(),
-    }).then((value) {
-      conIp.alteraStatusIp(idIp, message);
-    });
   }
 
   alterarTotal(String id, double total) {
     ref.child(id).update({
       "total": total,
     });
-  }
-
-  clear() {
-    idIp("");
-    codIp("");
-    defeito("");
-    indexDefeito(100);
-    defeito("");
-    // update();
   }
 }

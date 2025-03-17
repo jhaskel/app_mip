@@ -26,12 +26,12 @@ class SobrePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("ILumina Braço", style: _theme.textTheme.headline5),
+                Text("ILumina Braço", style: _theme.textTheme.bodyMedium),
                 const SizedBox(height: 15),
                 Text(
                   'O APLICATIVO QUE VEIO PARA FACILITAR\n'
                   'É A ESCOLHA PERFEITA PARA ESQUECER SEUS CARTÕES DE FIDELIZAÇÃO FÍSICO',
-                  style: _theme.textTheme.subtitle1,
+                  style: _theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 15),
 //                 SizedBox(
@@ -46,7 +46,7 @@ class SobrePage extends StatelessWidget {
 //                   ),
 //                 ),
                 const SizedBox(height: 25),
-                Text('V - 2.0.3', style: _theme.textTheme.headline2),
+                Text('V - 2.0.3', style: _theme.textTheme.bodyMedium),
                 Container(
                   width: 46,
                   height: 10,
@@ -57,7 +57,7 @@ class SobrePage extends StatelessWidget {
                   child: Text(
 
                     '2.0.3 - Correção admin',
-                    style: _theme.textTheme.subtitle2,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 ),
 
@@ -66,7 +66,7 @@ class SobrePage extends StatelessWidget {
                   child: Text(
 
                     '2.0.0 - Nova versão 2024',
-                    style: _theme.textTheme.subtitle2,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 ),
 
@@ -75,21 +75,21 @@ class SobrePage extends StatelessWidget {
                   child: Text(
 
                     '1.0.3 - Novo Design de telas',
-                    style: _theme.textTheme.subtitle2,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: Text(
                     '1.0.2 - Correçao de bugs',
-                    style: _theme.textTheme.subtitle2,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: Text(
                     '1.0.1 - Lançamento',
-                    style: _theme.textTheme.subtitle2,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 )
               ],

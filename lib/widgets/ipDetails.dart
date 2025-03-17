@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/widgets/adicionarDefeito.dart';
 import 'package:mip_app/widgets/defeitos_list.dart';
-
 import '../global/util.dart';
 
 class IpDetails extends StatefulWidget {
@@ -38,7 +37,7 @@ class _IpDetailsState extends State<IpDetails> {
     return Obx(
       () => Container(
         color: Colors.black87,
-        width: 500,
+        width: conCha.alturaContainerDetails.value,
         child: Wrap(
           children: <Widget>[
             ListTile(
@@ -47,7 +46,7 @@ class _IpDetailsState extends State<IpDetails> {
                 onTap: () => {}),
             ListTile(
               leading: new Icon(Icons.videocam),
-              title: new Text('Defeito ${widget.status}'),
+              title: new Text('Status ${widget.status}'),
               onTap: () => {},
             ),
             Container(

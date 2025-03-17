@@ -15,6 +15,7 @@ import 'package:mip_app/widgets/ipDetails.dart';
 class IpController extends GetxController {
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
+  final zoomControlsEnabled = true.obs;
 
   var lati = 0.0.obs;
   var longi = 0.0.obs;
@@ -30,8 +31,9 @@ class IpController extends GetxController {
   var logradouro = "".obs;
 
   late StreamSubscription<Position> positionStream;
-  LatLng _position = LatLng(-27.35661, -49.88283);
-  var position2 = LatLng(-27.35661, -49.88283).obs;
+  LatLng _position = LatLng(-27.358057, -49.883445);
+
+  var position2 = LatLng(-27.358057, -49.883445).obs;
   late GoogleMapController _mapsController;
   final markers = Set<Marker>();
 
@@ -74,7 +76,7 @@ class IpController extends GetxController {
     'assets/poste-normal.png',
     'assets/poste-defeito.png',
     'assets/poste-agendado.png',
-    'assets/poste-relatado.png'
+    'assets/poste-concertando.png'
   ];
 
   List<dynamic> list = [].obs;
@@ -95,6 +97,14 @@ class IpController extends GetxController {
   CommonMethods cMethods = CommonMethods();
   var postes = Map<String, String>().obs;
   List<dynamic> listaIp = [].obs;
+
+  final zoom = 16.0.obs;
+
+  changeZoom(){
+    zoom(zoom.value+1);
+    print("novo zoom = ${zoom.value}");
+    update();
+  }
 
   getIp() async {
     loading(true);
@@ -135,12 +145,13 @@ class IpController extends GetxController {
   onMapCreated(GoogleMapController gmc) async {
     _mapsController = gmc;
     getPosicao();
-    buscaPostes();
+ //   buscaPostes();
     var style = await rootBundle.loadString('assets/map/dark.json');
     _mapsController.setMapStyle(style);
   }
 
   buscaPostes() async {
+    print("ffffffffffffffffffffff");
     loading(true);
     update();
 
@@ -181,8 +192,6 @@ class IpController extends GetxController {
     }
 
   }
-
-
 
   addMarcador(x) async {
     String iconPoste = icones[0];
@@ -234,13 +243,12 @@ class IpController extends GetxController {
     }
   }
 
-
-
   alteraStatusIp(String idIp, String status) {
+
     ref.child(idIp).update({
       "status": status,
     });
-    update();
+  //  update();
   }
 
   removeIp(String id, BuildContext context) {
@@ -309,7 +317,7 @@ class IpController extends GetxController {
       return Future.error('Autorize o acesso à localização nas configurações.');
     }
 
-    return await Geolocator.getCurrentPosition().then((value) => buscaPostes());
+    return await Geolocator.getCurrentPosition();
   }
 
   getPosicao() async {
@@ -319,7 +327,7 @@ class IpController extends GetxController {
       longitude.value = posicao.longitude;
       position2(LatLng(latitude.value, longitude.value));
       print("pos2 $position2");
-      buscaPostes();
+    //  buscaPostes();
 
       _mapsController.animateCamera(
           CameraUpdate.newLatLng(LatLng(latitude.value, longitude.value)));

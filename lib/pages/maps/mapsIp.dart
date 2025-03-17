@@ -19,18 +19,18 @@ class _MapsIpState extends State<MapsIp> {
   @override
   void initState() {
     super.initState();
-
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(-27, -49),
     zoom: 11.0,
   );
-  CameraPosition _position = _kInitialPosition;
-  late GoogleMapController con;
+
+
 
   @override
   Widget build(BuildContext context) {
+    print("bandido");
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -59,31 +59,51 @@ class _MapsIpState extends State<MapsIp> {
   }
 
   _body() {
+
     return Column(
       children: [
         Expanded(
           child: GetBuilder<IpController>(
               init: controller,
               builder: (value) {
+                print("builderx");
                 return Stack(children: [
-                  GoogleMap(
-                    mapType: MapType.satellite,
-                    zoomControlsEnabled: true,
-                    initialCameraPosition: CameraPosition(
-                      target: controller.position,
-                      zoom: 16,
+                  Obx(
+                    ()=> GoogleMap(
+
+                      mapType: MapType.satellite,
+                      zoomControlsEnabled: controller.zoomControlsEnabled.value,
+                      initialCameraPosition: CameraPosition(
+                        target: controller.position,
+                        zoom: controller.zoom.value,
+                      ),
+                      onMapCreated: controller.onMapCreated,
+                      myLocationEnabled: true,
+                      markers: controller.markers,
+                      onCameraMove: (pos) {},
+                      onLongPress: (pos){
+                        print("lats");
+                        print('latitude ${pos.latitude}');
+                      },
+                      onTap: (pos) async {
+                        print('latitude ${pos.latitude}');
+                        await controller.changeLat(pos);
+                        for (var k in controller.list) {
+                          controller.addMarcador(k);
+                        }
+                      },
                     ),
-                    onMapCreated: controller.onMapCreated,
-                    myLocationEnabled: true,
-                    markers: controller.markers,
-                    onCameraMove: (pos) {},
-                    onTap: (pos) {
-                      controller.changeLat(pos);
-                      for (var k in controller.list) {
-                        controller.addMarcador(k);
-                      }
-                    },
                   ),
+                  Positioned(
+                      top: 50,
+                      right: 100,
+                      child: IconButton(
+                        onPressed: () {
+                          print("doops");
+                          controller.changeZoom();
+                        },
+                        icon: Icon(Icons.face),
+                      )),
                   Positioned(
                       top: 50,
                       right: 50,

@@ -37,8 +37,6 @@ class OrdemController extends GetxController {
     update();
   }
   getOrdemByFinalizada(String id) async {
-    print("HAS ${tem.value}");
-    print("HAS2 ${id}");
 
 
     await ref.orderByChild('isAberta').equalTo("1.1").onValue.listen((event) {
@@ -49,13 +47,13 @@ class OrdemController extends GetxController {
 
         for(var x in maps.keys){
           idOrdem.value = x;
-print("xxxxxxx ${idOrdem.value}");
+
         }
         tem(true);
         update();
-        print("HAS1 ${maps}");
+
       }else{
-        print("não foi encontrado ");
+
       }
     });
 

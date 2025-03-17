@@ -30,7 +30,7 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print("yyyyyyyyyyy ${conIte.listaItensChamado.length}");
+
 
     return Scaffold(
       appBar: AppBar(title: Text('Detalhe do chamado ${chamado['id']}'),  actions: [
@@ -64,9 +64,9 @@ class _ChamadoDetailsState extends State<ChamadoDetails> {
                     await conCha.alterarStatus(context,
                         chamado['id'],
                         chamado['idIp'],
-                        StatusApp.autorizado.message,
+                        StatusApp.concluido.message,
                         conIte.totalChamado.value);
-                   await conIte.updateItenAutorizado();
+                  await conIte.updateItenAutorizado();
                     Get.back();
                     Navigator.pop(context);
                   },

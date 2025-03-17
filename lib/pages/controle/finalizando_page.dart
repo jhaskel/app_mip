@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/controllers/controleController.dart';
+import 'package:mip_app/controllers/ipController.dart';
 import 'package:mip_app/controllers/itemController.dart';
 import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
@@ -22,6 +23,7 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
   final ControleController conCon = Get.put(ControleController());
   final ChamadoController conCha = Get.put(ChamadoController());
   final ItemController conIte = Get.put(ItemController());
+  final IpController conIp = Get.put(IpController());
 
   @override
   void initState() {
@@ -44,8 +46,6 @@ class _FinalizandoPageState extends State<FinalizandoPage> {
             onTap: () async {
               await conCha.finalizarConcerto(
                   context, StatusApp.lancado.message,widget.chamado);
-
-              Navigator.pop(context);
 
             },
             child: Center(

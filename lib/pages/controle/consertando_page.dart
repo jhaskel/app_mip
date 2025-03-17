@@ -23,8 +23,14 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
   final ItemController conIte = Get.put(ItemController());
   final ChamadoController conCha = Get.put(ChamadoController());
 
+  alteraSTatus() async {
+    await conCha.alterarStatusChamado(context, widget.chamado['id'], widget.chamado['idIp'],
+        StatusApp.concertando.message);
+  }
+
   @override
   void initState() {
+    alteraSTatus();
     conCon.getItens();
     conCon.getItensUtilizados(widget.chamado['id'].toString());
     super.initState();
@@ -43,7 +49,7 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
         child: InkWell(
             onTap: () {
               conCha.finalizarConcerto(
-                  context, StatusApp.realizado.message,widget.chamado);
+                  context, StatusApp.concertado.message, widget.chamado);
             },
             child: Center(
                 child: Text(
@@ -108,8 +114,6 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
               ],
             ),
           ),
-
-
           conCon.index == 0
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -145,8 +149,6 @@ class _ConsertandoPageState extends State<ConsertandoPage> {
                         }),
                   ),
                 ),
-
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),

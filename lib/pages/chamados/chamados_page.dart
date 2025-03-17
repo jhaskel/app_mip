@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mip_app/controllers/chamadoController.dart';
 import 'package:mip_app/global/app_colors.dart';
 import 'package:mip_app/global/app_text_styles.dart';
+import 'package:mip_app/global/util.dart';
 import 'package:mip_app/pages/chamados/chamado_page_detail.dart';
 
 class ChamadosPage extends StatefulWidget {
@@ -129,10 +130,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: 400,
-                    child: Text("Local"),
-                  ),
+
                   Spacer(),
                   Container(
                     width: 100,
@@ -181,10 +179,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
                               width: 100,
                               child: Text(item['idIp']),
                             ),
-                            Container(
-                              width: 400,
-                              child: Text(item['logradouro'],overflow: TextOverflow.ellipsis,),
-                            ),
+
                             Spacer(),
                             Container(
                               width: 100,
@@ -200,7 +195,7 @@ class _ChamadosPageState extends State<ChamadosPage> {
                               width: 100,
                               child: Icon(
                                 Icons.circle,
-                                color: item['isChamado']
+                                color: item['status']==StatusApp.concluido.message
                                     ? Colors.red
                                     : Colors.green,
                               ),

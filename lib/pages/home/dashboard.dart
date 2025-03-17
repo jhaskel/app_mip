@@ -8,7 +8,9 @@ import 'package:mip_app/pages/maps/MapsChamadoPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mip_app/pages/maps/mapsIp.dart';
 import 'package:mip_app/pages/maps/mapsIpUnico.dart';
+import 'package:mip_app/pages/maps/mapsPage.dart';
 import 'package:mip_app/pages/profile/profile_page.dart';
 
 class Dashboard extends StatefulWidget {
@@ -53,8 +55,9 @@ class _DashboardState extends State<Dashboard>
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          MapsChamadoPage(),
 
+          MapsPage(),
+        //  MapsChamadoPage(),
           ControlePage(),
           CreateDefeitoPage(),
           CadastroPage(),
